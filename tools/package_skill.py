@@ -8,7 +8,7 @@ import sys
 import zipfile
 from pathlib import Path
 
-from check_skill import REPO_ROOT, SKILL_ROOT, validate
+from check_skill import REPO_ROOT, SKILL_ROOT, distributable_files, validate
 
 
 FIXED_ZIP_TIME = (2026, 1, 1, 0, 0, 0)
@@ -26,7 +26,7 @@ def parse_args() -> argparse.Namespace:
 
 
 def build_archive(output: Path) -> str:
-    errors = validate()
+    errors = validate(allow_generated=True)
     if errors:
         raise RuntimeError("skill validation failed:\n" + "\n".join(errors))
 
@@ -35,7 +35,7 @@ def build_archive(output: Path) -> str:
     temporary = output.with_suffix(output.suffix + ".tmp")
     temporary.unlink(missing_ok=True)
 
-    files = sorted(path for path in SKILL_ROOT.rglob("*") if path.is_file())
+    files = distributable_files()
     with zipfile.ZipFile(temporary, "w", compression=zipfile.ZIP_DEFLATED, compresslevel=9) as archive:
         for path in files:
             relative = Path("genscaff") / path.relative_to(SKILL_ROOT)

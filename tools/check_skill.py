@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import json
+import os
 import re
 import sys
 from pathlib import Path
@@ -13,9 +14,25 @@ PERSONAL_PATH_PATTERNS = (
     re.compile(r"[A-Za-z]:\\Users\\[^\\/\r\n]+\\", re.IGNORECASE),
     re.compile(r"/(?:Users|home)/[^/\s]+/"),
 )
+GENERATED_DIRECTORIES = {"__pycache__", "node_modules"}
 
 
-def validate() -> list[str]:
+def distributable_files() -> list[Path]:
+    files: list[Path] = []
+    for current, directories, names in os.walk(SKILL_ROOT):
+        directories[:] = sorted(
+            directory for directory in directories if directory not in GENERATED_DIRECTORIES
+        )
+        root = Path(current)
+        files.extend(
+            root / name
+            for name in sorted(names)
+            if not name.endswith((".pyc", ".pyo"))
+        )
+    return files
+
+
+def validate(*, allow_generated: bool = False) -> list[str]:
     errors: list[str] = []
     required = [
         "SKILL.md",
@@ -71,11 +88,27 @@ def validate() -> list[str]:
                 errors.append("scripts/package.json must remain private")
 
     if SKILL_ROOT.is_dir():
-        for path in SKILL_ROOT.rglob("*"):
-            relative = path.relative_to(SKILL_ROOT).as_posix()
-            if path.name == "__pycache__" or path.suffix == ".pyc" or "node_modules" in path.parts:
-                errors.append(f"generated dependency or cache is not distributable: {relative}")
-            if path.is_file() and path.suffix.lower() in {".md", ".yaml", ".yml", ".json", ".py", ".js"}:
+        for current, directories, names in os.walk(SKILL_ROOT):
+            root = Path(current)
+            generated_directories = sorted(
+                directory for directory in directories if directory in GENERATED_DIRECTORIES
+            )
+            if not allow_generated:
+                for directory in generated_directories:
+                    relative = (root / directory).relative_to(SKILL_ROOT).as_posix()
+                    errors.append(f"generated dependency or cache is not distributable: {relative}")
+            directories[:] = sorted(
+                directory for directory in directories if directory not in GENERATED_DIRECTORIES
+            )
+            for name in sorted(names):
+                path = root / name
+                relative = path.relative_to(SKILL_ROOT).as_posix()
+                if path.suffix in {".pyc", ".pyo"}:
+                    if not allow_generated:
+                        errors.append(f"generated dependency or cache is not distributable: {relative}")
+                    continue
+                if path.suffix.lower() not in {".md", ".yaml", ".yml", ".json", ".py", ".js"}:
+                    continue
                 content = path.read_text(encoding="utf-8", errors="replace")
                 if any(pattern.search(content) for pattern in PERSONAL_PATH_PATTERNS):
                     errors.append(f"personal absolute path found: {relative}")
