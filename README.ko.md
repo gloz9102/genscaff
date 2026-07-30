@@ -6,6 +6,18 @@ Genscaff는 브라우저에서 렌더링되는 프런트엔드를 만들고 검�
 
 이 프로젝트는 독립적인 커뮤니티 프로젝트이며 OpenAI와 제휴하거나 OpenAI의 보증을 받지 않았다.
 
+## 동일 브리프 비교
+
+서로 독립적인 `terra-medium` 에이전트 2개에 같은 한국어 물류 대시보드 브리프와 구현 제약을 제공했다. 한쪽은 Genscaff Standard를 사용했고, 다른 쪽은 Genscaff를 읽거나 사용하지 않도록 분리했다.
+
+| Genscaff Standard 적용 | Genscaff 미적용 |
+|---|---|
+| <img src="docs/assets/comparison/genscaff-with.png" alt="Genscaff Standard로 만든 작업 중심 물류 대시보드" width="720"> | <img src="docs/assets/comparison/genscaff-without.png" alt="Genscaff 없이 만든 일반적인 물류 대시보드" width="720"> |
+
+이 샘플에서 Genscaff 적용 결과는 위험 건 선택부터 조치까지의 흐름이 더 직접적이었고 별도 검증 산출물을 생성했다. 미적용 결과는 KPI와 사이드바 중심의 완성도 높은 일반 대시보드를 만들었다. 두 결과 모두 반응형이었고 요청·취소 상호작용이 동작했으며 확인한 흐름에서 콘솔 오류와 경고가 없었다.
+
+단일 정성 A/B 샘플이므로 모든 미적용 실행보다 우수하다는 증거는 아니다. 브리프, 통제 조건, 데스크톱·모바일·완료 상태 캡처, 관찰 결과와 한계는 [상세 비교 문서](docs/comparison.ko.md)에서 확인할 수 있다.
+
 ## 검증 프로필
 
 | 프로필 | 용도 | 필수 검증 |
@@ -24,6 +36,7 @@ Genscaff는 AI 작성 여부 탐지기나 독창성 인증서가 아니며, 실�
 .
 ├── skill/genscaff/        # 설치 가능한 Codex 스킬
 ├── tools/                 # 저장소 검증 및 패키징 도구
+├── docs/                  # 평가 기록 및 비교 근거
 ├── .github/workflows/     # CI
 ├── LICENSE                # Apache License 2.0
 ├── NOTICE

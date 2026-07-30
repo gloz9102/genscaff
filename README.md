@@ -6,6 +6,18 @@ Genscaff is an evidence-backed Codex skill for building and reviewing browser-re
 
 This is an independent community project. It is not affiliated with or endorsed by OpenAI.
 
+## Same-brief comparison
+
+Two independent `terra-medium` agents received the same Korean logistics-dashboard brief and implementation constraints. One used Genscaff Standard; the other was explicitly isolated from Genscaff.
+
+| Genscaff Standard | Without Genscaff |
+|---|---|
+| <img src="docs/assets/comparison/genscaff-with.png" alt="Task-focused logistics dashboard created with Genscaff Standard" width="720"> | <img src="docs/assets/comparison/genscaff-without.png" alt="Conventional logistics dashboard created without Genscaff" width="720"> |
+
+In this sample, the Genscaff run produced a more direct risk-selection-to-action flow and additional verification artifacts. The control run produced a polished, conventional KPI-and-sidebar dashboard. Both were responsive, completed the request/cancel interaction, and had no console errors or warnings during the checked flow.
+
+This is a single qualitative A/B sample, not proof that the skill will outperform every unassisted run. See the [full desktop, mobile, and terminal-state comparison](docs/comparison.md) for the brief, controls, observations, and limitations.
+
 ## Verification profiles
 
 | Profile | Use | Required verification |
@@ -24,6 +36,7 @@ Genscaff is not an AI-authorship detector, originality certificate, or replaceme
 .
 ├── skill/genscaff/        # Installable Codex skill
 ├── tools/                 # Repository validation and packaging
+├── docs/                  # Evaluation notes and comparison evidence
 ├── .github/workflows/     # CI
 ├── LICENSE                # Apache License 2.0
 ├── NOTICE
