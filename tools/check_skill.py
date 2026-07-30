@@ -47,6 +47,7 @@ def validate(*, allow_generated: bool = False) -> list[str]:
         "scripts/runtime_probe.js",
         "scripts/test_quality_gate.py",
         "scripts/package.json",
+        "scripts/package-lock.json",
         "references/aggressive-hard-gate.md",
         "references/quality-report-schema.md",
     ]
@@ -57,6 +58,13 @@ def validate(*, allow_generated: bool = False) -> list[str]:
     skill_path = SKILL_ROOT / "SKILL.md"
     if skill_path.is_file():
         text = skill_path.read_text(encoding="utf-8")
+        if len(text) > 15_000:
+            errors.append("SKILL.md exceeds the 15,000-character Quick context budget")
+        for profile in ("Quick", "Standard", "Strict"):
+            if f"### {profile}" not in text:
+                errors.append(f"SKILL.md is missing the {profile} profile")
+        if "references/original-" in text:
+            errors.append("SKILL.md must not require bundled copies of generic source skills")
         match = re.match(r"\A---\s*\n(.*?)\n---\s*\n", text, re.DOTALL)
         if not match:
             errors.append("SKILL.md has invalid YAML frontmatter boundaries")
@@ -86,6 +94,16 @@ def validate(*, allow_generated: bool = False) -> list[str]:
                 errors.append("scripts/package.json license must be Apache-2.0")
             if package.get("private") is not True:
                 errors.append("scripts/package.json must remain private")
+            lock_path = package_path.with_name("package-lock.json")
+            if lock_path.is_file():
+                try:
+                    lock = json.loads(lock_path.read_text(encoding="utf-8"))
+                except (OSError, json.JSONDecodeError) as error:
+                    errors.append(f"invalid scripts/package-lock.json: {error}")
+                else:
+                    locked = lock.get("packages", {}).get("", {}).get("dependencies", {})
+                    if locked != package.get("dependencies"):
+                        errors.append("scripts/package-lock.json dependencies do not match package.json")
 
     if SKILL_ROOT.is_dir():
         for current, directories, names in os.walk(SKILL_ROOT):

@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import argparse
+import copy
 import hashlib
 import json
 import math
@@ -17,6 +18,8 @@ import hard_gate
 
 
 SCHEMA_VERSION = 3
+PROFILE_SCHEMA_VERSION = 4
+VALID_PROFILES = {"standard", "strict"}
 MIN_VISUAL_ITERATIONS = 2
 MIN_IMAGE_BYTES = 512
 MIN_IMAGE_WIDTH = 160
@@ -1644,12 +1647,14 @@ def validate_checks(data: dict[str, Any], errors: list[str]) -> None:
             errors.append(f"Required check failed or missing: checks.{key}")
 
 
-def validate(
+def _validate_strict(
     data: dict[str, Any],
     report_path: Path,
     *,
     _live_bundle_override: dict[str, Any] | None = None,
     _lighthouse_bundle_override: dict[str, Any] | None = None,
+    expected_schema_version: int = SCHEMA_VERSION,
+    execute_approved_commands: bool = False,
 ) -> list[str]:
     errors: list[str] = []
     raw_catalog = data.get("evidence_catalog")
@@ -1659,8 +1664,8 @@ def validate(
     )
 
     version = data.get("schema_version")
-    if version != SCHEMA_VERSION:
-        errors.append(f"schema_version must be {SCHEMA_VERSION}; got {version!r}")
+    if version != expected_schema_version:
+        errors.append(f"schema_version must be {expected_schema_version}; got {version!r}")
 
     validate_evidence_catalog(raw_catalog, inspector, errors)
     work_type, scope = validate_context(data, errors)
@@ -1681,8 +1686,238 @@ def validate(
             report_path,
             _live_bundle_override=_live_bundle_override,
             _lighthouse_bundle_override=_lighthouse_bundle_override,
+            execute_approved_commands=execute_approved_commands,
         )
     )
+    return errors
+
+
+def profile_template(profile: str) -> dict[str, Any]:
+    if profile == "strict":
+        template = copy.deepcopy(TEMPLATE)
+        template["schema_version"] = PROFILE_SCHEMA_VERSION
+    else:
+        template = {
+            "schema_version": PROFILE_SCHEMA_VERSION,
+            "context": {
+                "target_user": "",
+                "primary_task": "",
+                "success_outcome": "",
+                "primary_cta": "",
+                "recovery": "",
+            },
+            "evidence": {
+                viewport: {
+                    state: {"artifact": "", "observation": ""}
+                    for state in ("start", "terminal")
+                }
+                for viewport in ("desktop", "mobile")
+            },
+            "checks": {
+                "console_errors_clear": False,
+                "overflow_clear": False,
+                "keyboard_focus_checked": False,
+                "accessibility_basics_checked": False,
+            },
+            "skipped_checks": [],
+        }
+    template["profile"] = profile
+    template["visual_policy"] = {
+        "mode": "preserve-user-project",
+        "detected_effects": [],
+        "allowed_effects": [],
+    }
+    template["execution_policy"] = {
+        "mode": "none",
+        "approved_commands": [],
+        "active_browser": "none",
+    }
+    return template
+
+
+def validate_profile_envelope(data: dict[str, Any], errors: list[str]) -> None:
+    profile = data.get("profile")
+    if profile not in VALID_PROFILES:
+        errors.append(f"profile must be one of {sorted(VALID_PROFILES)}")
+
+    visual_policy = data.get("visual_policy")
+    if not isinstance(visual_policy, dict):
+        errors.append("visual_policy must be an object")
+    else:
+        if visual_policy.get("mode") != "preserve-user-project":
+            errors.append("visual_policy.mode must be preserve-user-project")
+        for field in ("detected_effects", "allowed_effects"):
+            if not isinstance(visual_policy.get(field), list):
+                errors.append(f"visual_policy.{field} must be a list")
+
+    execution_policy = data.get("execution_policy")
+    if not isinstance(execution_policy, dict):
+        errors.append("execution_policy must be an object")
+    else:
+        if execution_policy.get("mode") not in {"none", "approved"}:
+            errors.append("execution_policy.mode must be none or approved")
+        if execution_policy.get("active_browser") not in {"none", "approved"}:
+            errors.append("execution_policy.active_browser must be none or approved")
+        approved = execution_policy.get("approved_commands")
+        if not isinstance(approved, list) or not all(isinstance(item, str) for item in approved):
+            errors.append("execution_policy.approved_commands must be a string list")
+        elif execution_policy.get("mode") == "none" and approved:
+            errors.append("execution_policy.approved_commands must be empty when mode is none")
+
+
+def validate_standard(data: dict[str, Any], report_path: Path, errors: list[str]) -> None:
+    context = data.get("context")
+    if not isinstance(context, dict):
+        errors.append("context must be an object")
+    else:
+        for field in ("target_user", "primary_task", "success_outcome", "primary_cta", "recovery"):
+            value = context.get(field)
+            if not isinstance(value, str) or len(value.strip()) < 4:
+                errors.append(f"context.{field} is required for Standard")
+
+    evidence = data.get("evidence")
+    if not isinstance(evidence, dict):
+        errors.append("evidence must be an object")
+    else:
+        for viewport in ("desktop", "mobile"):
+            states = evidence.get(viewport)
+            if not isinstance(states, dict):
+                errors.append(f"evidence.{viewport} must be an object")
+                continue
+            for state in ("start", "terminal"):
+                item = states.get(state)
+                path = f"evidence.{viewport}.{state}"
+                if not isinstance(item, dict):
+                    errors.append(f"{path} must be an object")
+                    continue
+                artifact = item.get("artifact")
+                observation = item.get("observation")
+                if not isinstance(artifact, str) or not artifact.strip():
+                    errors.append(f"{path}.artifact is required")
+                else:
+                    candidate = Path(artifact).expanduser()
+                    if not candidate.is_absolute():
+                        candidate = report_path.resolve().parent / candidate
+                    if not candidate.is_file() or candidate.suffix.casefold() not in IMAGE_SUFFIXES:
+                        errors.append(f"{path}.artifact must be a local screenshot")
+                if not isinstance(observation, str) or len(observation.strip()) < 8:
+                    errors.append(f"{path}.observation must describe visible evidence")
+
+    checks = data.get("checks")
+    if not isinstance(checks, dict):
+        errors.append("checks must be an object")
+    else:
+        for field in (
+            "console_errors_clear",
+            "overflow_clear",
+            "keyboard_focus_checked",
+            "accessibility_basics_checked",
+        ):
+            if checks.get(field) is not True:
+                errors.append(f"checks.{field} must be true")
+    if not isinstance(data.get("skipped_checks"), list):
+        errors.append("skipped_checks must be a list")
+
+
+def validate_visual_policy(data: dict[str, Any], errors: list[str]) -> None:
+    policy = data.get("visual_policy")
+    if not isinstance(policy, dict):
+        return
+    detected = policy.get("detected_effects")
+    allowed = policy.get("allowed_effects")
+    if not isinstance(detected, list) or not isinstance(allowed, list):
+        return
+    approved: set[tuple[str, str]] = set()
+    for index, item in enumerate(allowed):
+        path = f"visual_policy.allowed_effects[{index}]"
+        if not isinstance(item, dict):
+            errors.append(f"{path} must be an object")
+            continue
+        kind = item.get("kind")
+        location = item.get("location")
+        source = item.get("source")
+        rationale = item.get("rationale")
+        if not isinstance(kind, str) or not kind.strip():
+            errors.append(f"{path}.kind is required")
+        if not isinstance(location, str) or not location.strip():
+            errors.append(f"{path}.location is required")
+        if source not in {"user", "project", "locked-reference"}:
+            errors.append(f"{path}.source must be user, project, or locked-reference")
+        if not isinstance(rationale, str) or len(rationale.strip()) < 8:
+            errors.append(f"{path}.rationale is required")
+        if isinstance(kind, str) and isinstance(location, str):
+            approved.add((kind.strip().casefold(), location.strip().casefold()))
+    for index, item in enumerate(detected):
+        if not isinstance(item, dict):
+            errors.append(f"visual_policy.detected_effects[{index}] must be an object")
+            continue
+        key = (str(item.get("kind", "")).strip().casefold(), str(item.get("location", "")).strip().casefold())
+        if not all(key) or key not in approved:
+            errors.append(f"Strict visual effect lacks user/project justification: {key[0]} at {key[1]}")
+
+
+def apply_visual_exceptions(hard_errors: list[str], data: dict[str, Any]) -> list[str]:
+    policy = data.get("visual_policy")
+    allowed = policy.get("allowed_effects", []) if isinstance(policy, dict) else []
+    exceptions = [
+        (str(item.get("kind", "")).casefold(), str(item.get("location", "")).casefold())
+        for item in allowed
+        if isinstance(item, dict)
+    ]
+    kept: list[str] = []
+    for error in hard_errors:
+        lowered = error.casefold()
+        if any(kind and location and kind in lowered and location in lowered for kind, location in exceptions):
+            continue
+        kept.append(error)
+    return kept
+
+
+def validate(
+    data: dict[str, Any],
+    report_path: Path,
+    *,
+    _live_bundle_override: dict[str, Any] | None = None,
+    _lighthouse_bundle_override: dict[str, Any] | None = None,
+    execute_approved_commands: bool = False,
+) -> list[str]:
+    version = data.get("schema_version")
+    if version == SCHEMA_VERSION:
+        return _validate_strict(
+            data,
+            report_path,
+            _live_bundle_override=_live_bundle_override,
+            _lighthouse_bundle_override=_lighthouse_bundle_override,
+            execute_approved_commands=execute_approved_commands,
+        )
+    if version != PROFILE_SCHEMA_VERSION:
+        return [f"schema_version must be {SCHEMA_VERSION} or {PROFILE_SCHEMA_VERSION}; got {version!r}"]
+
+    errors: list[str] = []
+    validate_profile_envelope(data, errors)
+    profile = data.get("profile")
+    if profile == "standard":
+        validate_standard(data, report_path, errors)
+        return errors
+    if profile == "strict":
+        validate_visual_policy(data, errors)
+        strict_data = copy.deepcopy(data)
+        strict_data["schema_version"] = PROFILE_SCHEMA_VERSION
+        checks = strict_data.get("checks")
+        visual_policy = data.get("visual_policy")
+        allowed_effects = visual_policy.get("allowed_effects") if isinstance(visual_policy, dict) else []
+        if isinstance(checks, dict) and allowed_effects:
+            for key in ("no_gradient_anywhere", "no_glassmorphism_or_backdrop_blur"):
+                checks[key] = True
+        hard_errors = _validate_strict(
+            strict_data,
+            report_path,
+            _live_bundle_override=_live_bundle_override,
+            _lighthouse_bundle_override=_lighthouse_bundle_override,
+            expected_schema_version=PROFILE_SCHEMA_VERSION,
+            execute_approved_commands=execute_approved_commands,
+        )
+        errors.extend(apply_visual_exceptions(hard_errors, data))
     return errors
 
 
@@ -1694,7 +1929,23 @@ def main() -> int:
     parser.add_argument(
         "--init",
         type=Path,
-        help="Write a blank schema-version-3 quality report template.",
+        help="Write a blank profile-aware quality report template.",
+    )
+    parser.add_argument(
+        "--profile",
+        choices=sorted(VALID_PROFILES),
+        default="standard",
+        help="Profile for --init (default: standard).",
+    )
+    parser.add_argument(
+        "--execute-approved-commands",
+        action="store_true",
+        help="Re-run exact approved repository verification commands. Treat them as arbitrary code.",
+    )
+    parser.add_argument(
+        "--allow-active-browser-audit",
+        action="store_true",
+        help="Allow target-page JavaScript, network requests, and Lighthouse for a trusted target.",
     )
     parser.add_argument(
         "--max-errors",
@@ -1714,13 +1965,14 @@ def main() -> int:
 
     if args.init:
         args.init.parent.mkdir(parents=True, exist_ok=True)
-        args.init.write_text(json.dumps(TEMPLATE, indent=2) + "\n", encoding="utf-8")
-        print(f"Wrote template: {args.init}")
-        print("Fill evidence_catalog once and reuse its IDs throughout the report.")
-        print(
-            "Run --report <path> --max-errors 30 after each evidence phase instead of "
-            "leaving validation to the end."
+        args.init.write_text(
+            json.dumps(profile_template(args.profile), indent=2) + "\n",
+            encoding="utf-8",
         )
+        print(f"Wrote template: {args.init}")
+        print(f"PROFILE={args.profile}")
+        if args.profile == "strict":
+            print("Fill evidence_catalog once and reuse its IDs throughout the report.")
         return 0
 
     if args.fingerprint:
@@ -1750,11 +2002,59 @@ def main() -> int:
     if not isinstance(data, dict):
         return fail(["Report root must be a JSON object"], max_errors=args.max_errors)
 
-    errors = validate(data, args.report)
+    report_profile = (
+        "legacy-strict" if data.get("schema_version") == SCHEMA_VERSION else data.get("profile")
+    )
+    if report_profile in {"strict", "legacy-strict"} and not args.allow_active_browser_audit:
+        print("ACTIVE_BROWSER_AUDIT_SKIPPED_UNTRUSTED")
+        return fail(
+            ["Strict validation requires --allow-active-browser-audit for a trusted target"],
+            max_errors=args.max_errors,
+        )
+    if report_profile == "strict":
+        policy = data.get("execution_policy")
+        if not isinstance(policy, dict) or policy.get("active_browser") != "approved":
+            return fail(
+                ["--allow-active-browser-audit requires execution_policy.active_browser=approved"],
+                max_errors=args.max_errors,
+            )
+
+    if args.execute_approved_commands and data.get("schema_version") == PROFILE_SCHEMA_VERSION:
+        policy = data.get("execution_policy")
+        if not isinstance(policy, dict) or policy.get("mode") != "approved":
+            return fail(
+                ["--execute-approved-commands requires execution_policy.mode=approved"],
+                max_errors=args.max_errors,
+            )
+        approved = {item.strip() for item in policy.get("approved_commands", []) if isinstance(item, str)}
+        declared = {
+            item.get("command", "").strip()
+            for item in data.get("measurements", {}).get("commands", [])
+            if isinstance(item, dict) and isinstance(item.get("command"), str)
+        }
+        if approved != declared:
+            return fail(
+                ["execution_policy.approved_commands must match measurements.commands exactly"],
+                max_errors=args.max_errors,
+            )
+
+    errors = validate(
+        data,
+        args.report,
+        execute_approved_commands=args.execute_approved_commands,
+    )
     if errors:
         return fail(errors, max_errors=args.max_errors)
 
+    profile = report_profile
+    print(f"PROFILE={profile}")
     print("STRUCTURAL_EVIDENCE_INVARIANTS_VERIFIED")
+    if profile in {"strict", "legacy-strict"}:
+        if args.execute_approved_commands:
+            print("COMMAND_EXECUTION_VERIFIED")
+        else:
+            print("COMMAND_EXECUTION_SKIPPED_UNTRUSTED")
+            print("STRICT_COMMAND_REEXECUTION_NOT_VERIFIED")
     print("REVIEW_PROVENANCE_UNVERIFIED")
     print(
         "The validator-owned structural and live-browser invariants were reproduced. "

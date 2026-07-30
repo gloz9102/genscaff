@@ -9,7 +9,8 @@ Record third-party material in `THIRD_PARTY_NOTICES.md` and retain all required 
 ## Development setup
 
 ```shell
-npm install --omit=dev --prefix skill/genscaff/scripts
+npm ci --omit=dev --prefix skill/genscaff/scripts
+npm audit --omit=dev --audit-level=moderate --prefix skill/genscaff/scripts
 python tools/check_skill.py
 python skill/genscaff/scripts/test_quality_gate.py
 ```
@@ -20,7 +21,7 @@ The regression suite requires Chrome or Chromium. Set `CHROME_PATH` when automat
 
 - Keep `SKILL.md`, `agents/openai.yaml`, references, and scripts consistent.
 - Add or update regression coverage for validator behavior changes.
-- Do not weaken a hard gate solely to make a fixture pass.
+- Keep Standard practical and Strict evidence-backed; do not weaken either profile solely to make a fixture pass.
 - Remove generated caches, browser profiles, reports, and `node_modules` from commits.
 - Describe behavioral changes and the commands used to verify them.
 - Update `NOTICE` or `THIRD_PARTY_NOTICES.md` when attribution or dependency facts change.

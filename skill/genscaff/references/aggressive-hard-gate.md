@@ -1,6 +1,6 @@
 # Genscaff 공격적 하드 게이트
 
-이 문서는 번들 원본보다 엄격한 Genscaff 전용 오버레이이다. 원본과 충돌하면 이 문서를 따른다. 이 게이트는 AI 제작 여부를 감별하지 않는다. 제품과 행동의 근거가 빈약한데도 형식만 채워 `PASS`하는 일을 막는다.
+이 문서는 Genscaff Strict 프로필의 증거 계약이다. 이 게이트는 AI 제작 여부를 감별하지 않는다. 제품과 행동의 근거가 빈약한데도 형식만 채워 `PASS`하는 일을 막는다.
 
 ## 판정 원칙
 
@@ -27,9 +27,9 @@ Lighthouse, 빌드, 반응형 스크린샷, 자동 접근성 점수는 기술 �
 - `NOT TESTED`: 필요한 검증을 하지 않았다. `PASS`로 합치지 않는다.
 - `FAIL`: 직접 실패했거나 필수 근거가 없다.
 
-## 그라디언트·글래스모피즘 무조건 금지
+## 시각 효과 정책
 
-Genscaff 결과에는 장식 목적 여부를 따지는 allowlist가 없다. 다음 항목이 소스, computed style, SVG, canvas, WebGL, 래스터 이미지, 데스크톱 또는 모바일 캡처에서 하나라도 발견되면 실패한다.
+사용자 요구와 기존 프로젝트 디자인 시스템이 Genscaff 취향보다 우선한다. 다음 효과는 무조건 결함이 아니지만, Strict에서는 소스, computed style, SVG, canvas, WebGL, 래스터 이미지, 데스크톱 또는 모바일 캡처에서 발견된 위치를 전부 기록한다.
 
 - `linear-gradient`, `radial-gradient`, `conic-gradient`, repeating 변형, canvas gradient API
 - 그라디언트 텍스트, Tailwind `bg-gradient-*`, `from-*`, `via-*`, `to-*`
@@ -39,14 +39,16 @@ Genscaff 결과에는 장식 목적 여부를 따지는 allowlist가 없다. 다
 - SVG `linearGradient`, `radialGradient`, `feGaussianBlur`
 - 이미지 안에 구워 넣은 그라디언트 텍스트·빛 번짐·유리 카드
 
-이는 WCAG가 금지한 기술이라는 주장이 아니다. AI 생성 UI의 상투적 장식을 억제하기 위한 Genscaff의 명시적 제품 정책이다. 데이터 구간은 단색 단계, 패턴, 라벨, 선 종류로 구분하고, overflow fade는 clipping·scroll cue·명시적 affordance로 대체한다.
+각 효과는 `visual_policy.detected_effects`에 `kind`와 `location`을 기록한다. 사용자 요구, 기존 프로젝트 토큰, 잠긴 reference 중 하나가 근거라면 `visual_policy.allowed_effects`에 동일한 `kind`·`location`과 `source`, 구체적 `rationale`을 기록한다. 일치하는 근거가 없는 장식 효과만 실패한다. 이는 WCAG가 금지한 기술이라는 주장이 아니며 AI 저작 여부도 증명하지 않는다.
+
+Schema v3 `legacy-strict`는 하위 호환성을 위해 기존의 절대 금지 판정을 유지한다.
 
 검사는 네 층을 모두 통과해야 한다.
 
 1. `implementation_audit.project_root` 전체와 `source_roots`를 validator가 직접 재귀 스캔한다. 위반 파일을 source list에서 빼는 방식은 통하지 않는다.
 2. `implementation_audit.rendered_roots`에 실제 서비스·배포되는 모든 결과 root를 별도로 기록한다. `dist`, `build`, `out` 자체가 rendered root이거나 그 아래에 있으면 generated/vendor ignore 규칙을 적용하지 않고 HTML·CSS·JS·SVG·shader·인코딩된 data URI까지 검사한다.
 3. validator가 새 브라우저 세션을 소유하고 데스크톱·모바일 기본 route를 다시 연다. report가 제공한 결과를 신뢰하지 않고 실제 DOM·pseudo-element 포함 computed style·SVG·canvas 계측·보이는 control 활성화·visible claim·로드된 first-party와 external 리소스를 다시 수집한다.
-4. 독립 reviewer가 SVG·canvas·WebGL·래스터와 전체 스크린샷을 사람 눈으로 확인한다.
+4. 독립 reviewer가 SVG·canvas·WebGL·래스터와 전체 스크린샷을 사람 눈으로 확인하고, 허용 근거와 실제 사용 위치가 일치하는지 판단한다.
 
 사전에 만든 `runtime_probe.js` 결과와 manifest는 live-browser 재실행의 입력 또는 대체 증거가 아니다. validator의 새 실행 결과와 일치하는지 확인하는 교차검사 대상이다. CSSOM이나 source 문자열에 나타나지 않는 런타임 스타일, 빌드 결과에만 남은 금지 표현, 퍼센트·base64 인코딩된 SVG/data URI, 동적으로 로드된 first-party CSS·JS·SVG도 loaded-resource 검사에 포함한다.
 
@@ -152,7 +154,7 @@ validator는 한 실행에서 최소 다음 원시 사실을 직접 수집하고
 }
 ```
 
-`runtime_probe.js`가 `canvas_elements_reviewed: false`를 반환하면 canvas 결과를 독립적으로 시각 검토한 뒤에만 값을 갱신한다. 발견 항목을 지우고 통과시키지 말고 구현에서 제거한 후 probe를 다시 실행한다.
+`runtime_probe.js`가 `canvas_elements_reviewed: false`를 반환하면 canvas 결과를 독립적으로 시각 검토한다. 발견 항목을 지우지 말고 제거하거나 `visual_policy`의 근거 있는 허용 항목과 연결한 뒤 probe를 다시 실행한다.
 
 ### Control manifest
 
@@ -189,7 +191,7 @@ Lighthouse artifact는 score 네 개만 손으로 적은 JSON이 아니라 `ligh
 3. 주요 CTA의 결과를 누르기 전에 예측할 수 있는가?
 4. 시작부터 피드백, 종료, 복구까지 실제로 이어지는가?
 5. 두 먼 도메인으로 치환했을 때 5축 중 무엇이 구조적으로 깨지는가?
-6. gradient, glass, orb, glow, generic hero, 동일 카드 반복, 근거 없는 수치가 남았는가?
+6. gradient, glass, orb, glow, generic hero, 동일 카드 반복 중 사용자·프로젝트 근거 없이 남은 것이 있는가?
 
 ## 판정 문구의 한계
 

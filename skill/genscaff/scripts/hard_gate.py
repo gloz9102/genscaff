@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Evidence-backed, non-compensating hard gates for Genscaff schema v3."""
+"""Evidence-backed, non-compensating gates for Genscaff Strict reports."""
 
 from __future__ import annotations
 
@@ -2522,7 +2522,12 @@ def execute_verification_command(
 
 
 def validate_execution_manifest(
-    data: dict[str, Any], base_dir: Path, source_fingerprint: str | None, errors: list[str]
+    data: dict[str, Any],
+    base_dir: Path,
+    source_fingerprint: str | None,
+    errors: list[str],
+    *,
+    execute_approved_commands: bool = False,
 ) -> None:
     manifest, manifest_path = load_json_file(
         get_path(data, "measurements.execution_manifest"),
@@ -2581,7 +2586,7 @@ def validate_execution_manifest(
             errors.append(f"{path}.log must be a non-trivial local command log")
         elif run.get("log_sha256") != file_sha256(log_path):
             errors.append(f"{path}.log_sha256 does not match the command log")
-        if cwd is not None:
+        if cwd is not None and execute_approved_commands:
             observed = execute_verification_command(
                 command.strip(), cwd, source_fingerprint, path, errors
             )
@@ -2685,6 +2690,7 @@ def validate(
     *,
     _live_bundle_override: dict[str, Any] | None = None,
     _lighthouse_bundle_override: dict[str, Any] | None = None,
+    execute_approved_commands: bool = False,
 ) -> list[str]:
     errors: list[str] = []
     base_dir = report_path.resolve().parent
@@ -2731,6 +2737,12 @@ def validate(
         observed=lighthouse_bundle,
         live_config_path=live_config_path,
     )
-    validate_execution_manifest(data, base_dir, source_fingerprint, errors)
+    validate_execution_manifest(
+        data,
+        base_dir,
+        source_fingerprint,
+        errors,
+        execute_approved_commands=execute_approved_commands,
+    )
     validate_visual_target_content(data, base_dir, captures, errors)
     return errors

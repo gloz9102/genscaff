@@ -11,6 +11,7 @@ import json
 import os
 import subprocess
 import struct
+import sys
 import tempfile
 import threading
 import unittest
@@ -1253,36 +1254,60 @@ def build_valid_report(root: Path) -> tuple[dict[str, object], Path]:
     return report, report_path
 
 
-class BundledSourceSyncTests(unittest.TestCase):
-    def test_bundled_original_skills_match_canonical_hashes(self) -> None:
+class ProgressiveDisclosureTests(unittest.TestCase):
+    def test_generic_source_skills_are_not_bundled(self) -> None:
         skill_root = Path(__file__).resolve().parent.parent
-        skills_root = skill_root.parent
-        pairs = [
-            (
-                skill_root / "references" / "original-image-to-web-impl-skill.md",
-                skills_root / "image-to-web-impl" / "SKILL.md",
-            ),
-            (
-                skill_root / "references" / "original-image-to-web-impl-openai.yaml",
-                skills_root / "image-to-web-impl" / "agents" / "openai.yaml",
-            ),
-            (
-                skill_root / "references" / "original-frontend-quality-gate-skill.md",
-                skills_root / "frontend-quality-gate" / "SKILL.md",
-            ),
-            (
-                skill_root / "references" / "original-frontend-quality-gate-openai.yaml",
-                skills_root / "frontend-quality-gate" / "agents" / "openai.yaml",
-            ),
-        ]
-        if any(not canonical.is_file() for _, canonical in pairs):
-            self.skipTest("Canonical source skills are not installed beside Genscaff")
-        for bundled, canonical in pairs:
-            self.assertEqual(
-                sha256(canonical),
-                sha256(bundled),
-                f"Bundled original drifted from canonical source: {bundled.name}",
+        bundled = list((skill_root / "references").glob("original-*.md"))
+        bundled.extend((skill_root / "references").glob("original-*.yaml"))
+        self.assertEqual([], bundled)
+        self.assertLessEqual(len((skill_root / "SKILL.md").read_text(encoding="utf-8")), 15_000)
+
+
+class ProfileTests(unittest.TestCase):
+    def test_standard_template_is_default_and_lightweight(self) -> None:
+        report = gate.profile_template("standard")
+        self.assertEqual(4, report["schema_version"])
+        self.assertEqual("standard", report["profile"])
+        self.assertNotIn("measurements", report)
+        self.assertNotIn("visual_review", report)
+
+    def test_standard_report_accepts_two_viewport_start_and_terminal_evidence(self) -> None:
+        with tempfile.TemporaryDirectory(prefix="genscaff-standard-") as directory:
+            root = Path(directory)
+            screenshot = root / "screen.png"
+            make_png(screenshot, 320, 180, 7)
+            report = gate.profile_template("standard")
+            report["context"] = {
+                "target_user": "Operations analyst",
+                "primary_task": "Review a failed import",
+                "success_outcome": "Failure details are visible",
+                "primary_cta": "Inspect failed import",
+                "recovery": "Return to the import queue",
+            }
+            for viewport in ("desktop", "mobile"):
+                for state in ("start", "terminal"):
+                    report["evidence"][viewport][state] = {
+                        "artifact": str(screenshot),
+                        "observation": f"{viewport} {state} state is visibly rendered",
+                    }
+            report["checks"] = {key: True for key in report["checks"]}
+            self.assertEqual([], gate.validate(report, root / "report.json"))
+
+    def test_strict_cli_refuses_active_browser_without_operator_flag(self) -> None:
+        with tempfile.TemporaryDirectory(prefix="genscaff-strict-cli-") as directory:
+            root = Path(directory)
+            report_path = root / "report.json"
+            write_json(report_path, gate.profile_template("strict"))
+            completed = subprocess.run(
+                [sys.executable, str(Path(gate.__file__)), "--report", str(report_path)],
+                capture_output=True,
+                text=True,
+                encoding="utf-8",
+                errors="replace",
+                check=False,
             )
+            self.assertNotEqual(0, completed.returncode)
+            self.assertIn("ACTIVE_BROWSER_AUDIT_SKIPPED_UNTRUSTED", completed.stdout)
 
 
 class QualityGateTests(unittest.TestCase):
@@ -1339,6 +1364,15 @@ class QualityGateTests(unittest.TestCase):
             self.report,
             self.report_path,
             _lighthouse_bundle_override=copy.deepcopy(self.lighthouse_bundle),
+        )
+
+    def errors_with_command_execution(self) -> list[str]:
+        return gate.validate(
+            self.report,
+            self.report_path,
+            _live_bundle_override=copy.deepcopy(self.live_bundle),
+            _lighthouse_bundle_override=copy.deepcopy(self.lighthouse_bundle),
+            execute_approved_commands=True,
         )
 
     def assert_has_error(self, needle: str) -> None:
@@ -2160,7 +2194,16 @@ document.querySelector('#schedule-late').onclick=()=>{{const result=document.cre
     def test_recorded_zero_exit_cannot_hide_failing_live_command(self) -> None:
         verifier = self.root / "verify-fixture.cjs"
         verifier.write_text("console.error('forced verifier failure'); process.exit(9);\n", encoding="utf-8")
-        self.assert_has_error("validator-owned re-execution with exit code 9")
+        self.assertFalse(
+            any("validator-owned re-execution" in error for error in self.errors()),
+            "Repository commands must stay inert without explicit approval",
+        )
+        self.assertTrue(
+            any(
+                "validator-owned re-execution with exit code 9" in error
+                for error in self.errors_with_command_execution()
+            )
+        )
 
     def test_visual_target_must_be_substantive(self) -> None:
         target = Path(self.report["visual_target"]["artifact"])
@@ -2182,6 +2225,59 @@ document.querySelector('#schedule-late').onclick=()=>{{const result=document.cre
         )
         self.assertNotIn(str(hidden), self.report["implementation_audit"]["source_roots"])
         self.assert_has_error("Forbidden gradient-function pattern")
+
+    def test_schema4_strict_allows_user_justified_gradient_location(self) -> None:
+        hidden = self.root / "approved-gradient.tsx"
+        hidden.write_text(
+            "export const approved = { background: 'linear-gradient(red, blue)' };",
+            encoding="utf-8",
+        )
+        self.report["schema_version"] = 4
+        self.report["profile"] = "strict"
+        self.report["visual_policy"] = {
+            "mode": "preserve-user-project",
+            "detected_effects": [
+                {"kind": "gradient-function", "location": "approved-gradient.tsx"}
+            ],
+            "allowed_effects": [
+                {
+                    "kind": "gradient-function",
+                    "location": "approved-gradient.tsx",
+                    "source": "user",
+                    "rationale": "The locked user reference explicitly requires this gradient.",
+                }
+            ],
+        }
+        self.report["execution_policy"] = {
+            "mode": "none",
+            "approved_commands": [],
+            "active_browser": "approved",
+        }
+        errors = self.errors()
+        self.assertFalse(
+            any(
+                "Forbidden gradient-function" in error and "approved-gradient.tsx" in error
+                for error in errors
+            ),
+            errors,
+        )
+
+    def test_schema4_strict_rejects_unjustified_visual_effect(self) -> None:
+        self.report["schema_version"] = 4
+        self.report["profile"] = "strict"
+        self.report["visual_policy"] = {
+            "mode": "preserve-user-project",
+            "detected_effects": [
+                {"kind": "gradient-function", "location": "unexplained.css"}
+            ],
+            "allowed_effects": [],
+        }
+        self.report["execution_policy"] = {
+            "mode": "none",
+            "approved_commands": [],
+            "active_browser": "approved",
+        }
+        self.assert_has_error("Strict visual effect lacks user/project justification")
 
     def test_generated_output_scan_prevents_dist_omission(self) -> None:
         generated = self.root / "dist" / "assets" / "app.js"

@@ -81,7 +81,7 @@ System:
 - Components:
 - Imagery or media:
 - Motion:
-- Hard visual exclusions: all gradients, glassmorphism, backdrop blur, glow, orb, and raster-baked equivalents:
+- Visual-effect policy: identify unexplained gradients, glass, blur, glow, orbs, and raster-baked equivalents; record any user/project/locked-reference exceptions:
 
 Copy:
 - Primary message:

@@ -1,14 +1,23 @@
 # Quality Report Schema
 
-Initialize the report with:
+Schema v4 supports Standard and Strict profiles. Initialize one with:
 
 ```bash
-python <skill-dir>/scripts/quality_gate.py --init <report.json>
+python <skill-dir>/scripts/quality_gate.py --init <report.json> --profile standard
+python <skill-dir>/scripts/quality_gate.py --init <report.json> --profile strict
 ```
 
-Do not hand-author a smaller report. The validator uses schema version `3` and treats accessibility, responsive rendering, Lighthouse, and build success as technical floors rather than proof of product quality. Read `aggressive-hard-gate.md` for the manifest contracts.
+Standard requires a compact product contract, desktop/mobile start and terminal screenshots, and console, overflow, focus, and accessibility-basics checks. Strict retains the complete evidence catalog and manifest contracts below. Existing schema v3 reports remain supported as `legacy-strict`.
 
-Initialize the report immediately after the product contract and keep it current during the work. Run the validator while sections are still incomplete to expose missing artifacts and cross-field mismatches early. A strict gate must be completed incrementally; leaving the report until the end turns verification into clerical rework and commonly produces no verdict at all.
+Every schema v4 report records:
+
+- `profile`: `standard` or `strict`
+- `visual_policy`: detected effects and user/project/locked-reference exceptions
+- `execution_policy`: exact command approval and active-browser approval
+
+Do not treat an approval field as proof of trust. The operator must still pass `--execute-approved-commands` before repository code can run and `--allow-active-browser-audit` before Strict browser or Lighthouse execution can start.
+
+Initialize a Strict report immediately after the product contract and keep it current during the work. Run the validator while sections are still incomplete to expose missing artifacts and cross-field mismatches early. Leaving a Strict report until the end turns verification into clerical rework and commonly produces no verdict at all.
 
 ## Evidence Object
 

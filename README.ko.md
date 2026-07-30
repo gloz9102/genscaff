@@ -2,20 +2,19 @@
 
 [English](README.md) | [한국어](README.ko.md)
 
-Genscaff는 브라우저에서 렌더링되는 프런트엔드를 만들고 검토하기 위한 증거 기반 Codex 스킬이다. 제품 고유성, 동작 연속성, 반응형 디자인, 접근성, 런타임 무결성, AI 특유의 획일적인 결과를 걸러내는 품질 기준을 브라우저 및 Lighthouse 자동 검증과 결합한다.
+Genscaff는 브라우저에서 렌더링되는 프런트엔드를 만들고 검토하기 위한 근거 기반 Codex 스킬이다. 사용자와 프로젝트의 디자인 의도를 보존하면서 작업 규모에 맞는 수준으로 제품 고유성, 동작 연속성, 반응형 동작, 접근성 기본 사항, 런타임 무결성을 확인한다.
 
 이 프로젝트는 독립적인 커뮤니티 프로젝트이며 OpenAI와 제휴하거나 OpenAI의 보증을 받지 않았다.
 
-## 적용하는 품질 기준
+## 검증 프로필
 
-- 구현 전 제품 계약과 시각적 목표 정의
-- 제품 도메인 고유 신호와 2개 도메인 치환 테스트
-- 피드백, 완료 상태, 복구 상태까지 포함한 주요 동작의 전체 흐름
-- 화면에 보이는 모든 컨트롤과 사실 주장 목록화
-- 데스크톱 및 모바일 브라우저 증거 수집
-- 검증기가 직접 실행하는 DOM, 계산된 스타일, 리소스, Lighthouse 재검사
-- 그라디언트, 글래스모피즘, 글로 효과, 장식용 오브를 금지하는 엄격한 프로젝트 정책
-- 기계 검증과 분리해 관리하는 독립 리뷰 출처
+| 프로필 | 용도 | 필수 검증 |
+|---|---|---|
+| **Quick** | 사용자가 명시한 작은 문구·컴포넌트·로컬 스타일 변경 | 영향 코드와 필요한 경우 대표 viewport 하나 |
+| **Standard** | 일반적인 생성·개편 작업의 기본값 | 데스크톱/모바일 주요 흐름, 콘솔, 오버플로, 초점, 접근성 기본 사항 |
+| **Strict** | 사용자가 명시한 배포 중요·전체 검증 | 전체 브라우저·컨트롤·콘텐츠·Lighthouse·캡처·독립 리뷰 근거 |
+
+Genscaff는 그라디언트, 글래스, 블러 기술 자체를 금지하지 않는다. 사용자 요구와 기존 프로젝트 디자인이 우선이다. Standard는 근거 없는 장식 상투 표현을 경고하고, Strict는 발견된 효과를 제거하거나 사용자·프로젝트 근거로 정당화하도록 요구한다.
 
 Genscaff는 AI 작성 여부 탐지기나 독창성 인증서가 아니며, 실제 사용자를 대상으로 한 테스트를 대체하지 않는다.
 
@@ -48,14 +47,14 @@ Genscaff는 AI 작성 여부 탐지기나 독창성 인증서가 아니며, 실�
 
 ```powershell
 Copy-Item -Recurse .\skill\genscaff "$env:USERPROFILE\.codex\skills\genscaff"
-npm install --omit=dev --prefix "$env:USERPROFILE\.codex\skills\genscaff\scripts"
+npm ci --omit=dev --prefix "$env:USERPROFILE\.codex\skills\genscaff\scripts"
 ```
 
 ### macOS 또는 Linux
 
 ```shell
 cp -R skill/genscaff "$HOME/.codex/skills/genscaff"
-npm install --omit=dev --prefix "$HOME/.codex/skills/genscaff/scripts"
+npm ci --omit=dev --prefix "$HOME/.codex/skills/genscaff/scripts"
 ```
 
 Codex를 다시 시작하거나 새 작업을 연 뒤 `$genscaff`를 호출하면 된다.
@@ -64,11 +63,26 @@ Codex를 다시 시작하거나 새 작업을 연 뒤 `$genscaff`를 호출하�
 
 ```shell
 python tools/check_skill.py
-npm install --omit=dev --prefix skill/genscaff/scripts
+npm ci --omit=dev --prefix skill/genscaff/scripts
+npm audit --omit=dev --audit-level=moderate --prefix skill/genscaff/scripts
 python skill/genscaff/scripts/test_quality_gate.py
 ```
 
 전체 회귀 테스트는 실제 브라우저와 Lighthouse 프로세스를 실행한다. Chrome을 자동으로 찾지 못하면 `CHROME_PATH`를 설정하라.
+
+## 안전한 검증
+
+`test`, `lint`, `build`라는 이름이 붙어도 저장소 스크립트는 임의 코드다. 검증기는 기본적으로 이를 재실행하지 않는다. 정확한 명령과 연결된 스크립트를 검사하고 저장소를 신뢰한 뒤에만 `--execute-approved-commands`를 사용하라.
+
+Strict 브라우저 검증은 대상 페이지의 JavaScript를 실행하고 네트워크 요청을 만들 수 있다. `--allow-active-browser-audit`가 필요하며 schema v4 보고서에서는 `execution_policy.active_browser=approved`도 설정해야 한다. 신뢰하지 않는 대상에 자격 증명이나 비밀 값을 노출하지 마라.
+
+```shell
+python skill/genscaff/scripts/quality_gate.py --init report.json --profile standard
+python skill/genscaff/scripts/quality_gate.py --init strict-report.json --profile strict
+python skill/genscaff/scripts/quality_gate.py --report strict-report.json --allow-active-browser-audit
+```
+
+기존 schema v3 보고서는 `legacy-strict`로 계속 지원한다.
 
 ## 설치용 압축 파일 빌드
 

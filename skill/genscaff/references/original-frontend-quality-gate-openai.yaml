@@ -1,4 +1,0 @@
-interface:
-  display_name: "Frontend Quality Gate"
-  short_description: "Product-specific UI craft and anti-slop gate"
-  default_prompt: "Use $frontend-quality-gate to turn this request into a product-specific brief, build the primary task end to end, and pass evidence-backed visual, action, anti-slop, and Lighthouse gates."

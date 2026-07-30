@@ -133,7 +133,7 @@ Read `ai-slop-research.md` and `product-specificity-and-action-gate.md` before a
 - No final answer without at least two ordered review-pass records containing findings, changes, and evidence.
 - No final answer for screen, flow, site, or design-board work without a fresh subagent's blind product-specificity, action-continuity, and anti-slop review plus its raw JSON artifact.
 - No claim that a local review JSON proves fresh-subagent provenance. The root agent must separately verify the actual collaboration mailbox task ID, distinct reviewer identity, blind request, supplied capture hashes, raw response, and completed state; otherwise mark `REVIEW_PROVENANCE_UNVERIFIED` and do not report the work complete.
-- No final answer without source fingerprint, capture manifest, desktop/mobile computed-style manifests, desktop/mobile control manifests, independent-review artifact, and command execution manifest from schema v3.
+- In Strict only, no final answer without source fingerprint, capture manifest, desktop/mobile computed-style manifests, desktop/mobile control manifests, independent-review artifact, and command execution manifest. Schema v3 remains legacy-strict; schema v4 records the selected profile and execution policy.
 - No final answer when any mandatory gate is `NOT TESTED`; missing evidence never collapses into PASS.
 - No claim that Lighthouse, build success, responsive rendering, or automated accessibility checks prove product quality or absence of AI slop.
 - No unqualified `PASS`, “AI Slop 아님”, AI non-use, human authorship, universal originality, representative-user success, or certified quality claim. Report only the bounded structural checks and mailbox provenance check actually completed.

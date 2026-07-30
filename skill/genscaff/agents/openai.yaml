@@ -1,4 +1,4 @@
 interface:
   display_name: "Genscaff"
-  short_description: "제품·행동 근거까지 공격적으로 검증하는 프론트엔드 스캐폴딩"
-  default_prompt: "Use $genscaff to build or refine the frontend, remove gradients and glassmorphism, verify product specificity and end-to-end actions with independent evidence, and pass the schema-v3 hard gate."
+  short_description: "프로필별 근거 기반 프론트엔드 생성·검증"
+  default_prompt: "Use $genscaff in Standard mode to build or refine this frontend while preserving user and project design intent and verifying the primary flow on desktop and mobile."
