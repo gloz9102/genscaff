@@ -1,5 +1,7 @@
 # Genscaff
 
+[English](README.md) | [한국어](README.ko.md)
+
 Genscaff is an evidence-driven Codex skill for building and reviewing browser-rendered frontend work. It combines product-specificity, action-continuity, responsive, accessibility, runtime-integrity, and anti-slop gates with validator-owned browser and Lighthouse checks.
 
 This is an independent community project. It is not affiliated with or endorsed by OpenAI.
