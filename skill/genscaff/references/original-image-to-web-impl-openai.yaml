@@ -1,0 +1,4 @@
+interface:
+  display_name: "Image to Web Impl"
+  short_description: "목업 이미지 기반 웹 구현과 품질 검증 워크플로우"
+  default_prompt: "Use $image-to-web-impl to generate a webpage mockup and implement a matching frontend through the frontend quality gate."

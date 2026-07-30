@@ -1,0 +1,29 @@
+name: Bug report
+description: Report a reproducible Genscaff failure or false result
+title: "[Bug]: "
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: Do not disclose security vulnerabilities here. Use a private GitHub Security Advisory.
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem
+      description: What happened and what should have happened?
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Reproduction
+      description: Include commands, relevant report fragments, and a minimal fixture when possible.
+    validations:
+      required: true
+  - type: input
+    id: environment
+    attributes:
+      label: Environment
+      description: OS, Python, Node.js, browser, and commit or release
+    validations:
+      required: true

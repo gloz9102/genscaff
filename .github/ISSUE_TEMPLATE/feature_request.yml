@@ -1,0 +1,19 @@
+name: Feature request
+description: Propose a new workflow, rule, or validator capability
+title: "[Feature]: "
+labels: [enhancement]
+body:
+  - type: textarea
+    id: need
+    attributes:
+      label: User need
+      description: What concrete frontend or validation problem needs solving?
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed behavior
+      description: Describe inputs, outputs, evidence, failure cases, and compatibility impact.
+    validations:
+      required: true
