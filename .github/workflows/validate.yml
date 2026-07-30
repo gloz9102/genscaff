@@ -28,7 +28,11 @@ jobs:
 
       - name: Install audit dependencies
         working-directory: skill/genscaff/scripts
-        run: npm install --omit=dev
+        run: npm ci --omit=dev
+
+      - name: Audit production dependencies
+        working-directory: skill/genscaff/scripts
+        run: npm audit --omit=dev --audit-level=moderate
 
       - name: Install Chromium
         working-directory: skill/genscaff/scripts
