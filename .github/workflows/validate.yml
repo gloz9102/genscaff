@@ -36,7 +36,7 @@ jobs:
 
       - name: Export Chromium path
         working-directory: skill/genscaff/scripts
-        run: echo "CHROME_PATH=$(node -e \"process.stdout.write(require('playwright').chromium.executablePath())\")" >> "$GITHUB_ENV"
+        run: node -e "console.log('CHROME_PATH=' + require('playwright').chromium.executablePath())" >> "$GITHUB_ENV"
 
       - name: Run regression tests
         working-directory: skill/genscaff/scripts
