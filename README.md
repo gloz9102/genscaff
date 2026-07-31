@@ -14,8 +14,6 @@ Genscaff is an evidence-backed Codex skill for building and reviewing browser-re
 
 This is an independent community project. It is not affiliated with or endorsed by OpenAI.
 
-Download the transparent lockup, standalone mark, favicon set, and theme variants from the [brand assets guide](docs/brand-assets.md).
-
 ## Same-brief comparison
 
 Two independent `terra-medium` agents received the same Korean logistics-dashboard brief and implementation constraints. One used Genscaff Standard; the other was explicitly isolated from Genscaff.
