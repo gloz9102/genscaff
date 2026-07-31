@@ -13,3 +13,7 @@ out/
 .DS_Store
 Thumbs.db
 *.tmp
+eval-run/
+eval-runs/
+**/trace.jsonl
+.plugin-smoke-home/

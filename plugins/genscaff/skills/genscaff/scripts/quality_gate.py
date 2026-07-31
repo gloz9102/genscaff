@@ -6,6 +6,7 @@ import hashlib
 import json
 import struct
 import sys
+import zlib
 from pathlib import Path
 
 STATUSES = ("IMPLEMENTED_UNVERIFIED", "VERIFIED_RENDER", "VERIFIED_FLOW", "VERIFIED_STANDARD")
@@ -29,12 +30,33 @@ def template() -> dict:
 
 def png_dimensions(path: Path) -> tuple[int, int] | None:
     try:
-        data = path.read_bytes()[:24]
+        data = path.read_bytes()
     except OSError:
         return None
-    if data[:8] == b"\x89PNG\r\n\x1a\n" and data[12:16] == b"IHDR":
-        return struct.unpack(">II", data[16:24])
-    return None
+    if len(data) < 64 or data[:8] != b"\x89PNG\r\n\x1a\n":
+        return None
+    offset, dimensions, compressed, ended = 8, None, bytearray(), False
+    try:
+        while offset + 12 <= len(data):
+            length = struct.unpack(">I", data[offset:offset + 4])[0]
+            kind = data[offset + 4:offset + 8]
+            value = data[offset + 8:offset + 8 + length]
+            checksum = struct.unpack(">I", data[offset + 8 + length:offset + 12 + length])[0]
+            if len(value) != length or zlib.crc32(kind + value) & 0xffffffff != checksum:
+                return None
+            if kind == b"IHDR":
+                dimensions = struct.unpack(">II", value[:8])
+            elif kind == b"IDAT":
+                compressed.extend(value)
+            elif kind == b"IEND":
+                ended = True
+                break
+            offset += 12 + length
+        if not dimensions or dimensions[0] < 8 or dimensions[1] < 8 or not ended or not zlib.decompress(bytes(compressed)):
+            return None
+    except (struct.error, zlib.error):
+        return None
+    return dimensions
 
 
 def evidence_path(report_path: Path, value: str) -> Path:
@@ -137,6 +159,8 @@ def main() -> int:
             print(f"ERROR: {error}", file=sys.stderr)
         return 1
     print(f"COMPLETION_STATUS={data['completion_status']}")
+    if data["completion_status"] == "IMPLEMENTED_UNVERIFIED":
+        print("STANDARD_BROWSER_EVIDENCE_UNVERIFIED")
     print("GENSCAFF_STANDARD_REPORT_VALID")
     return 0
 

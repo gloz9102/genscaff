@@ -1728,7 +1728,7 @@ def profile_template(profile: str) -> dict[str, Any]:
                 "keyboard": "not_tested",
                 "focus": "not_tested",
                 "automated_accessibility": "not_tested",
-                "assistive_technology": "not_tested",
+                "assistive_technology_user_validation": "not_tested",
             },
             "checks": {
                 "console_errors_clear": False,
@@ -1815,7 +1815,7 @@ def _upgrade_v4_standard(data: dict[str, Any]) -> tuple[dict[str, Any], bool]:
             "keyboard": "static_only" if downgraded else "not_tested",
             "focus": "static_only" if downgraded else "not_tested",
             "automated_accessibility": "not_tested",
-            "assistive_technology": "not_tested",
+            "assistive_technology_user_validation": "not_tested",
         },
     )
     upgraded.setdefault(
@@ -1864,7 +1864,7 @@ def validate_standard(data: dict[str, Any], report_path: Path, errors: list[str]
             "keyboard",
             "focus",
             "automated_accessibility",
-            "assistive_technology",
+            "assistive_technology_user_validation",
         ):
             if dimensions.get(field) not in VERIFICATION_DIMENSION_STATUSES:
                 errors.append(
@@ -2221,6 +2221,11 @@ def main() -> int:
                 max_errors=args.max_errors,
             )
 
+    if args.execute_approved_commands and data.get("schema_version") == SCHEMA_VERSION:
+        return fail(
+            ["legacy schema v3 cannot authorize command execution; migrate the report to schema v4 or v5"],
+            max_errors=args.max_errors,
+        )
     if args.execute_approved_commands and data.get("schema_version") in {
         LEGACY_PROFILE_SCHEMA_VERSION,
         PROFILE_SCHEMA_VERSION,
@@ -2260,20 +2265,23 @@ def main() -> int:
             print("SCHEMA_V4_DOWNGRADED_TO_VERIFIED_FLOW")
         if completion_status == "IMPLEMENTED_UNVERIFIED":
             print("STANDARD_BROWSER_EVIDENCE_UNVERIFIED")
-    print("STRUCTURAL_EVIDENCE_INVARIANTS_VERIFIED")
     if profile in {"strict", "legacy-strict"}:
+        print("STRUCTURAL_EVIDENCE_INVARIANTS_VERIFIED")
         if args.execute_approved_commands:
             print("COMMAND_EXECUTION_VERIFIED")
         else:
             print("COMMAND_EXECUTION_SKIPPED_UNTRUSTED")
             print("STRICT_COMMAND_REEXECUTION_NOT_VERIFIED")
-    print("REVIEW_PROVENANCE_UNVERIFIED")
-    print(
-        "The validator-owned structural and live-browser invariants were reproduced. "
-        "A root agent must separately verify the actual collaboration mailbox; neither "
-        "status proves authorship, originality, representative-user usability, or the "
-        "absence of every possible low-quality pattern."
-    )
+        print("REVIEW_PROVENANCE_UNVERIFIED")
+        print(
+            "The validator-owned structural and live-browser invariants were reproduced. "
+            "A root agent must separately verify the actual collaboration mailbox; neither "
+            "status proves authorship, originality, representative-user usability, or the "
+            "absence of every possible low-quality pattern."
+        )
+    else:
+        print("GENSCAFF_STANDARD_REPORT_VALID")
+        print("Only the declared Standard evidence level was validated; Strict live-browser invariants were not run.")
     return 0
 
 

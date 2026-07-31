@@ -1429,6 +1429,8 @@ class ProfileTests(unittest.TestCase):
             self.assertEqual(0, completed.returncode, completed.stderr)
             self.assertIn("COMPLETION_STATUS=VERIFIED_FLOW", completed.stdout)
             self.assertIn("SCHEMA_V4_DOWNGRADED_TO_VERIFIED_FLOW", completed.stdout)
+            self.assertIn("GENSCAFF_STANDARD_REPORT_VALID", completed.stdout)
+            self.assertNotIn("STRUCTURAL_EVIDENCE_INVARIANTS_VERIFIED", completed.stdout)
 
     def test_verified_standard_fails_without_browser_evidence(self) -> None:
         with tempfile.TemporaryDirectory(prefix="genscaff-standard-") as directory:
@@ -1600,6 +1602,15 @@ class QualityGateTests(unittest.TestCase):
 
     def test_valid_evidence_report_passes(self) -> None:
         self.assertEqual([], self.errors())
+
+    def test_schema3_cli_cannot_authorize_command_execution(self) -> None:
+        write_json(self.report_path, self.report)
+        completed = subprocess.run(
+            [sys.executable, str(Path(gate.__file__)), "--report", str(self.report_path), "--allow-active-browser-audit", "--execute-approved-commands"],
+            capture_output=True, text=True, encoding="utf-8", errors="replace", check=False,
+        )
+        self.assertEqual(1, completed.returncode)
+        self.assertIn("legacy schema v3 cannot authorize command execution", completed.stdout)
 
     def test_catalog_evidence_reference_passes(self) -> None:
         self.report["evidence_catalog"] = {

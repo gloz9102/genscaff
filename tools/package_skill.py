@@ -9,7 +9,7 @@ import sys
 import zipfile
 from pathlib import Path
 
-from check_skill import AUDIT_ROOT, LEGACY_ROOT, PLUGIN_ROOT, REPO_ROOT, files_under, validate
+from check_skill import LEGACY_ROOT, PLUGIN_ROOT, REPO_ROOT, files_under, validate
 
 FIXED_TIME = (2026, 1, 1, 0, 0, 0)
 
@@ -57,6 +57,9 @@ def main() -> int:
             return 1
         built.append((args.output_dir / "genscaff-eval-v2.0.0.zip", [(run, Path("genscaff-eval-v2.0.0"))]))
         (args.output_dir / "genscaff-eval-v2.0.0-summary.json").write_bytes(summary.read_bytes())
+    else:
+        built.append((args.output_dir / "genscaff-eval-v2.0.0.zip", [(REPO_ROOT / "evals", Path("genscaff-eval-v2.0.0/evals"))]))
+        (args.output_dir / "genscaff-eval-v2.0.0-summary.json").write_bytes((REPO_ROOT / "evals" / "baselines" / "v2.0.0.json").read_bytes())
     for output, roots in built:
         print(f"{output.name} {archive(output.resolve(), roots)}")
     return 0

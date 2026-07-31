@@ -1,11 +1,13 @@
 from __future__ import annotations
 
 import json
+import subprocess
 import struct
 import tempfile
 import unittest
 import zlib
 from pathlib import Path
+import sys
 
 import quality_gate as gate
 
@@ -51,6 +53,30 @@ class StandardTests(unittest.TestCase):
             value = self.valid(root)
             value["interaction_cost"]["fabricated_friction"] = ["invented selection"]
             self.assertIn("FABRICATED_FRICTION: fabricated_friction must be empty", gate.validate(value, root / "report.json"))
+
+    def test_unverified_cli_prints_explicit_warning(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            value = gate.template()
+            value["context"] = {key: key for key in value["context"]}
+            report = root / "report.json"
+            report.write_text(json.dumps(value), encoding="utf-8")
+            completed = subprocess.run([sys.executable, str(Path(gate.__file__)), "--report", str(report)], capture_output=True, text=True, check=False)
+            self.assertEqual(0, completed.returncode)
+            self.assertIn("STANDARD_BROWSER_EVIDENCE_UNVERIFIED", completed.stdout)
+
+    def test_tiny_png_cannot_satisfy_evidence(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            value = self.valid(root)
+            tiny = root / "tiny.png"
+            width = height = 1
+            raw = b"\0" + bytes((1, 2, 3))
+            def chunk(kind: bytes, payload: bytes) -> bytes:
+                return struct.pack(">I", len(payload)) + kind + payload + struct.pack(">I", zlib.crc32(kind + payload) & 0xffffffff)
+            tiny.write_bytes(b"\x89PNG\r\n\x1a\n" + chunk(b"IHDR", struct.pack(">IIBBBBB", width, height, 8, 2, 0, 0, 0)) + chunk(b"IDAT", zlib.compress(raw)) + chunk(b"IEND", b""))
+            value["evidence"]["desktop"]["focus"]["artifact"] = str(tiny)
+            self.assertTrue(any("readable PNG" in error for error in gate.validate(value, root / "report.json")))
 
 
 if __name__ == "__main__":
