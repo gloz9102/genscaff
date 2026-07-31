@@ -14,6 +14,16 @@ Genscaff는 브라우저에서 렌더링되는 프런트엔드를 만들고 검�
 
 이 프로젝트는 독립적인 커뮤니티 프로젝트이며 OpenAI와 제휴하거나 OpenAI의 보증을 받지 않습니다.
 
+## 상품 소개 페이지 동일 브리프 비교
+
+서로 독립적인 `terra-medium` 에이전트 2개가 가상의 실내 수경재배기 Mori One을 위한 동일한 반응형 상품 소개 페이지를 제작했습니다. 한쪽은 Genscaff Standard를 사용했고, 다른 쪽은 Genscaff를 읽거나 사용하지 않았습니다.
+
+| Genscaff Standard 적용 | Genscaff 미적용 |
+|---|---|
+| <img src="docs/assets/product-comparison/product-with-genscaff-desktop.png" alt="Genscaff Standard로 제작한 Mori One 상품 소개 페이지" width="720"> | <img src="docs/assets/product-comparison/product-without-genscaff-desktop.png" alt="Genscaff 없이 제작한 Mori One 상품 소개 페이지" width="720"> |
+
+두 결과 모두 포드 키트 선택, 장바구니 추가, 완료 요약, 제거 복구가 동작했으며 확인한 콘솔 오류와 경고는 없었습니다. Genscaff 적용 결과는 브라우저 근거를 바탕으로 모바일 레이아웃 결함 2개를 수정했고, 미적용 결과는 같은 시각 검사를 수정 없이 통과했습니다. 방법, 관찰 결과, 한계를 포함한 데스크톱·모바일·장바구니 상태는 [상세 비교 문서](docs/product-page-comparison.ko.md)에서 확인하실 수 있습니다.
+
 ## 동일 브리프 비교
 
 서로 독립적인 `terra-medium` 에이전트 2개에 같은 한국어 물류 대시보드 브리프와 구현 제약을 제공했습니다. 한쪽은 Genscaff Standard를 사용했고, 다른 쪽은 Genscaff를 읽거나 사용하지 않도록 분리했습니다.

@@ -14,6 +14,16 @@ Genscaff is an evidence-backed Codex skill for building and reviewing browser-re
 
 This is an independent community project. It is not affiliated with or endorsed by OpenAI.
 
+## Product-page same-brief comparison
+
+Two independent `terra-medium` agents built the same responsive product page for the fictional Mori One indoor hydroponic garden. One used Genscaff Standard; the other did not read or use Genscaff.
+
+| Genscaff Standard | Without Genscaff |
+|---|---|
+| <img src="docs/assets/product-comparison/product-with-genscaff-desktop.png" alt="Mori One product page created with Genscaff Standard" width="720"> | <img src="docs/assets/product-comparison/product-without-genscaff-desktop.png" alt="Mori One product page created without Genscaff" width="720"> |
+
+Both results completed pod-kit selection, add-to-cart, terminal summary, and removal recovery with no checked console errors or warnings. The Genscaff run used browser evidence to correct two mobile layout defects; the control run passed the same visual check without a revision. See the [full desktop, mobile, and cart-state comparison](docs/product-page-comparison.md) for the method, observations, and limitations.
+
 ## Same-brief comparison
 
 Two independent `terra-medium` agents received the same Korean logistics-dashboard brief and implementation constraints. One used Genscaff Standard; the other was explicitly isolated from Genscaff.
