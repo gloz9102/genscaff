@@ -17,7 +17,7 @@ Use these rules when implementing new UI, improving an existing screen, polishin
 1. Consistency over creativity: reuse project tokens, components, and patterns before adding new visual values.
 2. Hierarchy is design: title, supporting text, primary action, and secondary actions must be understood within 0.5 seconds.
 3. Spacing is functional: use proximity to group related items and distance to separate unrelated items.
-4. Decoration must have purpose: restrained shadows and animation must communicate state, depth, grouping, or motion. Gradients and glass effects are prohibited by the Genscaff hard gate.
+4. Decoration must have purpose: use shadows, animation, gradients, glass, blur, or glow only when they communicate state, depth, grouping, motion, or an evidenced brand or visual direction. Preserve user-requested, locked-reference, or project-established effects.
 5. Labels must earn their space: badges, eyebrow text, and section titles are omitted unless they orient the user, communicate status/category, or were requested.
 6. Density must serve decision-making: do not put more information on a screen than the user needs for the next action.
 7. Edges and depth must be quiet: borders, rounded corners, and shadows are minimized and used only for structure, state, or elevation.
@@ -55,7 +55,7 @@ Use these rules when implementing new UI, improving an existing screen, polishin
 ## Color
 
 - Use a 60-30-10 balance: neutral backgrounds and surfaces around 60%, text and borders around 30%, brand/accent around 10%.
-- Use white or black as the default page background. Off-white, tinted gray, textured, image, or multi-color backgrounds are variations and need explicit direction. Gradient backgrounds are never allowed in Genscaff output.
+- Use white or black as the default page background. Treat off-white, tinted gray, textured, image, multi-color, and gradient backgrounds as variations; require explicit user direction, a locked reference, or an established project system.
 - Keep accents scarce. One primary accent should carry CTA, active, or selected states; semantic colors should appear only for real info, success, warning, danger, or alert states.
 - Apply the Von Restorff effect: emphasis works when most surrounding UI is neutral. If many colors compete for attention, the screen fails.
 - Avoid pure black on pure white when the project palette offers softer neutrals.
@@ -124,7 +124,7 @@ Every meaningful interface needs more than the happy path:
 - Magic numbers such as `13px`, `22px`, or arbitrary one-off spacing.
 - Raw hex colors in component files when semantic tokens exist.
 - Untokenized color roles, repeated one-off hex values, or colors named by appearance instead of role.
-- Background variation such as off-white, tint, texture, image, or multi-color surface without explicit user confirmation; any gradient, glassmorphism, or backdrop blur regardless of confirmation.
+- Background variation such as off-white, tint, texture, image, or multi-color surface without explicit user confirmation; gradient, glassmorphism, or backdrop blur without user, locked-reference, or project-system evidence and a visible purpose.
 - Too many accent colors competing for attention.
 - Too much information in one viewport, section, card, list row, table cell, or toolbar.
 - Sentences that pack multiple messages, claims, caveats, or instructions together.
@@ -160,7 +160,8 @@ Before finishing, confirm:
 - Spacing uses the 4px scale.
 - Typography uses the allowed scale, line-height, and weight limits.
 - Color usage follows semantic roles and contrast requirements.
-- Page background is white or black by default, or any variation was explicitly requested or confirmed.
+- Page background is white or black by default, or any variation has user direction, a locked reference, or project-system evidence.
+- Any gradient, glass, blur, glow, or similar effect has user, locked-reference, or project-system evidence and a visible purpose.
 - Accent colors are minimized and semantic status colors are used only for their meanings.
 - Color tokens are layered and named by role before component usage.
 - Screen information density is restrained and secondary details are deferred when needed.

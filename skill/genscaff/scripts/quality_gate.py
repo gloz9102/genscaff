@@ -20,6 +20,7 @@ import hard_gate
 SCHEMA_VERSION = 3
 PROFILE_SCHEMA_VERSION = 4
 VALID_PROFILES = {"standard", "strict"}
+STANDARD_COMPLETION_STATUSES = {"IMPLEMENTED_UNVERIFIED", "VERIFIED_STANDARD"}
 MIN_VISUAL_ITERATIONS = 2
 MIN_IMAGE_BYTES = 512
 MIN_IMAGE_WIDTH = 160
@@ -1699,6 +1700,7 @@ def profile_template(profile: str) -> dict[str, Any]:
     else:
         template = {
             "schema_version": PROFILE_SCHEMA_VERSION,
+            "completion_status": "IMPLEMENTED_UNVERIFIED",
             "context": {
                 "target_user": "",
                 "primary_task": "",
@@ -1718,6 +1720,17 @@ def profile_template(profile: str) -> dict[str, Any]:
                 "overflow_clear": False,
                 "keyboard_focus_checked": False,
                 "accessibility_basics_checked": False,
+            },
+            "runtime_checks": {
+                viewport: {
+                    "inner_width": 0,
+                    "scroll_width": 0,
+                    "console_errors": 0,
+                    "console_warnings": 0,
+                    "primary_action_verified": False,
+                    "recovery_verified": False,
+                }
+                for viewport in ("desktop", "mobile")
             },
             "skipped_checks": [],
         }
@@ -1766,6 +1779,12 @@ def validate_profile_envelope(data: dict[str, Any], errors: list[str]) -> None:
 
 
 def validate_standard(data: dict[str, Any], report_path: Path, errors: list[str]) -> None:
+    completion_status = data.get("completion_status", "IMPLEMENTED_UNVERIFIED")
+    if completion_status not in STANDARD_COMPLETION_STATUSES:
+        errors.append(
+            "completion_status must be IMPLEMENTED_UNVERIFIED or VERIFIED_STANDARD"
+        )
+
     context = data.get("context")
     if not isinstance(context, dict):
         errors.append("context must be an object")
@@ -1776,9 +1795,10 @@ def validate_standard(data: dict[str, Any], report_path: Path, errors: list[str]
                 errors.append(f"context.{field} is required for Standard")
 
     evidence = data.get("evidence")
-    if not isinstance(evidence, dict):
-        errors.append("evidence must be an object")
-    else:
+    artifact_fingerprints: list[str] = []
+    if completion_status == "VERIFIED_STANDARD" and not isinstance(evidence, dict):
+        errors.append("evidence must be an object for VERIFIED_STANDARD")
+    elif completion_status == "VERIFIED_STANDARD":
         for viewport in ("desktop", "mobile"):
             states = evidence.get(viewport)
             if not isinstance(states, dict):
@@ -1800,13 +1820,20 @@ def validate_standard(data: dict[str, Any], report_path: Path, errors: list[str]
                         candidate = report_path.resolve().parent / candidate
                     if not candidate.is_file() or candidate.suffix.casefold() not in IMAGE_SUFFIXES:
                         errors.append(f"{path}.artifact must be a local screenshot")
+                    else:
+                        artifact_fingerprints.append(hashlib.sha256(candidate.read_bytes()).hexdigest())
                 if not isinstance(observation, str) or len(observation.strip()) < 8:
                     errors.append(f"{path}.observation must describe visible evidence")
 
+        if len(artifact_fingerprints) == 4 and len(set(artifact_fingerprints)) != 4:
+            errors.append(
+                "VERIFIED_STANDARD evidence artifacts must be distinct across desktop/mobile start/terminal"
+            )
+
     checks = data.get("checks")
-    if not isinstance(checks, dict):
-        errors.append("checks must be an object")
-    else:
+    if completion_status == "VERIFIED_STANDARD" and not isinstance(checks, dict):
+        errors.append("checks must be an object for VERIFIED_STANDARD")
+    elif completion_status == "VERIFIED_STANDARD":
         for field in (
             "console_errors_clear",
             "overflow_clear",
@@ -1815,6 +1842,41 @@ def validate_standard(data: dict[str, Any], report_path: Path, errors: list[str]
         ):
             if checks.get(field) is not True:
                 errors.append(f"checks.{field} must be true")
+
+    if completion_status == "VERIFIED_STANDARD":
+        runtime_checks = data.get("runtime_checks")
+        if not isinstance(runtime_checks, dict):
+            errors.append("runtime_checks must be an object for VERIFIED_STANDARD")
+        else:
+            for viewport in ("desktop", "mobile"):
+                item = runtime_checks.get(viewport)
+                path = f"runtime_checks.{viewport}"
+                if not isinstance(item, dict):
+                    errors.append(f"{path} must be an object")
+                    continue
+                inner_width = item.get("inner_width")
+                scroll_width = item.get("scroll_width")
+                if (
+                    isinstance(inner_width, bool)
+                    or not isinstance(inner_width, int)
+                    or inner_width <= 0
+                ):
+                    errors.append(f"{path}.inner_width must be a positive integer")
+                if (
+                    isinstance(scroll_width, bool)
+                    or not isinstance(scroll_width, int)
+                    or scroll_width <= 0
+                ):
+                    errors.append(f"{path}.scroll_width must be a positive integer")
+                elif isinstance(inner_width, int) and not isinstance(inner_width, bool) and scroll_width > inner_width:
+                    errors.append(f"{path}.scroll_width must not exceed inner_width")
+                for field in ("console_errors", "console_warnings"):
+                    value = item.get(field)
+                    if isinstance(value, bool) or not isinstance(value, int) or value != 0:
+                        errors.append(f"{path}.{field} must be 0 for VERIFIED_STANDARD")
+                for field in ("primary_action_verified", "recovery_verified"):
+                    if item.get(field) is not True:
+                        errors.append(f"{path}.{field} must be true for VERIFIED_STANDARD")
     if not isinstance(data.get("skipped_checks"), list):
         errors.append("skipped_checks must be a list")
 
@@ -2048,6 +2110,11 @@ def main() -> int:
 
     profile = report_profile
     print(f"PROFILE={profile}")
+    if profile == "standard":
+        completion_status = data.get("completion_status", "IMPLEMENTED_UNVERIFIED")
+        print(f"COMPLETION_STATUS={completion_status}")
+        if completion_status == "IMPLEMENTED_UNVERIFIED":
+            print("STANDARD_BROWSER_EVIDENCE_UNVERIFIED")
     print("STRUCTURAL_EVIDENCE_INVARIANTS_VERIFIED")
     if profile in {"strict", "legacy-strict"}:
         if args.execute_approved_commands:

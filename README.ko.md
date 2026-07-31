@@ -14,16 +14,6 @@ Genscaff는 브라우저에서 렌더링되는 프런트엔드를 만들고 검�
 
 이 프로젝트는 독립적인 커뮤니티 프로젝트이며 OpenAI와 제휴하거나 OpenAI의 보증을 받지 않습니다.
 
-## 상품 소개 페이지 동일 브리프 비교
-
-서로 독립적인 `terra-medium` 에이전트 2개가 가상의 실내 수경재배기 Mori One을 위한 동일한 반응형 상품 소개 페이지를 제작했습니다. 한쪽은 Genscaff Standard를 사용했고, 다른 쪽은 Genscaff를 읽거나 사용하지 않았습니다.
-
-| Genscaff Standard 적용 | Genscaff 미적용 |
-|---|---|
-| <img src="docs/assets/product-comparison/product-with-genscaff-desktop.png" alt="Genscaff Standard로 제작한 Mori One 상품 소개 페이지" width="720"> | <img src="docs/assets/product-comparison/product-without-genscaff-desktop.png" alt="Genscaff 없이 제작한 Mori One 상품 소개 페이지" width="720"> |
-
-두 결과 모두 포드 키트 선택, 장바구니 추가, 완료 요약, 제거 복구가 동작했으며 확인한 콘솔 오류와 경고는 없었습니다. Genscaff 적용 결과는 브라우저 근거를 바탕으로 모바일 레이아웃 결함 2개를 수정했고, 미적용 결과는 같은 시각 검사를 수정 없이 통과했습니다. 방법, 관찰 결과, 한계를 포함한 데스크톱·모바일·장바구니 상태는 [상세 비교 문서](docs/product-page-comparison.ko.md)에서 확인하실 수 있습니다.
-
 ## 동일 브리프 비교
 
 서로 독립적인 `terra-medium` 에이전트 2개에 같은 한국어 물류 대시보드 브리프와 구현 제약을 제공했습니다. 한쪽은 Genscaff Standard를 사용했고, 다른 쪽은 Genscaff를 읽거나 사용하지 않도록 분리했습니다.
@@ -43,6 +33,10 @@ Genscaff는 브라우저에서 렌더링되는 프런트엔드를 만들고 검�
 | **Quick** | 사용자가 명시한 작은 문구·컴포넌트·로컬 스타일 변경 | 영향 코드와 필요한 경우 대표 viewport 하나 |
 | **Standard** | 일반적인 생성·개편 작업의 기본값 | 데스크톱/모바일 주요 흐름, 콘솔, 오버플로, 초점, 접근성 기본 사항 |
 | **Strict** | 사용자가 명시한 배포 중요·전체 검증 | 전체 브라우저·컨트롤·콘텐츠·Lighthouse·캡처·독립 리뷰 근거 |
+
+Standard의 광범위한 UI 작업에서는 craft 지침을 읽기 전에 페이지 유형 하나를 선택합니다. 상품·커머스 페이지에는 구성, 제품 스토리텔링, 위계, 브랜드 일관성, 상호작용 완성도를 스크린샷으로 판정하는 결과 게이트를 적용하며 필요한 경우에만 최대 두 번 수정합니다.
+
+Standard 보고서는 `IMPLEMENTED_UNVERIFIED`와 `VERIFIED_STANDARD`를 구분합니다. 검증 완료 상태를 사용하려면 서로 다른 데스크톱·모바일 시작 및 완료 스크린샷, 콘솔 오류·경고 0건, 가로 오버플로 없음, 두 viewport에서 확인된 핵심 동작과 복구가 필요합니다.
 
 Genscaff는 그라디언트, 글래스, 블러 기술 자체를 금지하지 않습니다. 사용자 요구와 기존 프로젝트 디자인이 우선합니다. Standard는 근거 없는 장식 상투 표현을 경고하고, Strict는 발견된 효과를 제거하거나 사용자·프로젝트 근거로 정당화하도록 요구합니다.
 

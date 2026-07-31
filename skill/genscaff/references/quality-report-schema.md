@@ -7,11 +7,19 @@ python <skill-dir>/scripts/quality_gate.py --init <report.json> --profile standa
 python <skill-dir>/scripts/quality_gate.py --init <report.json> --profile strict
 ```
 
-Standard requires a compact product contract, desktop/mobile start and terminal screenshots, and console, overflow, focus, and accessibility-basics checks. Strict retains the complete evidence catalog and manifest contracts below. Existing schema v3 reports remain supported as `legacy-strict`.
+Standard reports declare one completion status:
+
+- `IMPLEMENTED_UNVERIFIED`: the implementation and compact product contract are recorded, but no browser evidence was collected. Validation may pass, but the CLI prints `STANDARD_BROWSER_EVIDENCE_UNVERIFIED`; do not describe this as Standard-verified.
+- `VERIFIED_STANDARD`: requires separate desktop/mobile start and terminal screenshots, zero browser console errors and warnings, no horizontal overflow, and a verified primary action plus recovery in both viewports.
+
+For `VERIFIED_STANDARD`, record compact `runtime_checks.desktop` and `runtime_checks.mobile` objects with `inner_width`, `scroll_width`, `console_errors`, `console_warnings`, `primary_action_verified`, and `recovery_verified`. `scroll_width` must not exceed `inner_width`; both console counts must be zero; both action booleans must be true. The four screenshot artifacts must exist locally and be pixel-distinct.
+
+Strict retains the complete evidence catalog and manifest contracts below. Existing schema v3 reports remain supported as `legacy-strict`.
 
 Every schema v4 report records:
 
 - `profile`: `standard` or `strict`
+- `completion_status`: required for new Standard reports; omitted schema-v4 Standard reports are treated as `IMPLEMENTED_UNVERIFIED` for compatibility
 - `visual_policy`: detected effects and user/project/locked-reference exceptions
 - `execution_policy`: exact command approval and active-browser approval
 

@@ -43,15 +43,23 @@ Use for ordinary frontend generation, redesign, and multi-component changes.
 - Preserve explicit requirements and distinguish repository facts from assumptions.
 - Implement the primary action from trigger to observable result and recovery.
 - Check desktop and mobile, console errors, overflow, keyboard/focus basics, and relevant loading, empty, error, disabled, success, and long-content states.
-- Capture start and terminal evidence at both viewports when the primary flow changed.
+- Capture actual browser evidence of start and terminal states at both viewports when the primary flow changed.
 - Treat Lighthouse as optional unless performance, accessibility, broad layout, or deployment behavior changed.
 - Do not require a subagent, full control inventory, four-state capture sequence, or command re-execution.
+
+Assign one completion status:
+
+- `IMPLEMENTED_UNVERIFIED`: finish implementation without actual browser evidence at desktop and mobile. Do not call this Standard-verified.
+- `VERIFIED_STANDARD`: collect actual desktop and mobile browser evidence; check the applicable primary flow, start and terminal states when changed, console errors, overflow, and primary keyboard/focus basics.
+
+Before broad UI work, select one page type: `product-commerce`, `marketing-landing`, `application-dashboard`, `editorial-content`, or `form-transaction`. Read `references/task-type-craft-router.md`, then read only the routed craft reference in addition to the applicable Standard references below. For `product-commerce`, read `references/product-page-craft.md`. Use this selection to guide composition and task checks; do not replace explicit user or project direction.
 
 Read only:
 
 - `references/product-specificity-and-action-gate.md` for product or flow work
 - `references/ui-craft-guidelines.md` when visual direction is open
 - `references/visual-target-template.md` for new or broad UI
+- `references/task-type-craft-router.md` and its routed craft reference for new or broad UI
 - `references/quality-report-schema.md` only when producing a Standard report
 
 Initialize an optional Standard report with:
@@ -70,7 +78,7 @@ Use only when the user explicitly requests strict verification, or after the use
 - Run two visual passes and a fresh blind subagent review. If a reviewer is unavailable, mark Strict verification incomplete.
 - Verify independent-review provenance separately from machine validation.
 
-Read `references/aggressive-hard-gate.md`, `references/quality-report-schema.md`, and `references/visual-comparison-protocol.md`. Load other references only for a concrete question they answer.
+Read `references/aggressive-hard-gate.md`, `references/quality-report-schema.md`, and `references/visual-comparison-protocol.md`. Treat `aggressive-hard-gate.md` as the only source for Strict-only full control manifests, four-checkpoint capture, fresh-context browser revalidation, independent-review provenance, and full command re-execution. Load other references only for a concrete question they answer.
 
 ```bash
 python <skill-dir>/scripts/quality_gate.py --init <report.json> --profile strict

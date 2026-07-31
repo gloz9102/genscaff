@@ -1264,34 +1264,126 @@ class ProgressiveDisclosureTests(unittest.TestCase):
 
 
 class ProfileTests(unittest.TestCase):
+    @staticmethod
+    def standard_context() -> dict[str, str]:
+        return {
+            "target_user": "Operations analyst",
+            "primary_task": "Review a failed import",
+            "success_outcome": "Failure details are visible",
+            "primary_cta": "Inspect failed import",
+            "recovery": "Return to the import queue",
+        }
+
+    def verified_standard_report(self, root: Path) -> dict[str, object]:
+        report = gate.profile_template("standard")
+        report["completion_status"] = "VERIFIED_STANDARD"
+        report["context"] = self.standard_context()
+        for index, (viewport, state) in enumerate(
+            (("desktop", "start"), ("desktop", "terminal"), ("mobile", "start"), ("mobile", "terminal")),
+            start=1,
+        ):
+            screenshot = root / f"{viewport}-{state}.png"
+            make_png(screenshot, 320 + index, 180, index)
+            report["evidence"][viewport][state] = {
+                "artifact": str(screenshot),
+                "observation": f"{viewport} {state} state visibly shows the import workflow",
+            }
+        report["checks"] = {key: True for key in report["checks"]}
+        report["runtime_checks"] = {
+            viewport: {
+                "inner_width": width,
+                "scroll_width": width,
+                "console_errors": 0,
+                "console_warnings": 0,
+                "primary_action_verified": True,
+                "recovery_verified": True,
+            }
+            for viewport, width in (("desktop", 1440), ("mobile", 390))
+        }
+        return report
+
     def test_standard_template_is_default_and_lightweight(self) -> None:
         report = gate.profile_template("standard")
         self.assertEqual(4, report["schema_version"])
         self.assertEqual("standard", report["profile"])
+        self.assertEqual("IMPLEMENTED_UNVERIFIED", report["completion_status"])
         self.assertNotIn("measurements", report)
         self.assertNotIn("visual_review", report)
 
-    def test_standard_report_accepts_two_viewport_start_and_terminal_evidence(self) -> None:
+    def test_verified_standard_requires_and_accepts_two_viewport_start_and_terminal_evidence(self) -> None:
         with tempfile.TemporaryDirectory(prefix="genscaff-standard-") as directory:
             root = Path(directory)
-            screenshot = root / "screen.png"
-            make_png(screenshot, 320, 180, 7)
-            report = gate.profile_template("standard")
-            report["context"] = {
-                "target_user": "Operations analyst",
-                "primary_task": "Review a failed import",
-                "success_outcome": "Failure details are visible",
-                "primary_cta": "Inspect failed import",
-                "recovery": "Return to the import queue",
-            }
-            for viewport in ("desktop", "mobile"):
-                for state in ("start", "terminal"):
-                    report["evidence"][viewport][state] = {
-                        "artifact": str(screenshot),
-                        "observation": f"{viewport} {state} state is visibly rendered",
-                    }
-            report["checks"] = {key: True for key in report["checks"]}
+            report = self.verified_standard_report(root)
             self.assertEqual([], gate.validate(report, root / "report.json"))
+
+    def test_verified_standard_fails_without_browser_evidence(self) -> None:
+        with tempfile.TemporaryDirectory(prefix="genscaff-standard-") as directory:
+            root = Path(directory)
+            report = gate.profile_template("standard")
+            report["completion_status"] = "VERIFIED_STANDARD"
+            report["context"] = self.standard_context()
+            report["checks"] = {key: True for key in report["checks"]}
+            report["runtime_checks"] = {
+                viewport: {
+                    "inner_width": width,
+                    "scroll_width": width,
+                    "console_errors": 0,
+                    "console_warnings": 0,
+                    "primary_action_verified": True,
+                    "recovery_verified": True,
+                }
+                for viewport, width in (("desktop", 1440), ("mobile", 390))
+            }
+            self.assertIn(
+                "evidence.desktop.start.artifact is required",
+                gate.validate(report, root / "report.json"),
+            )
+
+    def test_unverified_standard_passes_without_browser_evidence(self) -> None:
+        with tempfile.TemporaryDirectory(prefix="genscaff-standard-") as directory:
+            root = Path(directory)
+            report = gate.profile_template("standard")
+            report["context"] = self.standard_context()
+            self.assertEqual([], gate.validate(report, root / "report.json"))
+
+    def test_unverified_standard_cli_reports_browser_gap(self) -> None:
+        with tempfile.TemporaryDirectory(prefix="genscaff-standard-") as directory:
+            root = Path(directory)
+            report_path = root / "report.json"
+            report = gate.profile_template("standard")
+            report["context"] = self.standard_context()
+            write_json(report_path, report)
+            completed = subprocess.run(
+                [sys.executable, str(Path(gate.__file__)), "--report", str(report_path)],
+                capture_output=True,
+                text=True,
+                encoding="utf-8",
+                errors="replace",
+                check=False,
+            )
+            self.assertEqual(0, completed.returncode)
+            self.assertIn("COMPLETION_STATUS=IMPLEMENTED_UNVERIFIED", completed.stdout)
+            self.assertIn("STANDARD_BROWSER_EVIDENCE_UNVERIFIED", completed.stdout)
+
+    def test_verified_standard_rejects_horizontal_overflow(self) -> None:
+        with tempfile.TemporaryDirectory(prefix="genscaff-standard-") as directory:
+            root = Path(directory)
+            report = self.verified_standard_report(root)
+            report["runtime_checks"]["mobile"]["scroll_width"] = 391
+            self.assertIn(
+                "runtime_checks.mobile.scroll_width must not exceed inner_width",
+                gate.validate(report, root / "report.json"),
+            )
+
+    def test_verified_standard_rejects_console_failures(self) -> None:
+        with tempfile.TemporaryDirectory(prefix="genscaff-standard-") as directory:
+            root = Path(directory)
+            report = self.verified_standard_report(root)
+            report["runtime_checks"]["desktop"]["console_warnings"] = 1
+            self.assertIn(
+                "runtime_checks.desktop.console_warnings must be 0 for VERIFIED_STANDARD",
+                gate.validate(report, root / "report.json"),
+            )
 
     def test_strict_cli_refuses_active_browser_without_operator_flag(self) -> None:
         with tempfile.TemporaryDirectory(prefix="genscaff-strict-cli-") as directory:
