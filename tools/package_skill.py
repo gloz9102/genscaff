@@ -44,6 +44,7 @@ def main() -> int:
     if errors:
         print("\n".join(f"ERROR: {error}" for error in errors), file=sys.stderr)
         return 1
+    args.output_dir.mkdir(parents=True, exist_ok=True)
     built = []
     if args.kind in {"all", "plugin"}:
         built.append((args.output_dir / "genscaff-plugin.zip", [(PLUGIN_ROOT, Path("genscaff"))]))
