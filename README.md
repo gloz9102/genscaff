@@ -1,3 +1,11 @@
+<p align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="docs/assets/brand/genscaff-logo-dark.png">
+    <source media="(prefers-color-scheme: light)" srcset="docs/assets/brand/genscaff-logo-light.png">
+    <img src="docs/assets/brand/genscaff-logo-light.png" alt="Genscaff" width="760">
+  </picture>
+</p>
+
 # Genscaff
 
 [English](README.md) | [한국어](README.ko.md)
@@ -5,6 +13,8 @@
 Genscaff is an evidence-backed Codex skill for building and reviewing browser-rendered frontend work. It preserves user and project design intent while checking product specificity, action continuity, responsive behavior, accessibility basics, and runtime integrity at a verification level appropriate to the task.
 
 This is an independent community project. It is not affiliated with or endorsed by OpenAI.
+
+Download the transparent lockup, standalone mark, favicon set, and theme variants from the [brand assets guide](docs/brand-assets.md).
 
 ## Same-brief comparison
 

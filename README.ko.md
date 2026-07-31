@@ -1,3 +1,11 @@
+<p align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="docs/assets/brand/genscaff-logo-dark.png">
+    <source media="(prefers-color-scheme: light)" srcset="docs/assets/brand/genscaff-logo-light.png">
+    <img src="docs/assets/brand/genscaff-logo-light.png" alt="Genscaff" width="760">
+  </picture>
+</p>
+
 # Genscaff
 
 [English](README.md) | [한국어](README.ko.md)
@@ -5,6 +13,8 @@
 Genscaff는 브라우저에서 렌더링되는 프런트엔드를 만들고 검토하기 위한 근거 기반 Codex 스킬이다. 사용자와 프로젝트의 디자인 의도를 보존하면서 작업 규모에 맞는 수준으로 제품 고유성, 동작 연속성, 반응형 동작, 접근성 기본 사항, 런타임 무결성을 확인한다.
 
 이 프로젝트는 독립적인 커뮤니티 프로젝트이며 OpenAI와 제휴하거나 OpenAI의 보증을 받지 않았다.
+
+투명 가로형, 심볼 단독, 파비콘 세트, 테마별 버전은 [브랜드 자산 가이드](docs/brand-assets.ko.md)에서 내려받을 수 있다.
 
 ## 동일 브리프 비교
 
