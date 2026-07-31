@@ -3,66 +3,62 @@ from __future__ import annotations
 
 import argparse
 import hashlib
+import json
 import os
 import sys
 import zipfile
 from pathlib import Path
 
-from check_skill import REPO_ROOT, SKILL_ROOT, distributable_files, validate
+from check_skill import AUDIT_ROOT, LEGACY_ROOT, PLUGIN_ROOT, REPO_ROOT, files_under, validate
+
+FIXED_TIME = (2026, 1, 1, 0, 0, 0)
 
 
-FIXED_ZIP_TIME = (2026, 1, 1, 0, 0, 0)
-
-
-def parse_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(description="Build a reproducible Genscaff skill archive")
-    parser.add_argument(
-        "--output",
-        type=Path,
-        default=REPO_ROOT / "dist" / "genscaff.zip",
-        help="Output ZIP path (default: dist/genscaff.zip)",
-    )
-    return parser.parse_args()
-
-
-def build_archive(output: Path) -> str:
-    errors = validate(allow_generated=True)
-    if errors:
-        raise RuntimeError("skill validation failed:\n" + "\n".join(errors))
-
-    output = output.resolve()
+def archive(output: Path, roots: list[tuple[Path, Path]]) -> str:
     output.parent.mkdir(parents=True, exist_ok=True)
     temporary = output.with_suffix(output.suffix + ".tmp")
     temporary.unlink(missing_ok=True)
-
-    files = distributable_files()
-    with zipfile.ZipFile(temporary, "w", compression=zipfile.ZIP_DEFLATED, compresslevel=9) as archive:
-        for path in files:
-            relative = Path("genscaff") / path.relative_to(SKILL_ROOT)
-            info = zipfile.ZipInfo(relative.as_posix(), FIXED_ZIP_TIME)
+    entries = []
+    for source, prefix in roots:
+        entries.extend((prefix / path.relative_to(source), path) for path in files_under(source))
+    with zipfile.ZipFile(temporary, "w", zipfile.ZIP_DEFLATED, compresslevel=9) as target:
+        for relative, path in sorted(entries, key=lambda pair: pair[0].as_posix()):
+            info = zipfile.ZipInfo(relative.as_posix(), FIXED_TIME)
             info.compress_type = zipfile.ZIP_DEFLATED
             info.create_system = 3
-            info.external_attr = (0o644 & 0xFFFF) << 16
-            archive.writestr(info, path.read_bytes(), compress_type=zipfile.ZIP_DEFLATED, compresslevel=9)
-
+            info.external_attr = (0o644 & 0xffff) << 16
+            target.writestr(info, path.read_bytes(), compress_type=zipfile.ZIP_DEFLATED, compresslevel=9)
     os.replace(temporary, output)
     digest = hashlib.sha256(output.read_bytes()).hexdigest()
-    output.with_suffix(output.suffix + ".sha256").write_text(
-        f"{digest}  {output.name}\n",
-        encoding="utf-8",
-    )
+    output.with_suffix(output.suffix + ".sha256").write_text(f"{digest}  {output.name}\n", encoding="utf-8")
     return digest
 
 
 def main() -> int:
-    args = parse_args()
-    try:
-        digest = build_archive(args.output)
-    except (OSError, RuntimeError, zipfile.BadZipFile) as error:
-        print(f"ERROR: {error}", file=sys.stderr)
+    parser = argparse.ArgumentParser(description="Build reproducible Genscaff v2.0 archives")
+    parser.add_argument("--kind", choices=("all", "plugin", "legacy"), default="all")
+    parser.add_argument("--output-dir", type=Path, default=REPO_ROOT / "dist")
+    parser.add_argument("--eval-run", type=Path)
+    args = parser.parse_args()
+    errors = validate(allow_generated=True)
+    if errors:
+        print("\n".join(f"ERROR: {error}" for error in errors), file=sys.stderr)
         return 1
-    print(f"Wrote {args.output.resolve()}")
-    print(f"SHA256 {digest}")
+    built = []
+    if args.kind in {"all", "plugin"}:
+        built.append((args.output_dir / "genscaff-plugin.zip", [(PLUGIN_ROOT, Path("genscaff"))]))
+    if args.kind in {"all", "legacy"}:
+        built.append((args.output_dir / "genscaff-legacy.zip", [(LEGACY_ROOT, Path("genscaff"))]))
+    if args.eval_run:
+        run = args.eval_run.resolve()
+        summary = run / "summary.json"
+        if not summary.is_file():
+            print("ERROR: eval run must contain summary.json", file=sys.stderr)
+            return 1
+        built.append((args.output_dir / "genscaff-eval-v2.0.0.zip", [(run, Path("genscaff-eval-v2.0.0"))]))
+        (args.output_dir / "genscaff-eval-v2.0.0-summary.json").write_bytes(summary.read_bytes())
+    for output, roots in built:
+        print(f"{output.name} {archive(output.resolve(), roots)}")
     return 0
 
 

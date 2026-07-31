@@ -9,10 +9,12 @@ Record third-party material in `THIRD_PARTY_NOTICES.md` and retain all required 
 ## Development setup
 
 ```shell
-npm ci --omit=dev --prefix skill/genscaff/scripts
-npm audit --omit=dev --audit-level=moderate --prefix skill/genscaff/scripts
 python tools/check_skill.py
-python skill/genscaff/scripts/test_quality_gate.py
+python -m unittest discover -s tools -p "test_*.py"
+python plugins/genscaff/skills/genscaff/scripts/test_quality_gate.py
+npm ci --omit=dev --prefix plugins/genscaff/skills/genscaff-release-audit/scripts
+npm audit --omit=dev --audit-level=moderate --prefix plugins/genscaff/skills/genscaff-release-audit/scripts
+python plugins/genscaff/skills/genscaff-release-audit/scripts/test_quality_gate.py
 ```
 
 The regression suite requires Chrome or Chromium. Set `CHROME_PATH` when automatic discovery fails.
@@ -20,6 +22,7 @@ The regression suite requires Chrome or Chromium. Set `CHROME_PATH` when automat
 ## Pull requests
 
 - Keep `SKILL.md`, `agents/openai.yaml`, references, and scripts consistent.
+- Keep both plugin skills explicitly invoked and keep Node/browser dependencies out of the core skill.
 - Add or update regression coverage for validator behavior changes.
 - Keep Standard practical and Strict evidence-backed; do not weaken either profile solely to make a fixture pass.
 - Remove generated caches, browser profiles, reports, and `node_modules` from commits.

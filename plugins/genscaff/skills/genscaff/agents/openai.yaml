@@ -1,0 +1,7 @@
+interface:
+  display_name: "Genscaff"
+  short_description: "Lightweight frontend craft and verification"
+  default_prompt: "Use $genscaff in Standard mode to build this frontend and verify its primary flow on desktop and mobile."
+  brand_color: "#182C51"
+policy:
+  allow_implicit_invocation: false

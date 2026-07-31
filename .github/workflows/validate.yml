@@ -27,23 +27,30 @@ jobs:
         run: python tools/check_skill.py
 
       - name: Install audit dependencies
-        working-directory: skill/genscaff/scripts
+        working-directory: plugins/genscaff/skills/genscaff-release-audit/scripts
         run: npm ci --omit=dev
 
       - name: Audit production dependencies
-        working-directory: skill/genscaff/scripts
+        working-directory: plugins/genscaff/skills/genscaff-release-audit/scripts
         run: npm audit --omit=dev --audit-level=moderate
 
       - name: Install Chromium
-        working-directory: skill/genscaff/scripts
+        working-directory: plugins/genscaff/skills/genscaff-release-audit/scripts
         run: npx playwright install --with-deps chromium
 
       - name: Export Chromium path
-        working-directory: skill/genscaff/scripts
+        working-directory: plugins/genscaff/skills/genscaff-release-audit/scripts
         run: node -e "console.log('CHROME_PATH=' + require('playwright').chromium.executablePath())" >> "$GITHUB_ENV"
 
-      - name: Run regression tests
-        working-directory: skill/genscaff/scripts
+      - name: Run deterministic repository tests
+        run: python -m unittest discover -s tools -p "test_*.py"
+
+      - name: Run core tests
+        working-directory: plugins/genscaff/skills/genscaff/scripts
+        run: python test_quality_gate.py
+
+      - name: Run release-audit regression tests
+        working-directory: plugins/genscaff/skills/genscaff-release-audit/scripts
         run: python test_quality_gate.py
 
       - name: Build installable archive
@@ -51,7 +58,9 @@ jobs:
 
       - uses: actions/upload-artifact@v4
         with:
-          name: genscaff-skill
+          name: genscaff-v2-packages
           path: |
-            dist/genscaff.zip
-            dist/genscaff.zip.sha256
+            dist/genscaff-plugin.zip
+            dist/genscaff-plugin.zip.sha256
+            dist/genscaff-legacy.zip
+            dist/genscaff-legacy.zip.sha256

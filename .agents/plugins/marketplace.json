@@ -1,0 +1,20 @@
+{
+  "name": "genscaff-public",
+  "interface": {
+      "displayName": "Genscaff Public"
+  },
+  "plugins": [
+    {
+      "name": "genscaff",
+      "source": {
+        "source": "local",
+        "path": "./plugins/genscaff"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "NONE"
+      },
+      "category": "Productivity"
+    }
+  ]
+}

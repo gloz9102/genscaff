@@ -1,0 +1,28 @@
+{
+  "name": "genscaff",
+  "version": "2.0.0",
+  "description": "Evidence-backed frontend craft and release verification for Codex.",
+  "author": {
+    "name": "gloz9102",
+    "url": "https://github.com/gloz9102"
+  },
+  "homepage": "https://github.com/gloz9102/genscaff",
+  "repository": "https://github.com/gloz9102/genscaff",
+  "license": "Apache-2.0",
+  "keywords": ["frontend", "verification", "accessibility", "quality"],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Genscaff",
+    "shortDescription": "Evidence-backed frontend craft and audits.",
+    "longDescription": "Build focused browser interfaces with lightweight craft guidance, then run a separate Strict release audit when exhaustive live evidence is warranted.",
+    "developerName": "gloz9102",
+    "category": "Productivity",
+    "capabilities": ["Interactive", "Write"],
+    "websiteURL": "https://github.com/gloz9102/genscaff",
+    "defaultPrompt": "Use $genscaff to build and verify this frontend.",
+    "brandColor": "#182C51",
+    "composerIcon": "./assets/favicon-256.png",
+    "logo": "./assets/genscaff-logo-light.png",
+    "logoDark": "./assets/genscaff-logo-dark.png"
+  }
+}
