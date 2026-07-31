@@ -15,6 +15,14 @@ the product's actual category, price model, and existing brand evidence.
 | Conversion flow | The primary CTA leads to visible feedback, a purchase/cart result, and a recovery path such as remove, edit, or return. |
 | Mobile CTA proximity | On a phone, price/selection context and the primary CTA remain reachable together without an excessive scroll or unclear state. |
 
+## Friction budget
+
+- Do not add a choice, disabled CTA, confirmation, or empty state merely to create verification evidence.
+- Preserve a safe, conventional default when the brief or project supports one.
+- Disable the initial CTA only when a real required input, safety constraint, or project rule is missing.
+- Record required decisions, actions to primary success, and the default-selection rationale.
+- Report any unsupported extra action as `FABRICATED_FRICTION`; do not hide it behind a polished state treatment.
+
 ## Visual outcome gate
 
 For each item, mark `pass` or `revise` from the captured result and cite the

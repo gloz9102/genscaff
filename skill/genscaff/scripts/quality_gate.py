@@ -18,9 +18,16 @@ import hard_gate
 
 
 SCHEMA_VERSION = 3
-PROFILE_SCHEMA_VERSION = 4
+LEGACY_PROFILE_SCHEMA_VERSION = 4
+PROFILE_SCHEMA_VERSION = 5
 VALID_PROFILES = {"standard", "strict"}
-STANDARD_COMPLETION_STATUSES = {"IMPLEMENTED_UNVERIFIED", "VERIFIED_STANDARD"}
+STANDARD_COMPLETION_STATUSES = {
+    "IMPLEMENTED_UNVERIFIED",
+    "VERIFIED_RENDER",
+    "VERIFIED_FLOW",
+    "VERIFIED_STANDARD",
+}
+VERIFICATION_DIMENSION_STATUSES = {"observed", "static_only", "automated", "not_tested"}
 MIN_VISUAL_ITERATIONS = 2
 MIN_IMAGE_BYTES = 512
 MIN_IMAGE_WIDTH = 160
@@ -1711,14 +1718,21 @@ def profile_template(profile: str) -> dict[str, Any]:
             "evidence": {
                 viewport: {
                     state: {"artifact": "", "observation": ""}
-                    for state in ("start", "terminal")
+                    for state in ("start", "terminal", "focus")
                 }
                 for viewport in ("desktop", "mobile")
+            },
+            "verification_dimensions": {
+                "render": "not_tested",
+                "flow": "not_tested",
+                "keyboard": "not_tested",
+                "focus": "not_tested",
+                "automated_accessibility": "not_tested",
+                "assistive_technology": "not_tested",
             },
             "checks": {
                 "console_errors_clear": False,
                 "overflow_clear": False,
-                "keyboard_focus_checked": False,
                 "accessibility_basics_checked": False,
             },
             "runtime_checks": {
@@ -1729,8 +1743,17 @@ def profile_template(profile: str) -> dict[str, Any]:
                     "console_warnings": 0,
                     "primary_action_verified": False,
                     "recovery_verified": False,
+                    "keyboard_path_verified": False,
+                    "focus_visible_verified": False,
+                    "focus_not_obscured_verified": False,
                 }
                 for viewport in ("desktop", "mobile")
+            },
+            "interaction_cost": {
+                "required_decisions": 0,
+                "actions_to_primary_success": 0,
+                "default_selection_rationale": "",
+                "fabricated_friction": [],
             },
             "skipped_checks": [],
         }
@@ -1778,12 +1801,93 @@ def validate_profile_envelope(data: dict[str, Any], errors: list[str]) -> None:
             errors.append("execution_policy.approved_commands must be empty when mode is none")
 
 
+def _upgrade_v4_standard(data: dict[str, Any]) -> tuple[dict[str, Any], bool]:
+    upgraded = copy.deepcopy(data)
+    downgraded = upgraded.get("completion_status") == "VERIFIED_STANDARD"
+    upgraded["schema_version"] = PROFILE_SCHEMA_VERSION
+    if downgraded:
+        upgraded["completion_status"] = "VERIFIED_FLOW"
+    upgraded.setdefault(
+        "verification_dimensions",
+        {
+            "render": "observed" if downgraded else "not_tested",
+            "flow": "observed" if downgraded else "not_tested",
+            "keyboard": "static_only" if downgraded else "not_tested",
+            "focus": "static_only" if downgraded else "not_tested",
+            "automated_accessibility": "not_tested",
+            "assistive_technology": "not_tested",
+        },
+    )
+    upgraded.setdefault(
+        "interaction_cost",
+        {
+            "required_decisions": 0,
+            "actions_to_primary_success": 0,
+            "default_selection_rationale": "legacy schema v4 report",
+            "fabricated_friction": [],
+        },
+    )
+    for viewport in ("desktop", "mobile"):
+        checks = upgraded.get("runtime_checks", {}).get(viewport)
+        if isinstance(checks, dict):
+            checks.setdefault("keyboard_path_verified", False)
+            checks.setdefault("focus_visible_verified", False)
+            checks.setdefault("focus_not_obscured_verified", False)
+    return upgraded, downgraded
+
+
+def effective_standard_status(data: dict[str, Any]) -> tuple[str, bool]:
+    status = data.get("completion_status", "IMPLEMENTED_UNVERIFIED")
+    downgraded = (
+        data.get("schema_version") == LEGACY_PROFILE_SCHEMA_VERSION
+        and status == "VERIFIED_STANDARD"
+    )
+    return ("VERIFIED_FLOW" if downgraded else status, downgraded)
+
+
 def validate_standard(data: dict[str, Any], report_path: Path, errors: list[str]) -> None:
     completion_status = data.get("completion_status", "IMPLEMENTED_UNVERIFIED")
     if completion_status not in STANDARD_COMPLETION_STATUSES:
         errors.append(
-            "completion_status must be IMPLEMENTED_UNVERIFIED or VERIFIED_STANDARD"
+            "completion_status must be IMPLEMENTED_UNVERIFIED, VERIFIED_RENDER, "
+            "VERIFIED_FLOW, or VERIFIED_STANDARD"
         )
+
+    dimensions = data.get("verification_dimensions")
+    if not isinstance(dimensions, dict):
+        errors.append("verification_dimensions must be an object")
+        dimensions = {}
+    else:
+        for field in (
+            "render",
+            "flow",
+            "keyboard",
+            "focus",
+            "automated_accessibility",
+            "assistive_technology",
+        ):
+            if dimensions.get(field) not in VERIFICATION_DIMENSION_STATUSES:
+                errors.append(
+                    f"verification_dimensions.{field} must be one of "
+                    f"{sorted(VERIFICATION_DIMENSION_STATUSES)}"
+                )
+
+    interaction_cost = data.get("interaction_cost")
+    if not isinstance(interaction_cost, dict):
+        errors.append("interaction_cost must be an object")
+    else:
+        for field in ("required_decisions", "actions_to_primary_success"):
+            value = interaction_cost.get(field)
+            if isinstance(value, bool) or not isinstance(value, int) or value < 0:
+                errors.append(f"interaction_cost.{field} must be a non-negative integer")
+        rationale = interaction_cost.get("default_selection_rationale")
+        if not isinstance(rationale, str):
+            errors.append("interaction_cost.default_selection_rationale must be a string")
+        friction = interaction_cost.get("fabricated_friction")
+        if not isinstance(friction, list) or not all(isinstance(item, str) for item in friction):
+            errors.append("interaction_cost.fabricated_friction must be a string list")
+        elif friction:
+            errors.append("FABRICATED_FRICTION: fabricated_friction must be empty")
 
     context = data.get("context")
     if not isinstance(context, dict):
@@ -1796,15 +1900,23 @@ def validate_standard(data: dict[str, Any], report_path: Path, errors: list[str]
 
     evidence = data.get("evidence")
     artifact_fingerprints: list[str] = []
-    if completion_status == "VERIFIED_STANDARD" and not isinstance(evidence, dict):
-        errors.append("evidence must be an object for VERIFIED_STANDARD")
+    required_states: tuple[str, ...] = ()
+    if completion_status == "VERIFIED_RENDER":
+        required_states = ("start",)
+    elif completion_status == "VERIFIED_FLOW":
+        required_states = ("start", "terminal")
     elif completion_status == "VERIFIED_STANDARD":
+        required_states = ("start", "terminal", "focus")
+
+    if required_states and not isinstance(evidence, dict):
+        errors.append(f"evidence must be an object for {completion_status}")
+    elif required_states:
         for viewport in ("desktop", "mobile"):
             states = evidence.get(viewport)
             if not isinstance(states, dict):
                 errors.append(f"evidence.{viewport} must be an object")
                 continue
-            for state in ("start", "terminal"):
+            for state in required_states:
                 item = states.get(state)
                 path = f"evidence.{viewport}.{state}"
                 if not isinstance(item, dict):
@@ -1825,28 +1937,40 @@ def validate_standard(data: dict[str, Any], report_path: Path, errors: list[str]
                 if not isinstance(observation, str) or len(observation.strip()) < 8:
                     errors.append(f"{path}.observation must describe visible evidence")
 
-        if len(artifact_fingerprints) == 4 and len(set(artifact_fingerprints)) != 4:
+        expected_artifacts = len(required_states) * 2
+        if (
+            len(artifact_fingerprints) == expected_artifacts
+            and len(set(artifact_fingerprints)) != expected_artifacts
+        ):
             errors.append(
-                "VERIFIED_STANDARD evidence artifacts must be distinct across desktop/mobile start/terminal"
+                f"{completion_status} evidence artifacts must be distinct across "
+                f"desktop/mobile {'/'.join(required_states)}"
             )
 
     checks = data.get("checks")
-    if completion_status == "VERIFIED_STANDARD" and not isinstance(checks, dict):
-        errors.append("checks must be an object for VERIFIED_STANDARD")
-    elif completion_status == "VERIFIED_STANDARD":
-        for field in (
-            "console_errors_clear",
-            "overflow_clear",
-            "keyboard_focus_checked",
-            "accessibility_basics_checked",
-        ):
+    if required_states and not isinstance(checks, dict):
+        errors.append(f"checks must be an object for {completion_status}")
+    elif required_states:
+        required_checks = ["console_errors_clear", "overflow_clear"]
+        if completion_status == "VERIFIED_STANDARD":
+            required_checks.append("accessibility_basics_checked")
+        for field in required_checks:
             if checks.get(field) is not True:
                 errors.append(f"checks.{field} must be true")
 
-    if completion_status == "VERIFIED_STANDARD":
+    if completion_status in {"VERIFIED_RENDER", "VERIFIED_FLOW", "VERIFIED_STANDARD"}:
+        if dimensions.get("render") != "observed":
+            errors.append("verification_dimensions.render must be observed")
+        if completion_status in {"VERIFIED_FLOW", "VERIFIED_STANDARD"} and dimensions.get("flow") != "observed":
+            errors.append("verification_dimensions.flow must be observed")
+        if completion_status == "VERIFIED_STANDARD":
+            for field in ("keyboard", "focus"):
+                if dimensions.get(field) != "observed":
+                    errors.append(f"verification_dimensions.{field} must be observed")
+
         runtime_checks = data.get("runtime_checks")
         if not isinstance(runtime_checks, dict):
-            errors.append("runtime_checks must be an object for VERIFIED_STANDARD")
+            errors.append(f"runtime_checks must be an object for {completion_status}")
         else:
             for viewport in ("desktop", "mobile"):
                 item = runtime_checks.get(viewport)
@@ -1873,10 +1997,19 @@ def validate_standard(data: dict[str, Any], report_path: Path, errors: list[str]
                 for field in ("console_errors", "console_warnings"):
                     value = item.get(field)
                     if isinstance(value, bool) or not isinstance(value, int) or value != 0:
-                        errors.append(f"{path}.{field} must be 0 for VERIFIED_STANDARD")
-                for field in ("primary_action_verified", "recovery_verified"):
-                    if item.get(field) is not True:
-                        errors.append(f"{path}.{field} must be true for VERIFIED_STANDARD")
+                        errors.append(f"{path}.{field} must be 0 for {completion_status}")
+                if completion_status in {"VERIFIED_FLOW", "VERIFIED_STANDARD"}:
+                    for field in ("primary_action_verified", "recovery_verified"):
+                        if item.get(field) is not True:
+                            errors.append(f"{path}.{field} must be true for {completion_status}")
+                if completion_status == "VERIFIED_STANDARD":
+                    for field in (
+                        "keyboard_path_verified",
+                        "focus_visible_verified",
+                        "focus_not_obscured_verified",
+                    ):
+                        if item.get(field) is not True:
+                            errors.append(f"{path}.{field} must be true for VERIFIED_STANDARD")
     if not isinstance(data.get("skipped_checks"), list):
         errors.append("skipped_checks must be a list")
 
@@ -1952,19 +2085,26 @@ def validate(
             _lighthouse_bundle_override=_lighthouse_bundle_override,
             execute_approved_commands=execute_approved_commands,
         )
-    if version != PROFILE_SCHEMA_VERSION:
-        return [f"schema_version must be {SCHEMA_VERSION} or {PROFILE_SCHEMA_VERSION}; got {version!r}"]
+    if version not in {LEGACY_PROFILE_SCHEMA_VERSION, PROFILE_SCHEMA_VERSION}:
+        return [
+            f"schema_version must be {SCHEMA_VERSION}, {LEGACY_PROFILE_SCHEMA_VERSION}, "
+            f"or {PROFILE_SCHEMA_VERSION}; got {version!r}"
+        ]
 
     errors: list[str] = []
-    validate_profile_envelope(data, errors)
     profile = data.get("profile")
     if profile == "standard":
-        validate_standard(data, report_path, errors)
+        standard_data = data
+        if version == LEGACY_PROFILE_SCHEMA_VERSION:
+            standard_data, _ = _upgrade_v4_standard(data)
+        validate_profile_envelope(standard_data, errors)
+        validate_standard(standard_data, report_path, errors)
         return errors
     if profile == "strict":
+        validate_profile_envelope(data, errors)
         validate_visual_policy(data, errors)
         strict_data = copy.deepcopy(data)
-        strict_data["schema_version"] = PROFILE_SCHEMA_VERSION
+        strict_data["schema_version"] = version
         checks = strict_data.get("checks")
         visual_policy = data.get("visual_policy")
         allowed_effects = visual_policy.get("allowed_effects") if isinstance(visual_policy, dict) else []
@@ -1976,7 +2116,7 @@ def validate(
             report_path,
             _live_bundle_override=_live_bundle_override,
             _lighthouse_bundle_override=_lighthouse_bundle_override,
-            expected_schema_version=PROFILE_SCHEMA_VERSION,
+            expected_schema_version=version,
             execute_approved_commands=execute_approved_commands,
         )
         errors.extend(apply_visual_exceptions(hard_errors, data))
@@ -2081,7 +2221,10 @@ def main() -> int:
                 max_errors=args.max_errors,
             )
 
-    if args.execute_approved_commands and data.get("schema_version") == PROFILE_SCHEMA_VERSION:
+    if args.execute_approved_commands and data.get("schema_version") in {
+        LEGACY_PROFILE_SCHEMA_VERSION,
+        PROFILE_SCHEMA_VERSION,
+    }:
         policy = data.get("execution_policy")
         if not isinstance(policy, dict) or policy.get("mode") != "approved":
             return fail(
@@ -2111,8 +2254,10 @@ def main() -> int:
     profile = report_profile
     print(f"PROFILE={profile}")
     if profile == "standard":
-        completion_status = data.get("completion_status", "IMPLEMENTED_UNVERIFIED")
+        completion_status, downgraded = effective_standard_status(data)
         print(f"COMPLETION_STATUS={completion_status}")
+        if downgraded:
+            print("SCHEMA_V4_DOWNGRADED_TO_VERIFIED_FLOW")
         if completion_status == "IMPLEMENTED_UNVERIFIED":
             print("STANDARD_BROWSER_EVIDENCE_UNVERIFIED")
     print("STRUCTURAL_EVIDENCE_INVARIANTS_VERIFIED")

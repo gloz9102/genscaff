@@ -47,12 +47,18 @@ Use for ordinary frontend generation, redesign, and multi-component changes.
 - Treat Lighthouse as optional unless performance, accessibility, broad layout, or deployment behavior changed.
 - Do not require a subagent, full control inventory, four-state capture sequence, or command re-execution.
 
-Assign one completion status:
+Assign one completion status. A boolean claim never raises the status without matching artifacts and observations:
 
 - `IMPLEMENTED_UNVERIFIED`: finish implementation without actual browser evidence at desktop and mobile. Do not call this Standard-verified.
-- `VERIFIED_STANDARD`: collect actual desktop and mobile browser evidence; check the applicable primary flow, start and terminal states when changed, console errors, overflow, and primary keyboard/focus basics.
+- `VERIFIED_RENDER`: observe desktop/mobile rendering, console output, and horizontal overflow.
+- `VERIFIED_FLOW`: meet Render and observe the primary action, completion, and recovery.
+- `VERIFIED_STANDARD`: meet Flow, then exercise Tab plus Enter or Space and capture visible, unobscured focus at desktop and mobile.
 
-Before broad UI work, select one page type: `product-commerce`, `marketing-landing`, `application-dashboard`, `editorial-content`, or `form-transaction`. Read `references/task-type-craft-router.md`, then read only the routed craft reference in addition to the applicable Standard references below. For `product-commerce`, read `references/product-page-craft.md`. Use this selection to guide composition and task checks; do not replace explicit user or project direction.
+Record `verification_dimensions` separately for render, flow, keyboard, focus, automated accessibility, and assistive-technology user validation. Use only `observed`, `static_only`, `automated`, or `not_tested`. Do not imply assistive-technology or representative-user validation from Lighthouse, axe, or keyboard checks.
+
+For product and transaction work, minimize actions to primary success. Do not invent a selection step or disabled CTA merely to manufacture a state. Prefer a safe default when one exists, and record `required_decisions`, `actions_to_primary_success`, and `default_selection_rationale`. Classify unsupported extra actions as `FABRICATED_FRICTION`.
+
+Before broad UI work, select one page type: `product-commerce`, `marketing-landing`, `application-dashboard`, `editorial-content`, or `form-transaction`. Read `references/task-type-craft-router.md`, then read only its routed craft reference. Use this selection to guide composition and task checks; do not replace explicit user or project direction.
 
 Read only:
 
@@ -72,20 +78,22 @@ python <skill-dir>/scripts/quality_gate.py --init <report.json> --profile standa
 
 Use only when the user explicitly requests strict verification, or after the user accepts an explained escalation for release-critical work.
 
+In the v2.0 plugin, call `$genscaff-release-audit` instead. `$genscaff strict` remains a one-release compatibility route and must emit a deprecation warning. It is removed in v2.1.
+
 - Run the full source, rendered-output, live-browser, control, content, Lighthouse, capture, and evidence-provenance gate.
 - Exercise `primary-start → primary-feedback → primary-terminal → primary-recovery` on desktop and mobile.
 - Test every visible control and reconcile the runtime inventory with the report.
 - Run two visual passes and a fresh blind subagent review. If a reviewer is unavailable, mark Strict verification incomplete.
 - Verify independent-review provenance separately from machine validation.
 
-Read `references/aggressive-hard-gate.md`, `references/quality-report-schema.md`, and `references/visual-comparison-protocol.md`. Treat `aggressive-hard-gate.md` as the only source for Strict-only full control manifests, four-checkpoint capture, fresh-context browser revalidation, independent-review provenance, and full command re-execution. Load other references only for a concrete question they answer.
+Read `references/aggressive-hard-gate.md`, `references/quality-report-schema.md`, `references/visual-comparison-protocol.md`, and `references/workflow-rubric.md`. Treat `aggressive-hard-gate.md` as the only source for Strict-only full control manifests, four-checkpoint capture, fresh-context browser revalidation, independent-review provenance, and full command re-execution. Do not transitively load historical AI-slop or brand-research documents. Load other references only for a concrete question they answer.
 
 ```bash
 python <skill-dir>/scripts/quality_gate.py --init <report.json> --profile strict
 python <skill-dir>/scripts/quality_gate.py --report <report.json> --allow-active-browser-audit
 ```
 
-Schema v3 reports remain supported as `legacy-strict`.
+Schema v3 and v4 Strict reports remain supported. Schema v4 Standard `VERIFIED_STANDARD` is read as `VERIFIED_FLOW` and reports `SCHEMA_V4_DOWNGRADED_TO_VERIFIED_FLOW`.
 
 ## Input mode
 

@@ -1,0 +1,11 @@
+{
+  "schema_version": 1,
+  "version": "2.0.0",
+  "status": "pending_release_run",
+  "claim": "No visual-superiority claim is made before a completed release evaluation.",
+  "thresholds": {
+    "treatment_hard_gate_pass_rate_min": 0.95,
+    "treatment_disadvantage_max_percentage_points": 5,
+    "treatment_fabricated_friction_max": 0
+  }
+}

@@ -1,6 +1,6 @@
 # Quality Report Schema
 
-Schema v4 supports Standard and Strict profiles. Initialize one with:
+Schema v5 supports Standard and Strict profiles. Initialize one with:
 
 ```bash
 python <skill-dir>/scripts/quality_gate.py --init <report.json> --profile standard
@@ -10,16 +10,20 @@ python <skill-dir>/scripts/quality_gate.py --init <report.json> --profile strict
 Standard reports declare one completion status:
 
 - `IMPLEMENTED_UNVERIFIED`: the implementation and compact product contract are recorded, but no browser evidence was collected. Validation may pass, but the CLI prints `STANDARD_BROWSER_EVIDENCE_UNVERIFIED`; do not describe this as Standard-verified.
-- `VERIFIED_STANDARD`: requires separate desktop/mobile start and terminal screenshots, zero browser console errors and warnings, no horizontal overflow, and a verified primary action plus recovery in both viewports.
+- `VERIFIED_RENDER`: requires distinct desktop/mobile start screenshots, zero browser console errors and warnings, and no horizontal overflow.
+- `VERIFIED_FLOW`: adds distinct terminal screenshots plus a verified primary action and recovery in both viewports.
+- `VERIFIED_STANDARD`: adds actual keyboard activation, visible and unobscured focus, and distinct focus screenshots in both viewports.
 
-For `VERIFIED_STANDARD`, record compact `runtime_checks.desktop` and `runtime_checks.mobile` objects with `inner_width`, `scroll_width`, `console_errors`, `console_warnings`, `primary_action_verified`, and `recovery_verified`. `scroll_width` must not exceed `inner_width`; both console counts must be zero; both action booleans must be true. The four screenshot artifacts must exist locally and be pixel-distinct.
+Record `verification_dimensions` separately for render, flow, keyboard, focus, automated accessibility, and assistive-technology testing. Values are `observed`, `static_only`, `automated`, or `not_tested`; source inspection never counts as observed keyboard or focus behavior. Record `interaction_cost.required_decisions`, `actions_to_primary_success`, `default_selection_rationale`, and an empty `fabricated_friction` list. Any fabricated friction fails validation.
 
-Strict retains the complete evidence catalog and manifest contracts below. Existing schema v3 reports remain supported as `legacy-strict`.
+For `VERIFIED_STANDARD`, `runtime_checks.desktop` and `runtime_checks.mobile` also require `keyboard_path_verified`, `focus_visible_verified`, and `focus_not_obscured_verified`. All required screenshots must exist locally and be pixel-distinct.
 
-Every schema v4 report records:
+Strict retains the complete evidence catalog and manifest contracts below. Existing schema v3 reports remain supported as `legacy-strict`. Schema-v4 Strict reports remain supported. A schema-v4 Standard report claiming `VERIFIED_STANDARD` is accepted only as `VERIFIED_FLOW` and emits `SCHEMA_V4_DOWNGRADED_TO_VERIFIED_FLOW`.
+
+Every schema v5 report records:
 
 - `profile`: `standard` or `strict`
-- `completion_status`: required for new Standard reports; omitted schema-v4 Standard reports are treated as `IMPLEMENTED_UNVERIFIED` for compatibility
+- `completion_status`: required for new Standard reports
 - `visual_policy`: detected effects and user/project/locked-reference exceptions
 - `execution_policy`: exact command approval and active-browser approval
 

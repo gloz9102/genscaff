@@ -1,0 +1,7 @@
+{
+  "schema_version": 1,
+  "hard_gates": ["requirements_complete", "primary_flow_works", "no_fabricated_friction", "no_undisclosed_dead_controls"],
+  "dimensions": ["functional_completeness", "efficiency", "project_fit", "visual_hierarchy", "responsive_accessibility"],
+  "score_range": [0, 5],
+  "human_review_pair_fraction": 0.2
+}

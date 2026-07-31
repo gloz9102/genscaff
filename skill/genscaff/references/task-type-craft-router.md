@@ -7,10 +7,10 @@ the primary CTA and note the secondary concern in the target.
 | Type | Choose when | Read next |
 | --- | --- | --- |
 | Product / commerce | A visitor must understand, configure, compare, or buy an offering. | `product-page-craft.md` |
-| Marketing / landing | The main task is learning a proposition or starting a lead/signup path. | Use `ui-craft-guidelines.md` only. |
-| Application / dashboard | A returning user monitors, edits, or acts on operational data. | Use `ui-craft-guidelines.md` only. |
-| Editorial / content | Reading, scanning, or finding information is the primary job. | Use `ui-craft-guidelines.md` only. |
-| Form / transactional | Completing a bounded submission, booking, payment, or workflow is the primary job. | Use `ui-craft-guidelines.md` only. |
+| Marketing / landing | The main task is learning a proposition or starting a lead/signup path. | `marketing-page-craft.md` |
+| Application / dashboard | A returning user monitors, edits, or acts on operational data. | `dashboard-craft.md` |
+| Editorial / content | Reading, scanning, or finding information is the primary job. | `editorial-craft.md` |
+| Form / transactional | Completing a bounded submission, booking, payment, or workflow is the primary job. | `transaction-craft.md` |
 
 Record the selected type and one-sentence rationale in the visual target. Do
 not load every route's guidance: load only the selected reference. Product-page

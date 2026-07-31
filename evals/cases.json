@@ -1,0 +1,25 @@
+{
+  "schema_version": 1,
+  "cases": [
+    {"id":"product-coffee","type":"product-commerce","pr":true,"brief":"Build a responsive product page for a single-origin coffee subscription with safe defaults, delivery facts, returns, and a working purchase flow."},
+    {"id":"product-headphones","type":"product-commerce","pr":false,"brief":"Build a responsive product page for studio headphones with variant choice, shipping, returns, and recovery from an invalid quantity."},
+    {"id":"product-chair","type":"product-commerce","pr":false,"brief":"Build a responsive product page for an ergonomic chair with price, lead time, warranty, and a working primary purchase action."},
+    {"id":"product-skincare","type":"product-commerce","pr":false,"brief":"Build a responsive product page for a skincare set with usage facts, safe default selection, delivery, returns, and checkout continuity."},
+    {"id":"dashboard-incidents","type":"application-dashboard","pr":true,"brief":"Build an incident operations dashboard that prioritizes exceptions, preserves filters, and supports a recoverable row action."},
+    {"id":"dashboard-inventory","type":"application-dashboard","pr":true,"brief":"Build an inventory dashboard with dense scannable data, low-stock prioritization, persistent filters, and row-level replenishment."},
+    {"id":"dashboard-support","type":"application-dashboard","pr":false,"brief":"Build a support queue dashboard with SLA exceptions, saved filters, assignment actions, and clear empty and error states."},
+    {"id":"dashboard-energy","type":"application-dashboard","pr":false,"brief":"Build an energy monitoring dashboard with anomaly priority, time-range preservation, device actions, and mobile usability."},
+    {"id":"transaction-transfer","type":"form-transaction","pr":true,"brief":"Build a bank transfer flow with input preservation, validation recovery, duplicate-submit prevention, and a completion receipt."},
+    {"id":"transaction-booking","type":"form-transaction","pr":true,"brief":"Build an appointment booking flow with safe defaults, inline error recovery, duplicate-submit prevention, and confirmation details."},
+    {"id":"transaction-return","type":"form-transaction","pr":false,"brief":"Build a merchandise return flow with preserved input, reason validation, retry behavior, and a return receipt."},
+    {"id":"transaction-registration","type":"form-transaction","pr":false,"brief":"Build an event registration flow with accessible validation, preserved data, duplicate-submit prevention, and confirmation."},
+    {"id":"marketing-security","type":"marketing-landing","pr":true,"brief":"Build a security product landing page whose claims have visible evidence and whose CTA continues into a concrete next step."},
+    {"id":"marketing-logistics","type":"marketing-landing","pr":true,"brief":"Build a logistics platform landing page with a coherent section progression, defensible proof, and continuous demo CTA."},
+    {"id":"marketing-climate","type":"marketing-landing","pr":false,"brief":"Build a climate analytics landing page with sourced claims, restrained hierarchy, and a working contact CTA."},
+    {"id":"marketing-education","type":"marketing-landing","pr":false,"brief":"Build an education platform landing page with audience-specific proof, section progression, and a working trial CTA."},
+    {"id":"editorial-policy","type":"editorial-content","pr":true,"brief":"Build a long-form public policy article with readable measure, section navigation, sources, tables, and mobile handling."},
+    {"id":"editorial-research","type":"editorial-content","pr":false,"brief":"Build a research explainer with readable long-form typography, citations, table overflow handling, and section navigation."},
+    {"id":"editorial-travel","type":"editorial-content","pr":false,"brief":"Build a destination guide with useful hierarchy, source notes, long content, maps-as-placeholders, and mobile navigation."},
+    {"id":"editorial-cooking","type":"editorial-content","pr":false,"brief":"Build a technique article with readable steps, source notes, a wide comparison table, and accessible section navigation."}
+  ]
+}

@@ -1279,7 +1279,14 @@ class ProfileTests(unittest.TestCase):
         report["completion_status"] = "VERIFIED_STANDARD"
         report["context"] = self.standard_context()
         for index, (viewport, state) in enumerate(
-            (("desktop", "start"), ("desktop", "terminal"), ("mobile", "start"), ("mobile", "terminal")),
+            (
+                ("desktop", "start"),
+                ("desktop", "terminal"),
+                ("desktop", "focus"),
+                ("mobile", "start"),
+                ("mobile", "terminal"),
+                ("mobile", "focus"),
+            ),
             start=1,
         ):
             screenshot = root / f"{viewport}-{state}.png"
@@ -1289,6 +1296,16 @@ class ProfileTests(unittest.TestCase):
                 "observation": f"{viewport} {state} state visibly shows the import workflow",
             }
         report["checks"] = {key: True for key in report["checks"]}
+        report["verification_dimensions"].update(
+            {"render": "observed", "flow": "observed", "keyboard": "observed", "focus": "observed"}
+        )
+        report["interaction_cost"].update(
+            {
+                "required_decisions": 1,
+                "actions_to_primary_success": 2,
+                "default_selection_rationale": "No safe default exists for the import target.",
+            }
+        )
         report["runtime_checks"] = {
             viewport: {
                 "inner_width": width,
@@ -1297,6 +1314,9 @@ class ProfileTests(unittest.TestCase):
                 "console_warnings": 0,
                 "primary_action_verified": True,
                 "recovery_verified": True,
+                "keyboard_path_verified": True,
+                "focus_visible_verified": True,
+                "focus_not_obscured_verified": True,
             }
             for viewport, width in (("desktop", 1440), ("mobile", 390))
         }
@@ -1304,7 +1324,7 @@ class ProfileTests(unittest.TestCase):
 
     def test_standard_template_is_default_and_lightweight(self) -> None:
         report = gate.profile_template("standard")
-        self.assertEqual(4, report["schema_version"])
+        self.assertEqual(5, report["schema_version"])
         self.assertEqual("standard", report["profile"])
         self.assertEqual("IMPLEMENTED_UNVERIFIED", report["completion_status"])
         self.assertNotIn("measurements", report)
@@ -1315,6 +1335,100 @@ class ProfileTests(unittest.TestCase):
             root = Path(directory)
             report = self.verified_standard_report(root)
             self.assertEqual([], gate.validate(report, root / "report.json"))
+
+    def test_verified_render_and_flow_are_distinct_levels(self) -> None:
+        with tempfile.TemporaryDirectory(prefix="genscaff-standard-") as directory:
+            root = Path(directory)
+            report = self.verified_standard_report(root)
+            report["completion_status"] = "VERIFIED_RENDER"
+            report["evidence"] = {
+                viewport: {"start": states["start"]}
+                for viewport, states in report["evidence"].items()
+            }
+            report["verification_dimensions"].update(
+                {"flow": "not_tested", "keyboard": "not_tested", "focus": "not_tested"}
+            )
+            self.assertEqual([], gate.validate(report, root / "report.json"))
+
+            flow = self.verified_standard_report(root)
+            flow["completion_status"] = "VERIFIED_FLOW"
+            flow["evidence"] = {
+                viewport: {key: states[key] for key in ("start", "terminal")}
+                for viewport, states in flow["evidence"].items()
+            }
+            flow["verification_dimensions"].update(
+                {"keyboard": "static_only", "focus": "static_only"}
+            )
+            self.assertEqual([], gate.validate(flow, root / "report.json"))
+
+    def test_verified_standard_rejects_boolean_only_keyboard_claim(self) -> None:
+        with tempfile.TemporaryDirectory(prefix="genscaff-standard-") as directory:
+            root = Path(directory)
+            report = self.verified_standard_report(root)
+            report["verification_dimensions"]["keyboard"] = "static_only"
+            report["runtime_checks"]["desktop"]["keyboard_path_verified"] = False
+            errors = gate.validate(report, root / "report.json")
+            self.assertIn("verification_dimensions.keyboard must be observed", errors)
+            self.assertIn(
+                "runtime_checks.desktop.keyboard_path_verified must be true for VERIFIED_STANDARD",
+                errors,
+            )
+
+    def test_verified_standard_requires_distinct_focus_evidence(self) -> None:
+        with tempfile.TemporaryDirectory(prefix="genscaff-standard-") as directory:
+            root = Path(directory)
+            report = self.verified_standard_report(root)
+            report["evidence"]["mobile"]["focus"] = copy.deepcopy(
+                report["evidence"]["desktop"]["focus"]
+            )
+            self.assertTrue(
+                any("evidence artifacts must be distinct" in error for error in gate.validate(report, root / "report.json"))
+            )
+
+    def test_fabricated_friction_fails(self) -> None:
+        with tempfile.TemporaryDirectory(prefix="genscaff-standard-") as directory:
+            root = Path(directory)
+            report = gate.profile_template("standard")
+            report["context"] = self.standard_context()
+            report["interaction_cost"]["fabricated_friction"] = [
+                "Disabled the primary CTA only to demonstrate an unselected state."
+            ]
+            self.assertIn(
+                "FABRICATED_FRICTION: fabricated_friction must be empty",
+                gate.validate(report, root / "report.json"),
+            )
+
+    def test_schema4_verified_standard_downgrades_to_flow(self) -> None:
+        with tempfile.TemporaryDirectory(prefix="genscaff-standard-v4-") as directory:
+            root = Path(directory)
+            report = self.verified_standard_report(root)
+            report["schema_version"] = 4
+            report["completion_status"] = "VERIFIED_STANDARD"
+            for viewport in ("desktop", "mobile"):
+                report["evidence"][viewport].pop("focus", None)
+            report.pop("verification_dimensions", None)
+            report.pop("interaction_cost", None)
+            for viewport in ("desktop", "mobile"):
+                for field in (
+                    "keyboard_path_verified",
+                    "focus_visible_verified",
+                    "focus_not_obscured_verified",
+                ):
+                    report["runtime_checks"][viewport].pop(field, None)
+            report["checks"]["keyboard_focus_checked"] = True
+            report_path = root / "report.json"
+            write_json(report_path, report)
+            completed = subprocess.run(
+                [sys.executable, str(Path(gate.__file__)), "--report", str(report_path)],
+                capture_output=True,
+                text=True,
+                encoding="utf-8",
+                errors="replace",
+                check=False,
+            )
+            self.assertEqual(0, completed.returncode, completed.stderr)
+            self.assertIn("COMPLETION_STATUS=VERIFIED_FLOW", completed.stdout)
+            self.assertIn("SCHEMA_V4_DOWNGRADED_TO_VERIFIED_FLOW", completed.stdout)
 
     def test_verified_standard_fails_without_browser_evidence(self) -> None:
         with tempfile.TemporaryDirectory(prefix="genscaff-standard-") as directory:
@@ -1331,6 +1445,9 @@ class ProfileTests(unittest.TestCase):
                     "console_warnings": 0,
                     "primary_action_verified": True,
                     "recovery_verified": True,
+                    "keyboard_path_verified": True,
+                    "focus_visible_verified": True,
+                    "focus_not_obscured_verified": True,
                 }
                 for viewport, width in (("desktop", 1440), ("mobile", 390))
             }
