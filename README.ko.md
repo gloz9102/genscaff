@@ -16,15 +16,15 @@ Genscaff는 브라우저에서 렌더링되는 프런트엔드를 만들고 검�
 
 ## 동일 브리프 비교
 
-서로 독립적인 `terra-medium` 에이전트 2개에 같은 한국어 물류 대시보드 브리프와 구현 제약을 제공했습니다. 한쪽은 Genscaff Standard를 사용했고, 다른 쪽은 Genscaff를 읽거나 사용하지 않도록 분리했습니다.
+서로 독립적인 `terra-medium` 에이전트 2개에 같은 한국어 상품 소개 페이지 브리프와 구현 제약을 제공했습니다. 한쪽은 현재 Genscaff Standard의 상품 페이지 워크플로를 사용했고, 다른 쪽은 Genscaff를 읽거나 사용하지 않도록 분리했습니다.
 
 | Genscaff Standard 적용 | Genscaff 미적용 |
 |---|---|
-| <img src="docs/assets/comparison/genscaff-with.png" alt="Genscaff Standard로 만든 작업 중심 물류 대시보드" width="720"> | <img src="docs/assets/comparison/genscaff-without.png" alt="Genscaff 없이 만든 일반적인 물류 대시보드" width="720"> |
+| <img src="docs/assets/slowdrop-comparison/genscaff-with.png" alt="Genscaff Standard로 만든 Slowdrop Mini 상품 소개 페이지" width="720"> | <img src="docs/assets/slowdrop-comparison/genscaff-without.png" alt="Genscaff 없이 만든 Slowdrop Mini 상품 소개 페이지" width="720"> |
 
-이 샘플에서 Genscaff 적용 결과는 위험 건 선택부터 조치까지의 흐름이 더 직접적이었고 별도 검증 산출물을 생성했습니다. 미적용 결과는 KPI와 사이드바 중심의 완성도 높은 일반 대시보드를 만들었습니다. 두 결과 모두 반응형이었고 요청·취소 상호작용이 동작했으며 확인한 흐름에서 콘솔 오류와 경고가 없었습니다.
+두 결과 모두 제품 특성이 드러나는 완성도 높은 페이지를 만들었습니다. Genscaff 적용 결과는 미선택 상태, 구매 판단 순서, 배송·반품 조건, 담기 이후의 복구 동작을 더 명시적으로 구성했습니다. 미적용 결과는 첫 화면의 편집 디자인 인상이 더 강했고 기본 선택된 구매 행동까지 더 짧게 연결했습니다. 두 결과 모두 반응형이었고 키트·가격 갱신과 담기·제거 복구가 동작했으며 확인한 흐름에서 콘솔 오류와 경고가 없었습니다.
 
-단일 정성 A/B 샘플이므로 모든 미적용 실행보다 우수하다는 증거는 아닙니다. 브리프, 통제 조건, 데스크톱·모바일·완료 상태 캡처, 관찰 결과와 한계는 [상세 비교 문서](docs/comparison.ko.md)에서 확인하실 수 있습니다.
+단일 정성 A/B 샘플이므로 모든 미적용 실행보다 우수하다는 증거는 아닙니다. 브리프, 통제 조건, 데스크톱·모바일·완료 상태 캡처, 관찰 결과와 한계는 [상품 페이지 상세 비교 문서](docs/slowdrop-comparison.ko.md)에서 확인하실 수 있습니다. [기존 물류 대시보드 비교](docs/comparison.ko.md)는 별도 샘플로 유지합니다.
 
 ## 검증 프로필
 

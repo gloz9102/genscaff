@@ -16,15 +16,15 @@ This is an independent community project. It is not affiliated with or endorsed 
 
 ## Same-brief comparison
 
-Two independent `terra-medium` agents received the same Korean logistics-dashboard brief and implementation constraints. One used Genscaff Standard; the other was explicitly isolated from Genscaff.
+Two independent `terra-medium` agents received the same Korean product-page brief and implementation constraints. One used the current Genscaff Standard product-page workflow; the other was explicitly isolated from Genscaff.
 
 | Genscaff Standard | Without Genscaff |
 |---|---|
-| <img src="docs/assets/comparison/genscaff-with.png" alt="Task-focused logistics dashboard created with Genscaff Standard" width="720"> | <img src="docs/assets/comparison/genscaff-without.png" alt="Conventional logistics dashboard created without Genscaff" width="720"> |
+| <img src="docs/assets/slowdrop-comparison/genscaff-with.png" alt="Slowdrop Mini product page created with Genscaff Standard" width="720"> | <img src="docs/assets/slowdrop-comparison/genscaff-without.png" alt="Slowdrop Mini product page created without Genscaff" width="720"> |
 
-In this sample, the Genscaff run produced a more direct risk-selection-to-action flow and additional verification artifacts. The control run produced a polished, conventional KPI-and-sidebar dashboard. Both were responsive, completed the request/cancel interaction, and had no console errors or warnings during the checked flow.
+Both runs produced polished, product-specific pages. The Genscaff run made the unselected state, decision sequence, shipping/returns context, and post-add recovery more explicit; the control run delivered a stronger immediate editorial impression and a shorter path to its preselected purchase action. Both were responsive, updated the selected kit and price, completed add/remove recovery, and had no console errors or warnings during the checked flows.
 
-This is a single qualitative A/B sample, not proof that the skill will outperform every unassisted run. See the [full desktop, mobile, and terminal-state comparison](docs/comparison.md) for the brief, controls, observations, and limitations.
+This is a single qualitative A/B sample, not proof that the skill will outperform every unassisted run. See the [full desktop, mobile, and terminal-state product-page comparison](docs/slowdrop-comparison.md) for the brief, controls, observations, and limitations. The [earlier logistics-dashboard comparison](docs/comparison.md) remains available as a separate sample.
 
 ## Verification profiles
 
