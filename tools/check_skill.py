@@ -77,7 +77,7 @@ def validate(*, allow_generated: bool = False) -> list[str]:
     except (OSError, json.JSONDecodeError) as error:
         errors.append(f"invalid plugin metadata: {error}")
     else:
-        expected = {"name":"genscaff", "version":"2.0.0", "license":"Apache-2.0", "repository":"https://github.com/gloz9102/genscaff"}
+        expected = {"name":"genscaff", "version":"2.0.1", "license":"Apache-2.0", "repository":"https://github.com/gloz9102/genscaff"}
         for key, value in expected.items():
             if manifest.get(key) != value:
                 errors.append(f"plugin manifest {key} must be {value}")
@@ -88,6 +88,8 @@ def validate(*, allow_generated: bool = False) -> list[str]:
         entries = marketplace.get("plugins", [])
         if len(entries) != 1 or entries[0].get("source", {}).get("path") != "./plugins/genscaff":
             errors.append("marketplace plugin path must be ./plugins/genscaff")
+        elif entries[0].get("policy") != {"installation": "AVAILABLE", "authentication": "ON_INSTALL"}:
+            errors.append("marketplace plugin policy must be AVAILABLE with ON_INSTALL authentication")
         for relative in ("composerIcon", "logo", "logoDark"):
             value = manifest.get("interface", {}).get(relative)
             if not value or not (PLUGIN_ROOT / value).is_file():

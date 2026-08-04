@@ -16,6 +16,15 @@ class PluginTests(unittest.TestCase):
         self.assertIn("explicitly invokes `$genscaff-release-audit`", audit)
         self.assertIn("deprecated", core)
 
+    def test_loading_contract_is_routed_by_both_skills(self) -> None:
+        for root in (check_skill.CORE_ROOT, check_skill.AUDIT_ROOT):
+            skill = (root / "SKILL.md").read_text(encoding="utf-8")
+            contract = (root / "references" / "loading-ux.md").read_text(encoding="utf-8")
+            self.assertIn("references/loading-ux.md", skill)
+            self.assertIn("A spinner is not a loading strategy", contract)
+            self.assertIn("Do not show a fabricated percentage", contract)
+            self.assertIn("Do not use optimistic completion for payment", contract)
+
 
 if __name__ == "__main__":
     unittest.main()

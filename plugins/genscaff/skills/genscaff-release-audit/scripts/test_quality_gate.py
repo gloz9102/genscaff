@@ -2364,6 +2364,24 @@ document.querySelector('#schedule-late').onclick=()=>{{const result=document.cre
         self.report["context"]["task_traits"] = ["async"]
         self.assert_has_error("require state_coverage.error to be implemented")
         self.assert_has_error("require state_coverage.loading to be implemented")
+        self.assert_has_error("require loading_experience.applicable=true")
+        self.assert_has_error("require at least one loading boundary")
+
+    def test_loading_boundary_requires_recovery_and_control(self) -> None:
+        self.report["context"]["task_traits"] = ["async"]
+        self.report["loading_experience"] = {
+            "applicable": True,
+            "boundaries": [{
+                "trigger": "Open comparison route",
+                "affected_surface": "Comparison table",
+                "wait_avoidance": "Keep prior comparison while refreshing",
+                "stale_data_policy": "Label prior data as refreshing",
+                "failure_recovery": "",
+                "user_control": "Retry from the affected table",
+                "evidence": "Observed refresh state",
+            }],
+        }
+        self.assert_has_error("loading_experience.boundaries[0].failure_recovery must be non-empty")
 
     def test_iteration_screenshots_must_be_chronological(self) -> None:
         path = Path(self.report["implementation_audit"]["capture_manifest"])

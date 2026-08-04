@@ -24,6 +24,11 @@ $genscaff-release-audit   # Strict: 배포 중요 전체 감사
 $genscaff strict          # v2.0 호환 경로, v2.1에서 제거
 ```
 
+## v2.0.1 주요 변경
+
+- 사용자에게 보이는 모든 비동기 경계에는 대기 제거 우선 로딩 계약을 적용합니다. 사용할 수 있는 맥락을 보존하고, 정직한 상태와 복구 수단을 제공하며, 스피너를 완료 근거로 대신하지 않고 관찰한 경계를 기록합니다.
+- Standard·Strict 보고서는 불완전한 로딩 경계 기록을 거부합니다. Strict의 `async`·`generation` 작업은 로딩 경험을 선언하고 근거를 남겨야 합니다.
+
 ## v2.0 주요 변경
 
 - schema v5가 `IMPLEMENTED_UNVERIFIED`, `VERIFIED_RENDER`, `VERIFIED_FLOW`, `VERIFIED_STANDARD`를 구분합니다.

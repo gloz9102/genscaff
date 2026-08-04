@@ -54,6 +54,28 @@ class StandardTests(unittest.TestCase):
             value["interaction_cost"]["fabricated_friction"] = ["invented selection"]
             self.assertIn("FABRICATED_FRICTION: fabricated_friction must be empty", gate.validate(value, root / "report.json"))
 
+    def test_async_boundary_requires_complete_loading_contract(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            value = self.valid(root)
+            value["loading_experience"] = {"applicable": True, "boundaries": []}
+            errors = gate.validate(value, root / "report.json")
+            self.assertIn(
+                "loading_experience.boundaries must describe every asynchronous boundary",
+                errors,
+            )
+
+            value["loading_experience"]["boundaries"] = [{
+                "trigger": "Open the account route",
+                "affected_surface": "Balance panel",
+                "wait_avoidance": "Retain cached balance while refreshing",
+                "stale_data_policy": "Show refreshing and last-updated time",
+                "failure_recovery": "Keep prior balance and expose retry",
+                "user_control": "Retry remains next to the failure",
+                "evidence": "Observed refresh and failed-refresh recovery",
+            }]
+            self.assertEqual([], gate.validate(value, root / "report.json"))
+
     def test_unverified_cli_prints_explicit_warning(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)

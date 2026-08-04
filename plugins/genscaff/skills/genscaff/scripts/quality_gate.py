@@ -12,6 +12,15 @@ from pathlib import Path
 STATUSES = ("IMPLEMENTED_UNVERIFIED", "VERIFIED_RENDER", "VERIFIED_FLOW", "VERIFIED_STANDARD")
 DIMENSION_VALUES = {"observed", "static_only", "automated", "not_tested"}
 DIMENSIONS = ("render", "flow", "keyboard", "focus", "automated_accessibility", "assistive_technology_user_validation")
+LOADING_BOUNDARY_FIELDS = (
+    "trigger",
+    "affected_surface",
+    "wait_avoidance",
+    "stale_data_policy",
+    "failure_recovery",
+    "user_control",
+    "evidence",
+)
 
 
 def template() -> dict:
@@ -24,6 +33,7 @@ def template() -> dict:
         "evidence": {viewport: {state: {"artifact": "", "observation": ""} for state in ("start", "terminal", "focus")} for viewport in ("desktop", "mobile")},
         "runtime_checks": {viewport: {"inner_width": 0, "scroll_width": 0, "console_errors": 0, "console_warnings": 0, "primary_action_verified": False, "recovery_verified": False, "keyboard_path_verified": False, "focus_visible_verified": False, "focus_not_obscured_verified": False} for viewport in ("desktop", "mobile")},
         "interaction_cost": {"required_decisions": 0, "actions_to_primary_success": 0, "default_selection_rationale": "", "fabricated_friction": []},
+        "loading_experience": {"applicable": False, "boundaries": []},
         "notes": [],
     }
 
@@ -93,6 +103,29 @@ def validate(data: dict, report_path: Path) -> list[str]:
         errors.append("interaction_cost.fabricated_friction must be a list")
     elif friction:
         errors.append("FABRICATED_FRICTION: fabricated_friction must be empty")
+
+    loading = data.get("loading_experience")
+    if not isinstance(loading, dict):
+        errors.append("loading_experience must be an object")
+    else:
+        applicable = loading.get("applicable")
+        boundaries = loading.get("boundaries")
+        if not isinstance(applicable, bool):
+            errors.append("loading_experience.applicable must be a boolean")
+        if not isinstance(boundaries, list):
+            errors.append("loading_experience.boundaries must be a list")
+        elif applicable and not boundaries:
+            errors.append("loading_experience.boundaries must describe every asynchronous boundary")
+        elif applicable:
+            for index, boundary in enumerate(boundaries):
+                if not isinstance(boundary, dict):
+                    errors.append(f"loading_experience.boundaries[{index}] must be an object")
+                    continue
+                for key in LOADING_BOUNDARY_FIELDS:
+                    if not isinstance(boundary.get(key), str) or not boundary.get(key, "").strip():
+                        errors.append(f"loading_experience.boundaries[{index}].{key} must be non-empty")
+        elif boundaries:
+            errors.append("loading_experience.boundaries must be empty when loading is not applicable")
 
     level = STATUSES.index(status)
     required_states = () if level == 0 else (("start",) if level == 1 else (("start", "terminal") if level == 2 else ("start", "terminal", "focus")))

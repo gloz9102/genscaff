@@ -24,6 +24,11 @@ $genscaff-release-audit   # Strict: release-critical exhaustive audit
 $genscaff strict          # v2.0 compatibility route; removed in v2.1
 ```
 
+## What changed in v2.0.1
+
+- Any user-visible asynchronous boundary must follow a wait-removal-first loading contract, preserve usable context, expose honest status and recovery, and document the observed boundary instead of treating a spinner as completion.
+- Standard and Strict reports reject incomplete loading-boundary records; `async` and `generation` Strict work must declare and evidence the loading experience.
+
 ## What changed in v2.0
 
 - Schema v5 distinguishes `IMPLEMENTED_UNVERIFIED`, `VERIFIED_RENDER`, `VERIFIED_FLOW`, and `VERIFIED_STANDARD`.

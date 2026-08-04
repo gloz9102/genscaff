@@ -2106,6 +2106,42 @@ def validate_action_and_state_evidence(
     for state in sorted(required - implemented):
         errors.append(f"context.task_traits require state_coverage.{state} to be implemented")
 
+    loading = get_path(data, "loading_experience")
+    loading_required = bool({normalized(trait) for trait in traits or []} & {"async", "generation"})
+    if not isinstance(loading, dict):
+        if loading_required:
+            errors.append("async and generation traits require loading_experience")
+        return
+    applicable = loading.get("applicable")
+    boundaries = loading.get("boundaries")
+    if not isinstance(applicable, bool):
+        errors.append("loading_experience.applicable must be a boolean")
+    if not isinstance(boundaries, list):
+        errors.append("loading_experience.boundaries must be a list")
+        return
+    if loading_required and applicable is not True:
+        errors.append("async and generation traits require loading_experience.applicable=true")
+    if loading_required and not boundaries:
+        errors.append("async and generation traits require at least one loading boundary")
+    if applicable is False and boundaries:
+        errors.append("loading_experience.boundaries must be empty when loading is not applicable")
+    for index, boundary in enumerate(boundaries):
+        path = f"loading_experience.boundaries[{index}]"
+        if not isinstance(boundary, dict):
+            errors.append(f"{path} must be an object")
+            continue
+        for key in (
+            "trigger",
+            "affected_surface",
+            "wait_avoidance",
+            "stale_data_policy",
+            "failure_recovery",
+            "user_control",
+            "evidence",
+        ):
+            if not isinstance(boundary.get(key), str) or not boundary.get(key, "").strip():
+                errors.append(f"{path}.{key} must be non-empty")
+
 
 def validate_substitution(data: dict[str, Any], errors: list[str]) -> None:
     comparisons = get_path(data, "product_specificity.substitution_test.comparisons", [])

@@ -18,15 +18,16 @@ Run only when the user explicitly invokes `$genscaff-release-audit`, or through 
 
 ## Audit
 
-Read `references/aggressive-hard-gate.md`, `references/quality-report-schema.md`, `references/visual-comparison-protocol.md`, and `references/workflow-rubric.md`. Load other references only for a concrete question. Do not transitively load historical AI-slop or brand-research documents.
+Read `references/aggressive-hard-gate.md`, `references/quality-report-schema.md`, `references/visual-comparison-protocol.md`, and `references/workflow-rubric.md`. If the audited flow reads or writes remote data, streams, lazy-loads media, waits on navigation, or starts a background job, also read and enforce `references/loading-ux.md`. Load other references only for a concrete question. Do not transitively load historical AI-slop or brand-research documents.
 
 1. Establish the product contract and inspect source/runtime scope.
 2. Exercise `primary-start → primary-feedback → primary-terminal → primary-recovery` at desktop and mobile.
 3. Test every visible control and reconcile runtime inventory with the report.
-4. Verify console, overflow, keyboard, visible/unobscured focus, content integrity, and applicable accessibility automation.
-5. Run Lighthouse as a laboratory diagnostic, not proof of user experience or accessibility.
-6. Run two visual rubric passes and a fresh blind reviewer. Keep reviewer provenance distinct from machine validation.
-7. Record exact argv. Replay approved commands only with `--execute-approved-commands`.
+4. For every asynchronous boundary, verify the loading contract record, wait-avoidance decision, continuity or progressive result, freshness cue, failure recovery, and relevant user control. A spinner, skeleton, boolean claim, or static source inspection alone is insufficient.
+5. Verify console, overflow, keyboard, visible/unobscured focus, content integrity, and applicable accessibility automation.
+6. Run Lighthouse as a laboratory diagnostic, not proof of user experience or accessibility.
+7. Run two visual rubric passes and a fresh blind reviewer. Keep reviewer provenance distinct from machine validation.
+8. Record exact argv. Replay approved commands only with `--execute-approved-commands`.
 
 ```bash
 npm ci --omit=dev --prefix <skill-dir>/scripts

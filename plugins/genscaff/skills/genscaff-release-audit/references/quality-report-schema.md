@@ -155,6 +155,12 @@ Record `loading`, `empty`, `error`, `disabled`, `success`, and `long-content` ex
 - Use a deterministic, visibly test-only fixture for a hard-to-reach state when necessary. The fixture must exercise the real layout and interaction code and must not masquerade as production data or a shipped capability.
 - State evidence must identify the affected surface and observed behavior.
 
+### `loading_experience`
+
+Use `applicable: true` whenever `context.task_traits` includes `async` or `generation`, or the changed flow otherwise reads or writes remote data, streams results, lazy-loads media, waits on navigation, or starts a background job. Do not classify these paths as not applicable merely because the delay is short.
+
+Record one boundary for each user-visible asynchronous transition. Every boundary requires non-empty `trigger`, `affected_surface`, `wait_avoidance`, `stale_data_policy`, `failure_recovery`, `user_control`, and `evidence` strings. Apply `loading-ux.md` in priority order. A spinner, skeleton, fabricated percentage, boolean claim, or static source inspection alone does not satisfy this section.
+
 ### `task_walkthroughs`
 
 Record at least one desktop and one mobile primary-task walkthrough. Each needs:

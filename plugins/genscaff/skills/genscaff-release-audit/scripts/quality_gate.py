@@ -371,6 +371,10 @@ TEMPLATE = {
         }
         for state in sorted(REQUIRED_STATE_NAMES)
     ],
+    "loading_experience": {
+        "applicable": False,
+        "boundaries": [],
+    },
     "task_walkthroughs": [
         {
             "viewport": "desktop",
