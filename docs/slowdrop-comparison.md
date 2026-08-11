@@ -4,6 +4,8 @@
 
 This document records one qualitative A/B run performed on July 31, 2026. It is reviewable evidence, not a benchmark or proof of causation.
 
+The historical treatment used the legacy `product-commerce` route. The current classifier would inspect the actual purchase task before choosing `transaction` or `marketplace-discovery` and would record the relevant `detail`/`checkout` surfaces; this note does not rescore the run.
+
 ## Conditions
 
 | Control | Value |

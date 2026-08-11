@@ -4,6 +4,8 @@
 
 This page records one qualitative A/B run conducted on July 30, 2026. It is intended as inspectable evidence, not a benchmark or a causal claim.
 
+The run predates schema v6. Under the current classifier its task is `workflow-application` on a `dashboard` surface with `no-reference`; this retrospective label does not change the recorded output or create new verification evidence.
+
 ## Setup
 
 | Control | Value |

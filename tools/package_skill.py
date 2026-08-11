@@ -5,6 +5,7 @@ import argparse
 import hashlib
 import json
 import os
+import re
 import sys
 import zipfile
 from pathlib import Path
@@ -32,6 +33,24 @@ def archive(output: Path, roots: list[tuple[Path, Path]]) -> str:
     digest = hashlib.sha256(output.read_bytes()).hexdigest()
     output.with_suffix(output.suffix + ".sha256").write_text(f"{digest}  {output.name}\n", encoding="utf-8")
     return digest
+
+
+def verify_archive(path: Path) -> list[str]:
+    errors = []
+    with zipfile.ZipFile(path) as source:
+        names = set(source.namelist())
+        skill_roots = {Path(name).parent for name in names if name.endswith("/SKILL.md")}
+        for root in skill_roots:
+            for required in ("SKILL.md", "agents/openai.yaml", "LICENSE", "NOTICE"):
+                expected = (root / required).as_posix()
+                if expected not in names:
+                    errors.append(f"{path.name}: missing {expected}")
+            content = source.read((root / "SKILL.md").as_posix()).decode("utf-8")
+            for target in set(re.findall(r"(?:references|scripts)/[A-Za-z0-9._/-]+", content)):
+                expected = (root / target).as_posix()
+                if expected not in names:
+                    errors.append(f"{path.name}: non-self-contained reference {expected}")
+    return errors
 
 
 def main() -> int:
@@ -63,6 +82,10 @@ def main() -> int:
         (args.output_dir / "genscaff-eval-v2.0.0-summary.json").write_bytes((REPO_ROOT / "evals" / "baselines" / "v2.0.0.json").read_bytes())
     for output, roots in built:
         print(f"{output.name} {archive(output.resolve(), roots)}")
+        errors = verify_archive(output.resolve())
+        if errors:
+            print("\n".join(f"ERROR: {error}" for error in errors), file=sys.stderr)
+            return 1
     return 0
 
 

@@ -1,0 +1,696 @@
+{
+  "schema_version": 2,
+  "evidence_catalog": {
+    "desktop-primary": {
+      "artifact": "C:/@Dev/genscaff/examples/vegetable-chopper-product-editorial/artifacts/final-desktop-start.png",
+      "region": "1440×1000 hero, product illustration, capacity selector, price, and add control",
+      "observation": "썰림 600 도해와 600ml 용량, 29,800원 가격, 제품별 담기 CTA가 한 구매 결정 영역에 보임."
+    },
+    "desktop-terminal": {
+      "artifact": "C:/@Dev/genscaff/examples/vegetable-chopper-product-editorial/artifacts/final-desktop-terminal.png",
+      "region": "Desktop 400ml selected state and top-right cart confirmation",
+      "observation": "400ml 선택 뒤 가격과 CTA가 24,800원으로 바뀌고 담기 완료 토스트와 담기 취소 복구가 함께 보임."
+    },
+    "mobile-primary": {
+      "artifact": "C:/@Dev/genscaff/examples/vegetable-chopper-product-editorial/artifacts/final-mobile-start.png",
+      "region": "390×844 hero through mobile add CTA",
+      "observation": "모바일 첫 화면에서 제품 도해, 400/600ml 선택, 긴 용량 설명, 600ml 담기 CTA가 가로 넘침 없이 이어짐."
+    },
+    "mobile-terminal": {
+      "artifact": "C:/@Dev/genscaff/examples/vegetable-chopper-product-editorial/artifacts/final-mobile-terminal.png",
+      "region": "Mobile 400ml terminal state and bottom confirmation",
+      "observation": "400ml 선택 결과와 비활성 담김 CTA, 24,800원 완료 확인, 담기 취소가 같은 모바일 화면에 표시됨."
+    },
+    "long-content": {
+      "artifact": "C:/@Dev/genscaff/examples/vegetable-chopper-product-editorial/artifacts/final-mobile-start.png",
+      "region": "Mobile capacity guidance below the 400/600ml control",
+      "observation": "양파와 마늘 수량을 포함한 긴 한국어 용량 안내가 고정 높이 없이 두 줄로 자연스럽게 감김."
+    },
+    "iteration-1": {
+      "artifact": "C:/@Dev/genscaff/examples/vegetable-chopper-product-editorial/artifacts/pass1-mobile-viewport.png",
+      "region": "First mobile render at 390×844",
+      "observation": "첫 패스에서는 제품 도해가 너무 높아 담기 CTA가 844px 첫 화면 아래로 밀려 있었음."
+    },
+    "iteration-2": {
+      "artifact": "C:/@Dev/genscaff/examples/vegetable-chopper-product-editorial/artifacts/final-mobile-start.png",
+      "region": "Corrected mobile render at 390×844",
+      "observation": "제품 도해 높이와 중복 가격 블록을 줄인 뒤 선택, 설명, 담기 CTA가 첫 화면 안에서 연속적으로 보임."
+    },
+    "independent-review": {
+      "artifact": "C:/@Dev/genscaff/examples/vegetable-chopper-product-editorial/artifacts/final-desktop-terminal.png",
+      "region": "Final product hero and completed local cart state",
+      "observation": "독립 리뷰가 당김 횟수, 칼날, 용량, 재료량, 세척 절차를 제품 신호로 식별하고 담기·취소 흐름을 데모 범위에서 통과로 판정함."
+    }
+  },
+  "context": {
+    "work_type": "new",
+    "scope": "site",
+    "product_name": "썰림 600",
+    "product_type": "수동 당김식 야채다지기 product-editorial 제품 사이트",
+    "target_user": "칼질 시간을 줄이면서 채소 입자 크기는 직접 조절하려는 1–2인 집밥 사용자",
+    "user_need": "조리할 채소 양에 맞는 용량을 고르고 당김 횟수별 식감을 이해한 뒤 제품을 담아야 함.",
+    "primary_task": "400ml 또는 600ml 용량을 선택하고 가격과 재료 용량을 확인한 뒤 선택한 야채다지기를 담음.",
+    "success_outcome": "선택한 용량과 가격이 담기 완료 상태에 표시되고 사용자가 담기 취소로 되돌릴 수 있음.",
+    "primary_cta": "600ml 다지기 담기 — 29,800원",
+    "constraints": [
+      "product-editorial 아키타입",
+      "야채다지기 제품을 주제로 한 반응형 웹사이트",
+      "기존 저장소 파일과 분리된 독립 샘플",
+      "Apple 표면 복제 금지",
+      "데스크톱과 모바일 실제 스크린샷 제공"
+    ],
+    "differentiators": [
+      "3·8·15회 당김 횟수별 채소 식감 가이드",
+      "400ml/600ml 용량을 실제 양파·마늘 수량과 가격에 연결",
+      "당김 모듈·3단 엇갈림 칼날·분리 세척 구조를 제품 도해와 단계로 설명"
+    ],
+    "domain_objects": [
+      "400ml 용기",
+      "600ml 용기",
+      "당김 손잡이",
+      "3단 엇갈림 칼날",
+      "양파와 마늘",
+      "굵게·잘게·소스 질감",
+      "담기 확인"
+    ],
+    "assumptions": [
+      "썰림 브랜드, 제품 사양, 가격, 재료 용량은 실제 상품 정보가 아니라 명시적으로 공개된 가상 데모 콘텐츠임."
+    ]
+  },
+  "visual_target": {
+    "created_before_coding": true,
+    "expanded_design_brief_created": true,
+    "artifact": "C:/@Dev/genscaff/examples/vegetable-chopper-product-editorial/visual-target-2026-08-04.md",
+    "created_at": "2026-08-04T21:25:53+09:00",
+    "baseline_context": "Genscaff 저장소에는 제품 사이트 샘플 구조나 공용 디자인 토큰이 없어 기존 변경과 분리된 단일 HTML 데모로 시작함.",
+    "brief_summary": "가상의 수동 야채다지기를 위한 한국어 product-editorial 사이트. 제품 구조와 당김 횟수별 식감, 용량 선택, 로컬 담기 결과를 한 흐름으로 구현함.",
+    "summary": "흰 배경과 검정 구조선, 기능적 연두색 포인트, 대형 원본 SVG 제품 도해를 사용해 제품 이해와 용량 결정을 첫 화면에 집중함.",
+    "direction_options": [
+      {
+        "name": "제품 매크로 에디토리얼",
+        "product_fit": "제품 도해, 용량 선택, 당김 횟수 결과가 구매 결정에 직접 연결됨.",
+        "tradeoff": "레시피나 생활 장면의 폭은 좁지만 제품 구조와 조절 방식을 가장 빨리 이해시킴."
+      },
+      {
+        "name": "레시피 매거진",
+        "product_fit": "완성 요리와 레시피 안에서 제품 사용 맥락을 감성적으로 보여줄 수 있음.",
+        "tradeoff": "첫 화면에서 야채다지기 구조와 용량 결정을 이해하는 속도가 느려짐."
+      }
+    ],
+    "selected_direction": "제품 매크로 에디토리얼",
+    "selection_rationale": "사용자가 먼저 판단해야 하는 제품 구조, 용량, 입자 조절을 한 화면에 묶어 product-editorial의 제품 집중 원리를 가장 직접적으로 수행함.",
+    "benchmark_principles": [
+      {
+        "source": "Apple product-page research fallback",
+        "principle": "한 제품을 지배적 시각 대상으로 두고 섹션마다 한 메시지만 전달함.",
+        "relevance": "작은 주방 도구는 장식보다 형태, 용량, 작동 방식의 빠른 이해가 중요함.",
+        "application": "원본 SVG 다지기를 첫 화면 절반 이상에 배치하고 식감·세척 섹션을 각각 하나의 질문으로 구성함.",
+        "non_copy_boundary": "Apple 내비게이션, 서체, 정확한 레이아웃, 카피, 제품 이미지, 색상, 섹션 순서와 고유 전환은 복제하지 않음."
+      }
+    ],
+    "risk_hypotheses": [
+      "대형 제품 도해가 모바일 CTA를 첫 화면 아래로 밀 수 있음.",
+      "연두색이 기능적 강조가 아니라 장식처럼 반복될 수 있음.",
+      "긴 한국어 재료 용량 안내가 모바일에서 잘리거나 버튼을 밀 수 있음.",
+      "제품 사이트가 일반 가전 랜딩페이지 카드 구조로 흐를 수 있음."
+    ],
+    "primary_cta": "600ml 다지기 담기 — 29,800원",
+    "token_strategy": "단일 HTML의 :root에 배경, 표면, 텍스트, 경계, 강조, 포커스, 성공 색과 반경·그림자 역할을 정의하고 모든 컴포넌트가 이를 참조함."
+  },
+  "requirement_trace": [
+    {
+      "id": "primary-task",
+      "requirement": "사용자가 용량을 고르고 결과 가격을 확인한 뒤 선택한 야채다지기를 담아야 함.",
+      "source": "derived",
+      "implementation": "400/600ml 라디오 그룹이 설명·가격·CTA를 동기화하고 담기 완료 상태를 생성함.",
+      "status": "verified",
+      "evidence": [
+        "desktop-primary",
+        "desktop-terminal",
+        "mobile-terminal"
+      ]
+    },
+    {
+      "id": "primary-cta",
+      "requirement": "CTA가 선택한 용량과 가격, 다음 결과를 구체적으로 알려야 함.",
+      "source": "derived",
+      "implementation": "선택에 따라 400ml/600ml와 가격이 포함된 담기 버튼 문구가 갱신되고 완료 후 담김 상태로 비활성화됨.",
+      "status": "verified",
+      "evidence": [
+        "desktop-primary",
+        "desktop-terminal"
+      ]
+    },
+    {
+      "id": "product-editorial",
+      "requirement": "야채다지기 product-editorial 아키타입 웹사이트와 실제 스크린샷을 제공해야 함.",
+      "source": "user",
+      "implementation": "대형 제품 도해, 횟수별 식감, 구조·세척, 용량 결정으로 구성된 반응형 제품 사이트와 네 개의 최종 캡처를 생성함.",
+      "status": "verified",
+      "evidence": [
+        "desktop-primary",
+        "mobile-primary"
+      ]
+    },
+    {
+      "id": "anti-copy",
+      "requirement": "유명 제품 페이지 원리는 추출하되 표면 표현과 자산은 복제하지 않아야 함.",
+      "source": "derived",
+      "implementation": "한 제품 집중과 섹션별 메시지만 채택하고 한국어 비대칭 구성, 원본 SVG, 식감·용량 상호작용을 독자적으로 설계함.",
+      "status": "verified",
+      "evidence": [
+        "desktop-primary"
+      ]
+    },
+    {
+      "id": "constraint-1",
+      "requirement": "product-editorial 아키타입의 제품 집중과 섹션별 단일 메시지를 구현해야 함.",
+      "source": "user",
+      "implementation": "대형 제품 도해를 첫 화면 중심에 두고 식감과 세척을 각각 하나의 질문으로 분리함.",
+      "status": "verified",
+      "evidence": [
+        "desktop-primary",
+        "mobile-primary"
+      ]
+    },
+    {
+      "id": "constraint-2",
+      "requirement": "야채다지기 제품을 주제로 한 반응형 웹사이트여야 함.",
+      "source": "user",
+      "implementation": "당김 손잡이, 칼날, 채소 입자, 용량, 세척 절차를 데스크톱과 모바일 구성에 구현함.",
+      "status": "verified",
+      "evidence": [
+        "desktop-primary",
+        "mobile-primary"
+      ]
+    },
+    {
+      "id": "constraint-3",
+      "requirement": "기존 저장소 변경과 충돌하지 않는 독립 샘플이어야 함.",
+      "source": "derived",
+      "implementation": "examples/vegetable-chopper-product-editorial 경로에 단일 HTML과 검증 산출물만 신규 생성함.",
+      "status": "verified",
+      "evidence": [
+        "desktop-primary"
+      ]
+    },
+    {
+      "id": "constraint-4",
+      "requirement": "Apple 제품 페이지의 표면·자산·고유 구성을 복제하지 않아야 함.",
+      "source": "derived",
+      "implementation": "한 제품 집중 원리만 채택하고 한국어 비대칭 그리드, 원본 SVG, 용량·식감 상호작용을 독자적으로 구성함.",
+      "status": "verified",
+      "evidence": [
+        "desktop-primary"
+      ]
+    },
+    {
+      "id": "constraint-5",
+      "requirement": "데스크톱과 모바일에서 실제 렌더링된 스크린샷을 제공해야 함.",
+      "source": "user",
+      "implementation": "1440×1000과 390×844에서 시작·완료 상태를 실제 브라우저로 캡처해 로컬 파일로 저장함.",
+      "status": "verified",
+      "evidence": [
+        "desktop-primary",
+        "mobile-primary"
+      ]
+    },
+    {
+      "id": "differentiator-1",
+      "requirement": "당김 횟수에 따라 달라지는 야채 식감을 구체적으로 설명해야 함.",
+      "source": "derived",
+      "implementation": "3번 굵게, 8번 잘게, 15번 소스 질감을 조리 용도와 입자 도형에 연결한 전용 섹션을 구현함.",
+      "status": "verified",
+      "evidence": [
+        "desktop-primary"
+      ]
+    },
+    {
+      "id": "differentiator-2",
+      "requirement": "용량 선택이 실제 조리량과 가격 결과에 연결돼야 함.",
+      "source": "derived",
+      "implementation": "400/600ml 선택이 양파·마늘 수량, 가격, CTA, 완료 토스트를 같은 값으로 동기화함.",
+      "status": "verified",
+      "evidence": [
+        "desktop-terminal",
+        "mobile-terminal"
+      ]
+    }
+  ],
+  "product_specificity": {
+    "domain_signals": [
+      {
+        "element": "3·8·15회 식감 표",
+        "domain_detail": "당김 횟수를 볶음밥·만두소·살사 용도의 입자 크기와 연결함.",
+        "decision_enabled": "사용자가 원하는 채소 식감에 맞는 당김 횟수를 계획할 수 있음.",
+        "evidence": "desktop-primary"
+      },
+      {
+        "element": "400ml/600ml 용량 선택",
+        "domain_detail": "각 용량을 양파 1/4·1/2개와 마늘 5·8알, 24,800·29,800원으로 연결함.",
+        "decision_enabled": "사용자가 조리할 양에 맞는 용량과 표시 가격을 같은 결정 영역에서 선택할 수 있음.",
+        "evidence": "desktop-terminal"
+      },
+      {
+        "element": "원본 제품 구조 도해",
+        "domain_detail": "당김 손잡이, 투명 용기, 3단 엇갈림 칼날, 미끄럼 방지 바닥을 시각적으로 설명함.",
+        "decision_enabled": "제품 작동 구조와 세척 범위를 이해한 뒤 구매 결정을 내림.",
+        "evidence": "desktop-primary"
+      },
+      {
+        "element": "세 덩어리 세척 순서",
+        "domain_detail": "뚜껑 잠금, 칼날 축, 음식 접촉 부품의 분리 순서를 실제 제품 용어로 안내함.",
+        "decision_enabled": "사용자가 음식 접촉 부품의 분리 범위와 예상 세척 부담을 구매 전에 판단할 수 있음.",
+        "evidence": "mobile-primary"
+      }
+    ],
+    "decision_points": [
+      {
+        "decision": "1–2인 반찬 준비에 맞는 400ml 또는 600ml 용량 선택",
+        "inputs": "예상 양파·마늘 수량, 준비 목적, 표시 가격",
+        "consequence": "용량 설명, 가격, CTA 문구, 담기 완료 항목이 선택값에 맞게 즉시 바뀜.",
+        "evidence": "desktop-terminal"
+      }
+    ],
+    "substitution_test": {
+      "comparisons": [
+        {
+          "alternate_product": "모바일 은행 앱",
+          "still_fits": false,
+          "breaking_signals": [
+            "당김 횟수별 채소 입자는 금융 업무에 의미가 없음.",
+            "400/600ml 용기와 양파·마늘 수량은 은행 상품 데이터로 바꿀 수 없음.",
+            "3단 칼날과 분리 세척 절차는 금융 워크플로와 구조가 맞지 않음.",
+            "담기 결과가 계좌 이체나 자산 관리 상태로 재사용되지 않음.",
+            "제품 도해 중심의 구매 결정이 은행 앱의 핵심 작업과 충돌함."
+          ]
+        },
+        {
+          "alternate_product": "온라인 강의 플랫폼",
+          "still_fits": false,
+          "breaking_signals": [
+            "굵게·잘게·소스 질감은 학습 콘텐츠 분류가 아님.",
+            "용기 ml와 재료 수량은 강의 선택 입력으로 사용할 수 없음.",
+            "당김 손잡이와 칼날 도해는 학습 미디어 역할을 하지 못함.",
+            "세척 순서는 강의 진도나 과제 흐름으로 치환되지 않음.",
+            "용량별 가격과 다지기 담기 결과가 수강 신청 구조와 맞지 않음."
+          ]
+        }
+      ],
+      "verdict": "product-specific",
+      "rationale": "브랜드명과 연두색을 제거해도 당김 횟수, 채소 입자, 용기 용량, 재료 수량, 칼날 구조, 세척 순서가 수동 야채다지기 제품과 사용자를 명확히 식별함."
+    },
+    "generic_elements_found": []
+  },
+  "action_trace": {
+    "interaction_mode": "functional",
+    "primary": {
+      "label": "600ml 다지기 담기 — 29,800원",
+      "location": "첫 화면 하단 용량 선택과 가격 옆",
+      "start_state": "600ml가 안전한 기본값으로 선택되고 재료 용량과 29,800원 가격이 표시된 상태",
+      "information_scent": "버튼 안에 용량, 다지기 객체, 담기 동작, 결과 가격이 있어 클릭 결과를 예상할 수 있음.",
+      "steps": [
+        {
+          "action": "400ml 라디오를 선택함.",
+          "feedback": "용량 안내가 양파 1/4개·마늘 5알로 바뀌고 가격과 CTA가 24,800원으로 갱신됨.",
+          "result": "400ml 구성 상태가 구매 결정 영역에 유지됨.",
+          "evidence": "desktop-terminal"
+        },
+        {
+          "action": "400ml 다지기 담기 버튼을 누름.",
+          "feedback": "CTA가 400ml 담김 상태로 비활성화되고 완료 토스트가 즉시 표시됨.",
+          "result": "선택 용량과 가격이 포함된 안정적인 담기 완료 상태에 도달함.",
+          "evidence": "mobile-terminal"
+        },
+        {
+          "action": "완료 토스트의 담기 취소를 누름.",
+          "feedback": "토스트가 닫히고 CTA가 다시 활성화되며 선택한 400ml 구성은 유지됨.",
+          "result": "중복 담기 없이 구성 상태로 안전하게 복구됨.",
+          "evidence": "desktop-terminal"
+        }
+      ],
+      "terminal_state": "400ml 다지기와 24,800원이 완료 토스트에 표시되고 기본 CTA는 담김 상태로 비활성화됨.",
+      "recovery_path": "담기 취소 버튼이나 Escape로 확인을 닫고 같은 용량 선택과 활성 CTA로 돌아감.",
+      "verified": true
+    },
+    "dead_end_controls": [],
+    "control_inventory": [
+      {
+        "label": "식감 안내",
+        "role": "navigation",
+        "location": "데스크톱 첫 화면 상단 주 내비게이션",
+        "behavior": "functional",
+        "result_or_prerequisite": "당김 횟수와 입자 용도를 설명하는 식감 섹션 위치로 스크롤함.",
+        "evidence": "desktop-primary"
+      },
+      {
+        "label": "구조와 세척",
+        "role": "navigation",
+        "location": "데스크톱 첫 화면 상단 주 내비게이션",
+        "behavior": "functional",
+        "result_or_prerequisite": "제품 구조와 세척 순서 섹션으로 이동함.",
+        "evidence": "desktop-primary"
+      },
+      {
+        "label": "제품 선택",
+        "role": "navigation",
+        "location": "데스크톱·모바일 상단 주 내비게이션",
+        "behavior": "functional",
+        "result_or_prerequisite": "용량 선택, 가격, 담기 CTA가 있는 구매 결정 영역으로 스크롤함.",
+        "evidence": "desktop-primary"
+      },
+      {
+        "label": "400 ml",
+        "role": "filter",
+        "location": "첫 화면 하단 구매 결정 용량 선택 그룹",
+        "behavior": "functional",
+        "result_or_prerequisite": "400ml 재료 용량, 24,800원 가격, CTA를 선택함.",
+        "evidence": "desktop-terminal"
+      },
+      {
+        "label": "600 ml",
+        "role": "filter",
+        "location": "첫 화면 하단 구매 결정 용량 선택 그룹",
+        "behavior": "functional",
+        "result_or_prerequisite": "600ml 재료 용량, 29,800원 가격, CTA를 선택함.",
+        "evidence": "desktop-primary"
+      },
+      {
+        "label": "600ml 다지기 담기 — 29,800원",
+        "role": "primary",
+        "location": "첫 화면 하단 가격 옆 구매 결정 영역",
+        "behavior": "functional",
+        "result_or_prerequisite": "선택 용량과 가격을 담기 완료 상태로 만듦.",
+        "evidence": "desktop-primary"
+      },
+      {
+        "label": "담기 취소",
+        "role": "secondary",
+        "location": "담기 완료 상태의 복구 토스트 영역",
+        "behavior": "functional",
+        "result_or_prerequisite": "완료 상태를 닫고 선택 구성과 활성 CTA로 돌아감.",
+        "evidence": "mobile-terminal"
+      },
+      {
+        "label": "용량 선택으로 돌아가기",
+        "role": "navigation",
+        "location": "페이지 마지막 결정 섹션",
+        "behavior": "functional",
+        "result_or_prerequisite": "페이지 마지막에서 첫 화면의 용량 선택과 가격 결정 영역으로 다시 이동함.",
+        "evidence": "mobile-primary"
+      }
+    ],
+    "prototype_disclosure": "페이지 하단에 브랜드, 사양, 가격, 도해가 Genscaff product-editorial 데모용 가상 콘셉트이며 실제 결제나 주문을 표현하지 않는다고 공개함."
+  },
+  "state_coverage": [
+    {
+      "state": "loading",
+      "surface": "제품 담기 로컬 상태 전환",
+      "status": "not-applicable",
+      "rationale": "원격 요청이나 지연 작업 없이 로컬 상태가 즉시 변경되므로 가짜 대기 상태를 만들지 않음.",
+      "evidence": []
+    },
+    {
+      "state": "empty",
+      "surface": "단일 제품 용량 선택 영역",
+      "status": "not-applicable",
+      "rationale": "단일 제품과 두 고정 용량을 제공하며 원격 재고 목록이나 비어질 수 있는 컬렉션이 없음.",
+      "evidence": []
+    },
+    {
+      "state": "error",
+      "surface": "로컬 제품 담기 결과 처리",
+      "status": "not-applicable",
+      "rationale": "네트워크, 폼 제출, 결제, 저장 실패가 없는 로컬 데모라 발생 가능한 오류 경로가 없음.",
+      "evidence": []
+    },
+    {
+      "state": "disabled",
+      "surface": "선택한 제품 담기 CTA",
+      "status": "implemented",
+      "rationale": "같은 구성을 중복 담지 못하도록 완료 상태 동안 CTA가 담김 문구와 semantic disabled 상태로 바뀜.",
+      "evidence": [
+        "mobile-terminal"
+      ]
+    },
+    {
+      "state": "success",
+      "surface": "담기 완료 토스트",
+      "status": "implemented",
+      "rationale": "선택한 용량과 가격, 담기 취소 복구가 보이는 안정적인 완료 상태를 구현함.",
+      "evidence": [
+        "desktop-terminal",
+        "mobile-terminal"
+      ]
+    },
+    {
+      "state": "long-content",
+      "surface": "모바일 용량 안내",
+      "status": "implemented",
+      "rationale": "긴 한국어 재료 수량과 사용 목적이 좁은 화면에서 클리핑 없이 자연스럽게 감김.",
+      "evidence": [
+        "long-content"
+      ]
+    }
+  ],
+  "task_walkthroughs": [
+    {
+      "viewport": "desktop",
+      "start_state": "1440×1000 첫 화면에서 600ml, 29,800원, 구체적인 담기 CTA가 제품 도해와 함께 보임.",
+      "steps": [
+        {
+          "action": "400ml 용량 라디오를 선택함.",
+          "expected_feedback": "재료 용량, 가격, CTA가 400ml 기준으로 즉시 바뀌어야 함.",
+          "observed_result": "양파 1/4개·마늘 5알, 24,800원, 400ml 담기 문구로 동기화됨.",
+          "evidence": "desktop-terminal"
+        },
+        {
+          "action": "400ml 다지기 담기 CTA를 클릭함.",
+          "expected_feedback": "중복 담기가 차단되고 선택값을 포함한 완료 상태가 보여야 함.",
+          "observed_result": "CTA가 담김 상태로 비활성화되고 상단 토스트에 400ml와 24,800원이 표시됨.",
+          "evidence": "desktop-terminal"
+        }
+      ],
+      "terminal_state": "400ml와 24,800원이 확인 토스트에 표시되고 취소 복구가 가능한 완료 상태임.",
+      "failure_or_correction_path": "담기 취소를 누르면 토스트가 닫히고 400ml 선택을 보존한 채 CTA가 다시 활성화됨.",
+      "result": "pass",
+      "evidence": [
+        "desktop-terminal"
+      ]
+    },
+    {
+      "viewport": "mobile",
+      "start_state": "390×844 첫 화면에서 제품, 용량 선택, 긴 용량 설명, 600ml 담기 CTA가 모두 가로 넘침 없이 보임.",
+      "steps": [
+        {
+          "action": "400ml 용량을 선택하고 변경된 CTA를 확인함.",
+          "expected_feedback": "가격과 재료 수량이 400ml 기준으로 바뀌고 CTA가 첫 화면에 남아야 함.",
+          "observed_result": "24,800원 CTA와 소량 양념·이유식 용량 안내가 첫 화면에서 확인됨.",
+          "evidence": "mobile-primary"
+        },
+        {
+          "action": "400ml 담기 CTA를 누르고 완료 상태를 확인함.",
+          "expected_feedback": "선택 결과와 복구가 모바일 화면을 가리지 않고 보여야 함.",
+          "observed_result": "비활성 담김 CTA와 하단 완료 토스트, 담기 취소가 같은 화면에 표시됨.",
+          "evidence": "mobile-terminal"
+        }
+      ],
+      "terminal_state": "모바일에서 400ml 담김 상태, 24,800원, 담기 취소 복구가 명확히 보이는 안정 상태임.",
+      "failure_or_correction_path": "하단 담기 취소를 누르면 완료 토스트가 닫히고 선택한 400ml 구성의 활성 CTA로 복구됨.",
+      "result": "pass",
+      "evidence": [
+        "mobile-terminal"
+      ]
+    }
+  ],
+  "visual_review": {
+    "desktop_checked": true,
+    "mobile_checked": true,
+    "brand_reference_compared": true,
+    "ai_slop_visual_compared": true,
+    "ui_craft_compared": true,
+    "comparison_notes": "Apple 계열의 한 제품 집중과 섹션별 단일 메시지만 채택하고 실제 브랜드 구성은 복제하지 않았음. 첫 패스에서 모바일 CTA가 제품 도해 아래로 밀린 결함을 발견해 도해 높이와 중복 가격을 줄였음. 두 번째 패스에서 주석 겹침, 중복 담기, 완료 토스트의 구매 문맥 가림을 고쳤음. 흰 배경, 한 연두색 강조, 최소 경계·그림자, 원본 SVG와 짧은 한국어 카피를 유지했고 generic 카드 그리드, gradient orb, fake metric, rounded-card soup를 배제함.",
+    "screenshots": {
+      "desktop": "C:/@Dev/genscaff/examples/vegetable-chopper-product-editorial/artifacts/final-desktop-start.png",
+      "mobile": "C:/@Dev/genscaff/examples/vegetable-chopper-product-editorial/artifacts/final-mobile-start.png"
+    },
+    "console_errors": 0,
+    "layout_issues_open": 0,
+    "iteration_log": [
+      {
+        "pass": 1,
+        "focus": "제품과 CTA의 모바일 첫 화면 연속성, 가로 넘침, 한국어 줄바꿈을 검사함.",
+        "screenshot": "C:/@Dev/genscaff/examples/vegetable-chopper-product-editorial/artifacts/pass1-mobile-viewport.png",
+        "findings": [
+          {
+            "severity": "major",
+            "symptom": "390×844 첫 화면에서 제품 도해가 높아 담기 CTA가 화면 아래로 밀려 용량 선택 뒤 결과 행동이 보이지 않았음.",
+            "criterion": "모바일 CTA proximity와 primary-action continuity",
+            "evidence": "iteration-1"
+          }
+        ],
+        "changes": [
+          {
+            "change": "모바일 제품 도해 높이를 줄이고 중복 가격 블록을 숨겨 선택 설명과 CTA를 첫 화면 안으로 이동함.",
+            "reason": "제품 이해를 유지하면서도 사용자의 다음 결정과 담기 행동을 같은 화면에 연결하기 위해 수정함.",
+            "files": [
+              "C:/@Dev/genscaff/examples/vegetable-chopper-product-editorial/index.html"
+            ],
+            "evidence": "iteration-2"
+          }
+        ],
+        "evidence": [
+          "iteration-1"
+        ]
+      },
+      {
+        "pass": 2,
+        "focus": "제품 주석 겹침, 중복 담기 방지, 완료 복구, 토스트 위치, 경계·반경·그림자 절제를 재검사함.",
+        "screenshot": "C:/@Dev/genscaff/examples/vegetable-chopper-product-editorial/artifacts/final-mobile-start.png",
+        "findings": [
+          {
+            "severity": "minor",
+            "symptom": "모바일의 한 손 고정 주석이 제품 손잡이 선과 겹치고 데스크톱 완료 토스트가 가격·CTA 영역을 가렸음.",
+            "criterion": "responsive annotation legibility and terminal-state context preservation",
+            "evidence": "iteration-2"
+          }
+        ],
+        "changes": [
+          {
+            "change": "모바일 주석을 제거하고 완료 CTA를 semantic disabled로 바꾸며 데스크톱 토스트를 헤더 아래 여백으로 이동함.",
+            "reason": "작은 화면의 중첩을 제거하고 중복 담기를 막으며 완료 상태가 기존 선택과 가격 문맥을 가리지 않게 하기 위함.",
+            "files": [
+              "C:/@Dev/genscaff/examples/vegetable-chopper-product-editorial/index.html"
+            ],
+            "evidence": "desktop-terminal"
+          }
+        ],
+        "evidence": [
+          "iteration-2"
+        ]
+      }
+    ],
+    "open_findings": [],
+    "independent_review": {
+      "performed": true,
+      "reviewer": "subagent",
+      "reviewer_name": "vegetable_chopper_review",
+      "product_specificity_verdict": "pass",
+      "action_continuity_verdict": "pass",
+      "findings": [],
+      "notes": "Fresh reviewer identified the page as a manual vegetable chopper for one- or two-person food preparation. It cited pull counts, texture outcomes, offset blades, bowl capacities, ingredient amounts, and cleaning steps as independent product signals. It followed capacity selection through synchronized price and CTA, local cart confirmation, and cancellation recovery, and rated both product specificity and action continuity PASS within the disclosed demo scope. Responsive annotation overlap, duplicate-add prevention, and terminal-toast placement were corrected after the review.",
+      "evidence": [
+        "independent-review"
+      ]
+    }
+  },
+  "measurements": {
+    "lighthouse": {
+      "report": "C:/@Dev/genscaff/examples/vegetable-chopper-product-editorial/artifacts/lighthouse.json",
+      "scores": {
+        "performance": 100,
+        "accessibility": 100,
+        "best_practices": 96,
+        "seo": 100
+      }
+    },
+    "commands": [
+      {
+        "command": "python -B -c <HTML static contract assertions>",
+        "exit_code": 0,
+        "result": "pass",
+        "summary": "Verified unique primary IDs, semantic main region, aria-live status, and reduced-motion handling; printed HTML_STATIC_CONTRACT_PASS.",
+        "artifact": "C:/@Dev/genscaff/examples/vegetable-chopper-product-editorial/index.html"
+      },
+      {
+        "command": "PowerShell parse of artifacts/lighthouse.json categories",
+        "exit_code": 0,
+        "result": "pass",
+        "summary": "Parsed a 522390-byte Lighthouse artifact with scores 100 performance, 100 accessibility, 96 best practices, and 100 SEO.",
+        "artifact": "C:/@Dev/genscaff/examples/vegetable-chopper-product-editorial/artifacts/lighthouse.json"
+      }
+    ],
+    "lighthouse_is_technical_floor": true
+  },
+  "judgment": {
+    "verdict": "pass",
+    "product_specificity_score": 5,
+    "action_continuity_score": 4,
+    "visual_coherence_score": 4,
+    "content_integrity_score": 5,
+    "rationale": "The result remains identifiable as a manual vegetable chopper without its name or green accent because the dominant product drawing, pull-count texture guide, bowl capacities, ingredient quantities, blade structure, cleaning sequence, and capacity-dependent purchase state all belong to the same domain. The primary action exposes its selected capacity and price, produces immediate cart confirmation, prevents duplicate addition, and offers cancellation recovery on desktop and mobile. The restrained white/black/green system and section-specific compositions support the product instead of substituting generic card decoration.",
+    "limitations": "This is a fictional local interaction sample, not a real storefront. It does not verify inventory, payment, delivery, safety, food-contact certification, production photography, screen-reader user testing, or representative-user purchase success. Lighthouse is reported only as an automated technical floor.",
+    "residual_risks": []
+  },
+  "checks": {
+    "no_placeholder_copy": true,
+    "no_generic_ai_hero": true,
+    "no_decorative_gradient_orbs": true,
+    "no_unverified_fake_metrics": true,
+    "no_nested_card_soup": true,
+    "screen_information_density_restrained": true,
+    "no_inconsistent_spacing": true,
+    "no_text_overflow_or_overlap": true,
+    "default_background_black_or_white": true,
+    "background_variation_confirmed_or_avoided": true,
+    "no_one_note_palette": true,
+    "accent_colors_minimized": true,
+    "no_default_saas_gradient": true,
+    "no_stock_ai_imagery": true,
+    "no_vague_aspirational_copy": true,
+    "copy_information_density_restrained": true,
+    "copy_length_restrained": true,
+    "no_polished_but_empty_sections": true,
+    "no_unnecessary_badges_or_titles": true,
+    "no_hallucinated_or_unverifiable_claims": true,
+    "tokens_or_local_theme_used": true,
+    "semantic_color_tokens_defined": true,
+    "color_roles_tokenized_before_use": true,
+    "expanded_brief_drives_implementation": true,
+    "explicit_user_constraints_preserved": true,
+    "domain_specific_screens_or_sections_defined": true,
+    "shared_components_defined": true,
+    "layout_board_or_page_structure_defined": true,
+    "no_raw_visual_values_when_tokens_exist": true,
+    "spacing_4px_scale_used": true,
+    "type_scale_limited": true,
+    "radius_and_shadow_levels_limited": true,
+    "border_usage_minimized": true,
+    "border_usage_not_overused": true,
+    "border_radius_minimized": true,
+    "border_radius_not_overused": true,
+    "box_shadow_not_overused": true,
+    "borders_and_shadows_restrained": true,
+    "list_item_borders_and_shadows_minimized": true,
+    "semantic_color_roles_used": true,
+    "von_restorff_emphasis_used_deliberately": true,
+    "single_primary_action_per_area": true,
+    "hover_focus_active_disabled_states": true,
+    "loading_empty_error_extreme_states_considered": true,
+    "motion_constraints_respected": true,
+    "touch_targets_and_semantics_checked": true,
+    "responsive_layout_verified": true,
+    "word_break_and_wrapping_verified": true,
+    "interactive_states_present": true,
+    "assets_render_correctly": true,
+    "accessibility_basics_pass": true,
+    "brand_reference_principles_applied": true,
+    "visual_target_matches_result": true,
+    "slop_checklist_compared_visually": true,
+    "user_need_traced_to_ui": true,
+    "product_specificity_verified": true,
+    "domain_objects_and_language_visible": true,
+    "differentiating_decision_present": true,
+    "two_domain_substitution_test_failed": true,
+    "primary_action_information_scent_clear": true,
+    "primary_action_end_to_end_verified": true,
+    "primary_action_feedback_and_terminal_state_present": true,
+    "primary_action_recovery_present": true,
+    "no_undisclosed_dead_end_controls": true,
+    "task_walkthroughs_recorded": true,
+    "requirements_traceable_to_evidence": true,
+    "evidence_artifacts_verified": true,
+    "independent_product_and_action_judgment_recorded": true,
+    "lighthouse_treated_as_technical_floor": true
+  }
+}

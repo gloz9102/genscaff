@@ -50,7 +50,14 @@ jobs:
 
       - name: Run core tests
         working-directory: plugins/genscaff/skills/genscaff/scripts
-        run: python test_quality_gate.py
+        run: python -m unittest discover -p "test_*.py"
+
+      - name: Check bundled Node syntax
+        working-directory: plugins/genscaff/skills/genscaff-release-audit/scripts
+        run: |
+          node --check runtime_probe.js
+          node --check live_audit.js
+          node --check lighthouse_audit.js
 
       - name: Smoke-test marketplace installation
         shell: bash
@@ -59,9 +66,9 @@ jobs:
           mkdir -p "$CODEX_HOME"
           codex plugin marketplace add "$GITHUB_WORKSPACE" --json
           codex plugin add genscaff@genscaff-public --json
-          test -f "$CODEX_HOME/plugins/cache/genscaff-public/genscaff/2.0.0/skills/genscaff/SKILL.md"
-          test -f "$CODEX_HOME/plugins/cache/genscaff-public/genscaff/2.0.0/skills/genscaff-release-audit/SKILL.md"
-          grep -R "allow_implicit_invocation: false" "$CODEX_HOME/plugins/cache/genscaff-public/genscaff/2.0.0/skills" | grep -q genscaff-release-audit
+          test -f "$CODEX_HOME/plugins/cache/genscaff-public/genscaff/2.0.1/skills/genscaff/SKILL.md"
+          test -f "$CODEX_HOME/plugins/cache/genscaff-public/genscaff/2.0.1/skills/genscaff-release-audit/SKILL.md"
+          grep -R "allow_implicit_invocation: false" "$CODEX_HOME/plugins/cache/genscaff-public/genscaff/2.0.1/skills" | grep -q genscaff-release-audit
 
       - name: Run release-audit regression tests
         working-directory: plugins/genscaff/skills/genscaff-release-audit/scripts
@@ -69,6 +76,9 @@ jobs:
 
       - name: Build installable archive
         run: python tools/package_skill.py
+
+      - name: Check whitespace
+        run: git diff --check
 
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:

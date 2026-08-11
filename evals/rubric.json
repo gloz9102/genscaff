@@ -1,7 +1,35 @@
 {
-  "schema_version": 1,
-  "hard_gates": ["requirements_complete", "primary_flow_works", "no_fabricated_friction", "no_undisclosed_dead_controls"],
-  "dimensions": ["functional_completeness", "efficiency", "project_fit", "visual_hierarchy", "responsive_accessibility"],
+  "schema_version": 2,
+  "hard_gates": [
+    "requirements_complete",
+    "primary_flow_works",
+    "user_intent_preserved",
+    "reference_mode_correct",
+    "anti_clone_behavior",
+    "anti_slop_cluster_honesty",
+    "verification_honest",
+    "command_safety",
+    "strict_delegation_correct",
+    "no_fabricated_friction",
+    "no_undisclosed_dead_controls"
+  ],
+  "dimensions": [
+    "functional_completeness",
+    "efficiency",
+    "project_fit",
+    "visual_hierarchy",
+    "responsive_accessibility",
+    "reference_intent",
+    "product_specificity",
+    "archetype_surface_fit",
+    "deliberate_differences",
+    "architecture_preservation",
+    "state_coverage",
+    "keyboard_focus_completeness",
+    "verification_honesty",
+    "runtime_degradation",
+    "command_safety"
+  ],
   "score_range": [0, 5],
   "human_review_pair_fraction": 0.2
 }

@@ -5,6 +5,7 @@ import json
 import os
 import re
 import sys
+import argparse
 from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
@@ -14,6 +15,8 @@ CORE_ROOT = PLUGIN_ROOT / "skills" / "genscaff"
 AUDIT_ROOT = PLUGIN_ROOT / "skills" / "genscaff-release-audit"
 GENERATED = {"__pycache__", "node_modules"}
 PERSONAL = (re.compile(r"[A-Za-z]:\\Users\\[^\\/\r\n]+\\", re.I), re.compile(r"/(?:Users|home)/[^/\s]+/"))
+LOCAL_TARGET = re.compile(r"(?:references|scripts)/[A-Za-z0-9._/-]+")
+MARKDOWN_LINK = re.compile(r"\[[^\]]*\]\((?!https?://|mailto:|#)([^)]+)\)")
 
 
 def files_under(root: Path) -> list[Path]:
@@ -52,17 +55,39 @@ def validate_skill(root: Path, name: str, required: tuple[str, ...], *, explicit
             errors.append(f"{name}: invalid SKILL.md frontmatter")
         if metadata.get("name") != name:
             errors.append(f"{name}: frontmatter name mismatch")
+        if metadata.get("name", "") != metadata.get("name", "").lower():
+            errors.append(f"{name}: frontmatter name must be lowercase")
         if len(metadata.get("description", "")) < 40:
             errors.append(f"{name}: description is too short")
     yaml = root / "agents" / "openai.yaml"
+    if yaml.is_file():
+        content = yaml.read_text(encoding="utf-8")
+        for field in ("display_name:", "short_description:", "default_prompt:"):
+            if field not in content:
+                errors.append(f"{name}: agents/openai.yaml missing {field[:-1]}")
     if explicit and yaml.is_file() and "allow_implicit_invocation: false" not in yaml.read_text(encoding="utf-8"):
         errors.append(f"{name}: implicit invocation must be disabled")
+    for markdown in (path for path in files_under(root) if path.suffix.lower() == ".md"):
+        content = markdown.read_text(encoding="utf-8")
+        targets = set(LOCAL_TARGET.findall(content))
+        targets.update(match.group(1).split("#", 1)[0] for match in MARKDOWN_LINK.finditer(content))
+        for target in targets:
+            if not target:
+                continue
+            candidate = (markdown.parent / target).resolve() if target.startswith(("./", "../")) else (root / target).resolve()
+            try:
+                candidate.relative_to(root.resolve())
+            except ValueError:
+                errors.append(f"{name}: reference escapes package root: {markdown.relative_to(root)} -> {target}")
+                continue
+            if not candidate.is_file():
+                errors.append(f"{name}: broken local reference: {markdown.relative_to(root)} -> {target}")
     return errors
 
 
 def validate(*, allow_generated: bool = False) -> list[str]:
     errors = []
-    errors += validate_skill(CORE_ROOT, "genscaff", ("scripts/quality_gate.py", "references/task-type-craft-router.md"))
+    errors += validate_skill(CORE_ROOT, "genscaff", ("scripts/quality_gate.py", "scripts/inspect_project.py", "references/reference-intent.md", "references/task-type-craft-router.md", "references/responsive-state-matrix.md", "references/verification-baseline.md", "references/anti-slop.md"))
     errors += validate_skill(AUDIT_ROOT, "genscaff-release-audit", ("scripts/hard_gate.py", "scripts/quality_gate.py", "scripts/live_audit.js", "scripts/lighthouse_audit.js", "scripts/runtime_probe.js", "scripts/package.json", "scripts/package-lock.json"))
     errors += validate_skill(LEGACY_ROOT, "genscaff", ("scripts/hard_gate.py", "scripts/quality_gate.py"), explicit=False)
 
@@ -122,7 +147,10 @@ def validate(*, allow_generated: bool = False) -> list[str]:
 
 
 def main() -> int:
-    errors = validate()
+    parser = argparse.ArgumentParser(description="Validate Genscaff plugin and legacy package structure")
+    parser.add_argument("--reject-generated", action="store_true", help="fail when local cache or dependency directories exist")
+    args = parser.parse_args()
+    errors = validate(allow_generated=not args.reject_generated)
     if errors:
         for error in errors:
             print(f"ERROR: {error}", file=sys.stderr)

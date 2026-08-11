@@ -29,18 +29,20 @@ $genscaff strict          # v2.0 compatibility route; removed in v2.1
 - Any user-visible asynchronous boundary must follow a wait-removal-first loading contract, preserve usable context, expose honest status and recovery, and document the observed boundary instead of treating a spinner as completion.
 - Standard and Strict reports reject incomplete loading-boundary records; `async` and `generation` Strict work must declare and evidence the loading experience.
 
-## What changed in v2.0
+## Current frontend workflow
 
-- Schema v5 distinguishes `IMPLEMENTED_UNVERIFIED`, `VERIFIED_RENDER`, `VERIFIED_FLOW`, and `VERIFIED_STANDARD`.
-- Render, flow, keyboard, focus, automated accessibility, and assistive-technology user validation are reported separately.
-- `VERIFIED_STANDARD` requires real keyboard operation and distinct desktop/mobile focus evidence; booleans alone cannot raise status.
+- Schema v6 separates verification `result`, `method`, `coverage`, evidence, issues, and limitations.
+- New reports use `IMPLEMENTED_UNVERIFIED`, `VERIFIED_RENDER`, `VERIFIED_PRIMARY_FLOW`, `VERIFIED_KEYBOARD_FLOW`, and `VERIFIED_STANDARD_BASELINE`. Evidence-free booleans or `pass` strings cannot raise status.
+- Standard classifies `project_mode`, four reference modes, one primary experience archetype, relevant surface types, and change scope before broad work.
+- The product/design contract covers product, reference, content, visual-system, and engineering decisions. Recovery is required only when failure, cancellation, reversal, incompletion, network, or transaction behavior makes it real.
+- Six focused craft modules cover product editorial, marketplace discovery, media discovery, workflow applications, content editorial, and transactions.
+- Named-site inspiration defaults to principle extraction with deliberate differences, not logo, copy, asset, composition, navigation, geometry, or interaction cloning.
 - Product and transaction craft rejects invented selection steps and disabled CTAs as `FABRICATED_FRICTION`.
-- Five focused craft modules cover commerce, dashboards, transactions, marketing, and editorial pages.
 - Strict uses a compact workflow rubric instead of loading historical AI-slop and brand-research chains.
-- A deterministic A/B harness prepares 8-prompt PR suites or 120-run release suites, blinds conditions, tracks swapped-judge disagreement, and merges human adjudication.
+- The existing deterministic A/B harness still prepares 8-prompt PR suites or 120-run release suites. Its JSON definitions now also include static behavior cases for reference intent, degradation, keyboard, schema migration, and command safety.
 - The core skill has no Node, Playwright, or Lighthouse dependency; those remain in release-audit.
 
-Schema v3/v4 Strict reports remain supported. A schema v4 Standard `VERIFIED_STANDARD` report is downgraded to `VERIFIED_FLOW` with `SCHEMA_V4_DOWNGRADED_TO_VERIFIED_FLOW`.
+Schema v3/v4 Strict reports remain supported by release-audit. Core schema v5 Standard reports remain readable: legacy `VERIFIED_FLOW` maps at most to `VERIFIED_PRIMARY_FLOW`, and `VERIFIED_STANDARD` maps at most to `VERIFIED_KEYBOARD_FLOW` after evidence validation. New reports do not emit legacy names.
 
 ## Profiles
 
@@ -52,6 +54,34 @@ Schema v3/v4 Strict reports remain supported. A schema v4 Standard `VERIFIED_STA
 
 Genscaff does not ban gradients, glass, blur, or glow. It preserves effects required by the user, a locked reference, or the project system. It is not an authorship detector, originality certificate, or substitute for representative-user testing.
 
+## Classification and references
+
+Reference modes are `locked-reproduction`, `structural-reference`, `aesthetic-inspiration`, and `no-reference`. A supplied screenshot is not automatically locked. Exact reproduction requires an explicit lock scope and rights to supplied assets.
+
+Experience archetypes describe the product job: `product-editorial`, `marketplace-discovery`, `media-discovery`, `workflow-application`, `content-editorial`, or `transaction`. Surface types describe the changed screen, such as `landing`, `search`, `listing`, `detail`, `dashboard`, `form`, or `checkout`.
+
+```text
+"Use Apple product-page clarity and pacing, but copy none of its layout,
+assets, navigation, copy, typography, or interactions."
+→ aesthetic-inspiration / product-editorial / landing
+
+"Use mature Airbnb-like search, comparison, availability, and trust
+principles without its branding or component geometry."
+→ aesthetic-inspiration / marketplace-discovery / search, listing
+
+"Use mature Netflix-like content-discovery principles with progress,
+missing-media handling, and complete keyboard navigation, without copying it."
+→ aesthetic-inspiration / media-discovery / landing, listing
+```
+
+These classifications guide craft; they do not replace user requirements or an existing information architecture.
+
+## Runtime and approval model
+
+Missing Chrome caps Standard at source implementation without browser evidence; missing Lighthouse blocks only its audit. Missing Strict-only dependencies or a reviewer makes Strict incomplete. Safe source edits continue unless the deliverable itself cannot be produced.
+
+Read-only inspection, project command execution, dependency installation, active browser access, network commands, and destructive operations are separate permissions. A request to modify and test the workspace may authorize inspected non-destructive lint/test/build commands, but not installs, deploys, migrations, credentials, network access, or cleanup. Validation output is scoped evidence, not WCAG conformance or legal/originality certification.
+
 ## Same-brief sample
 
 Two independent `terra-medium` agents received the same product-page brief. Only the treatment explicitly invoked Genscaff Standard.
@@ -61,6 +91,37 @@ Two independent `terra-medium` agents received the same product-page brief. Only
 | <img src="docs/assets/slowdrop-comparison/genscaff-with.png" alt="Product page built with Genscaff Standard" width="720"> | <img src="docs/assets/slowdrop-comparison/genscaff-without.png" alt="Control product page built without Genscaff" width="720"> |
 
 Both outputs were usable. This one qualitative pair does not establish superiority; see the [full comparison](docs/slowdrop-comparison.md). v2.0 treats its first scored release run as a baseline rather than a marketing claim.
+
+## Quick anti-slop A/B (directional)
+
+One isolated `gpt-5.6-terra` low-effort pair received the same fictional FlowPilot landing-page brief. The treatment explicitly invoked the current Genscaff Standard Skill; the control could not inspect it. This is directional evidence from two agents, not statistical proof.
+
+| Parent-verified result | Genscaff | Control |
+|---|---:|---:|
+| Desktop render and primary interaction | Pass | Pass |
+| Reliable 390×844 render evidence | Pass | Fail: renderer scaling limitation |
+| Valid Standard schema v6 report | Pass | Not produced |
+| Lighthouse P/A/BP/SEO | 100/98/100/100 | 100/95/100/100 |
+| Remaining generic-default cluster | Yes | Yes, broader |
+
+Genscaff helped by grounding the hero in a concrete approval route, retaining desktop/mobile flow evidence, and producing a validator-clean evidence report. It did not fully solve report honesty: the rendered treatment still contained decorative eyebrow copy, unsupported time-saved/setup claims, and nested workflow-row geometry that its own report did not list. The control combined a gradient hero, decorative eyebrow, nested workflow cards, and a uniform feature-card grid, while its mobile screenshot could not substantiate the requested viewport. The directional verdict is **Genscaff helped, but anti-slop finding recall still needs work**.
+
+## Same-brief Apple-principle PC café comparison
+
+Two independent `gpt-5.6-terra` agents received the [same NOON PC brief](examples/pccafe-apple-comparison/shared-brief.md), the same generated store image, the same standalone HTML constraint, and the same Korean production-copy rule. Only the left treatment invoked Genscaff Standard. Apple was used as an aesthetic-principle reference; neither treatment copies Apple trademarks, assets, copy, or exact layout.
+
+| Genscaff Standard | Control |
+|---|---|
+| <img src="docs/assets/pccafe-apple-comparison/with-genscaff.jpg" alt="NOON PC site built with Genscaff Standard" width="720"> | <img src="docs/assets/pccafe-apple-comparison/without-genscaff.jpg" alt="NOON PC control site built without Genscaff" width="720"> |
+
+Observed differences:
+
+- Genscaff produced a separate visual target and Standard report, a more compact three-option configuration surface, and a larger edge-to-edge image treatment.
+- The control put the selected `60평` model and `132석` consequence directly in the hero, then used a longer model-list and result-panel composition.
+- Both completed the model-change, required-field error, consultation summary, edit/close recovery, and desktop/mobile overflow checks. Focus styles were checked statically; a full Tab/Enter walkthrough was not claimed. Both final Lighthouse runs scored 100 in Performance, Accessibility, Best Practices, and SEO.
+- The Genscaff treatment initially omitted the dialog's team-room value and logged a console error after model change. The shared verification pass found and fixed it before publication. This pair is qualitative evidence, not a claim that either workflow is universally better.
+
+[Open the deployed comparison](https://pccafe-apple-comparison.vercel.app/) · [Genscaff Standard](https://pccafe-apple-comparison.vercel.app/with-genscaff/) · [Control](https://pccafe-apple-comparison.vercel.app/without-genscaff/)
 
 ## Repository layout
 
@@ -74,7 +135,7 @@ tools/                   # validators, deterministic packaging, eval harness
 
 ## Validate
 
-Core checks require Python 3.10+. Strict additionally requires Node.js 22.19+, Chrome/Chromium, and locked npm dependencies.
+Core checks use Python. Strict additionally uses the Node version and production dependencies declared by its bundled manifest plus Chrome/Chromium; the manifest is the runtime source of truth.
 
 ```shell
 python tools/check_skill.py

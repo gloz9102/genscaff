@@ -29,6 +29,20 @@ class EvalHarnessTests(unittest.TestCase):
                 prompt = (root / item["prompt"]).read_text(encoding="utf-8")
                 self.assertEqual(item["condition"] == "treatment", "$genscaff" in prompt)
 
+    def test_eval_definitions_and_legacy_baseline_are_valid(self) -> None:
+        self.assertEqual([], harness.validate_definitions())
+        cases = harness.read_json(harness.CASES)["cases"]
+        behavior = [case for case in cases if case.get("behavior_only")]
+        self.assertEqual(21, len(behavior))
+        self.assertTrue(all(harness.EXPECTED_FIELDS <= set(case["expected"]) for case in behavior))
+        by_id = {case["id"]: case["expected"] for case in behavior}
+        self.assertIn("anti-slop", by_id["behavior-generic-saas-antislop"]["required_references"])
+        self.assertIn("schema v6 initialization and validation", by_id["behavior-evidence-free-verified"]["must_include"])
+        self.assertIn("single-pattern failure", by_id["behavior-preserve-gradients"]["must_not_include"])
+        self.assertIn("anti-slop override of user intent", by_id["behavior-owned-exact-reproduction"]["must_not_include"])
+        baseline = harness.read_json(harness.ROOT / "evals" / "baselines" / "v2.0.0.json")
+        self.assertEqual("2.0.0", baseline["version"])
+
     def test_release_has_120_runs(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)

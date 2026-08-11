@@ -1,0 +1,697 @@
+{
+  "schema_version": 2,
+  "evidence_catalog": {
+    "desktop-primary": {
+      "artifact": "C:/@Dev/genscaff/examples/pet-walker-marketplace-discovery/artifacts/final-desktop-start.png",
+      "region": "동네 검색, 체급·시간 필터, 예약 가능 산책 파트너 비교 목록",
+      "observation": "마포구·중형견·오늘 19:00 조건과 세 파트너의 거리, 산책 방식, 리드줄, 체급, 가격, 선택 상태가 같은 순서로 보임."
+    },
+    "desktop-terminal": {
+      "artifact": "C:/@Dev/genscaff/examples/pet-walker-marketplace-discovery/artifacts/final-desktop-terminal.png",
+      "region": "산책 요청 완료 결과와 취소 복구 패널",
+      "observation": "김민지, 중형견 60분, 오늘 19:00, 18,000원과 요청 취소가 한 완료 상태에 보임."
+    },
+    "mobile-primary": {
+      "artifact": "C:/@Dev/genscaff/examples/pet-walker-marketplace-discovery/artifacts/final-mobile-start.png",
+      "region": "390px 동네 검색과 모바일 비교 첫 행",
+      "observation": "모바일에서 마포구 검색, 중형견·오늘 19:00 적용 상태와 김민지 산책 방식·리드줄·가능 체급·시간이 가로 넘침 없이 보임."
+    },
+    "mobile-terminal": {
+      "artifact": "C:/@Dev/genscaff/examples/pet-walker-marketplace-discovery/artifacts/final-mobile-terminal.png",
+      "region": "390px 요청 완료 상태",
+      "observation": "모바일에서 오류 재시도 뒤 산책 요청 완료 정보와 취소 복구 동작이 렌더링됨."
+    },
+    "empty-state": {
+      "artifact": "C:/@Dev/genscaff/examples/pet-walker-marketplace-discovery/artifacts/desktop-empty.png",
+      "region": "대형견·내일 08:00 빈 결과와 마감 목록",
+      "observation": "예약 가능 0명, 기본 조건 복구 버튼, 이재호의 내일 08:00 마감과 비활성 버튼이 함께 보임."
+    },
+    "error-state": {
+      "artifact": "C:/@Dev/genscaff/examples/pet-walker-marketplace-discovery/artifacts/mobile-error.png",
+      "region": "모바일 요청 오류 패널",
+      "observation": "화면의 오류 시연을 거친 뒤 실패 사유, 같은 조건 재시도, 목록 복귀가 보임."
+    },
+    "long-content": {
+      "artifact": "C:/@Dev/genscaff/examples/pet-walker-marketplace-discovery/artifacts/final-desktop-start.png",
+      "region": "박서윤 위치와 비교 메타데이터 행",
+      "observation": "마포구 성산동 월드컵시장 안쪽 긴 골목 위치가 행 안에서 자연스럽게 줄바꿈되고 가격과 선택 버튼 정렬이 유지됨."
+    },
+    "iteration-1": {
+      "artifact": "C:/@Dev/genscaff/examples/pet-walker-marketplace-discovery/artifacts/review-before-mobile.png",
+      "region": "390px 모바일 보정 전 첫 파트너 비교 행",
+      "observation": "지역 검색과 조건 필터가 길어 첫 파트너의 가격·선택 결과가 844px 첫 화면 아래로 밀린 상태가 관찰됨."
+    },
+    "iteration-2": {
+      "artifact": "C:/@Dev/genscaff/examples/pet-walker-marketplace-discovery/artifacts/final-mobile-start.png",
+      "region": "390px 모바일 밀도 보정 후 첫 파트너 비교 행",
+      "observation": "소개 문장과 필터 여백을 줄인 뒤 김민지의 산책 방식, 리드줄, 가능 체급, 60분, 18,000원, 선택됨이 첫 화면에 함께 보임."
+    },
+    "independent-review": {
+      "artifact": "C:/@Dev/genscaff/examples/pet-walker-marketplace-discovery/artifacts/final-desktop-start.png",
+      "region": "최종 데스크톱 검색·비교 표면",
+      "observation": "독립 검토자가 반려견 보호자용 산책 파트너 마켓플레이스와 검색·필터·비교·요청 과업을 첫 화면에서 식별하고 최종 PASS로 판정함."
+    }
+  },
+  "context": {
+    "work_type": "new",
+    "scope": "flow",
+    "product_name": "곁길",
+    "product_type": "반려견 산책 파트너 검색 마켓플레이스",
+    "target_user": "특정 시간에 반려견 산책을 맡길 근거리 파트너가 필요한 보호자",
+    "user_need": "동네, 강아지 체급, 가능한 시간을 먼저 맞추고 산책 방식과 가격을 비교해 한 사람에게 요청한다.",
+    "primary_task": "동네를 검색하고 체급·시간을 적용해 파트너를 비교한 뒤 산책 요청을 완료하고 필요하면 취소한다.",
+    "success_outcome": "선택한 파트너, 체급, 시작 시간, 가격이 요청 완료 패널에 표시되고 취소가 가능하다.",
+    "primary_cta": "민지에게 산책 요청 · 18,000원",
+    "constraints": [
+      "marketplace-discovery 아키타입 예시",
+      "실제 브라우저 스크린샷 제공",
+      "가상 데이터임을 화면에서 고지"
+    ],
+    "differentiators": [
+      "강아지 체급 호환성과 산책 슬롯이 결과 재고를 바꾼다.",
+      "거리·산책 방식·리드줄 대응·60분 가격이 동일 순서로 비교된다."
+    ],
+    "domain_objects": [
+      "동네 검색어",
+      "강아지 체급",
+      "산책 시작 슬롯",
+      "산책 파트너",
+      "산책 방식",
+      "리드줄 대응",
+      "산책 거리",
+      "산책 가격",
+      "요청 상태"
+    ],
+    "assumptions": [
+      "한국어 소비자용 가상 브랜드와 마포구 데모 데이터는 구현 가정이다.",
+      "프로필·가격·가용성은 실제 공급 데이터가 아닌 기능 데모다."
+    ]
+  },
+  "visual_target": {
+    "created_before_coding": true,
+    "expanded_design_brief_created": true,
+    "artifact": "C:/@Dev/genscaff/examples/pet-walker-marketplace-discovery/visual-target-2026-08-04.md",
+    "created_at": "2026-08-04T22:05:56+09:00",
+    "baseline_context": "기존 product-editorial 예시는 보존하고 독립 standalone HTML 예시를 새로 추가함.",
+    "brief_summary": "반려견 보호자가 지역·체급·시간으로 공급을 줄이고 일관된 메타데이터로 비교한 뒤 요청과 취소까지 끝내는 마켓플레이스 흐름.",
+    "summary": "흰 배경, 짙은 녹색 단일 액센트, 평면 비교 목록, 검색 우선, 가상 데이터 고지.",
+    "direction_options": [
+      {
+        "name": "가용성 우선 목록",
+        "product_fit": "검색·필터 뒤 거리, 슬롯, 방식, 가격을 같은 순서로 빠르게 비교함.",
+        "tradeoff": "정밀 지도와 경로 미리보기는 생략돼 블록 단위 공간 판단은 제공하지 않는다."
+      },
+      {
+        "name": "지도 우선 탐색",
+        "product_fit": "실제 이동 거리와 동네 경계를 먼저 탐색해야 하는 공급 탐색에는 적합하다.",
+        "tradeoff": "작은 화면에서 지도와 목록을 오가야 해 체급·방식·가격 비교가 느려진다."
+      }
+    ],
+    "selected_direction": "가용성 우선 목록",
+    "selection_rationale": "산책 보호자는 지도 위치만 보는 게 아니라 체급 호환, 가능한 시각, 산책 방식, 리드줄 대응, 60분 가격을 한 번에 비교해야 하므로 가용성 우선 목록이 실제 선택 비용을 더 직접적으로 줄인다.",
+    "benchmark_principles": [
+      {
+        "source": "Airbnb bundled research principle",
+        "principle": "검색을 먼저 두고 반복 항목의 메타데이터 순서를 고정한다.",
+        "relevance": "공급자 재고를 검색·필터·비교하는 같은 상호작용 모델이다.",
+        "application": "좌측에 지역 검색과 가역 필터를 두고 오른쪽 평면 목록에서 모든 산책 파트너의 메타데이터 순서를 고정했다.",
+        "non_copy_boundary": "브랜딩, 검색창 형상, 카드 비율, 아이콘, 실제 데이터, 예약 순서는 복제하지 않았다."
+      }
+    ],
+    "risk_hypotheses": [
+      "둥근 카드 그리드가 공급 비교를 장식으로 바꿀 위험",
+      "필터가 결과를 바꾸지 않는 상태 연극 위험",
+      "모바일 요청 바가 비교 정보를 덮을 위험",
+      "가상 신뢰 수치를 실제처럼 보일 위험"
+    ],
+    "primary_cta": "민지에게 산책 요청 · 18,000원",
+    "token_strategy": "CSS custom properties로 배경·표면·텍스트·경계·액센트·포커스·상태 역할을 먼저 정의하고 4px 배수 간격을 사용함."
+  },
+  "requirement_trace": [
+    {
+      "id": "primary-task",
+      "requirement": "검색→필터→비교→선택→요청→취소를 한 흐름에서 끝낸다.",
+      "source": "derived",
+      "implementation": "동네 검색, 체급·시간 버튼, 비교 목록, 선택 상태, 요청 완료와 취소.",
+      "status": "verified",
+      "evidence": [
+        "desktop-primary",
+        "desktop-terminal",
+        "mobile-primary",
+        "mobile-terminal"
+      ]
+    },
+    {
+      "id": "primary-cta",
+      "requirement": "선택한 파트너와 가격을 예측 가능한 CTA로 요청한다.",
+      "source": "derived",
+      "implementation": "선택 이름과 가격을 포함한 동적 산책 요청 버튼.",
+      "status": "verified",
+      "evidence": [
+        "desktop-primary",
+        "desktop-terminal"
+      ]
+    },
+    {
+      "id": "marketplace-archetype",
+      "requirement": "marketplace-discovery 예시를 만든다.",
+      "source": "user",
+      "implementation": "지역 검색, 가용성 필터, 일관된 비교 행, 마감 재고와 선택 결과.",
+      "status": "verified",
+      "evidence": [
+        "desktop-primary",
+        "empty-state"
+      ]
+    },
+    {
+      "id": "screenshot",
+      "requirement": "실제 브라우저에서 데스크톱과 모바일 렌더링 스크린샷을 제공한다.",
+      "source": "user",
+      "implementation": "브라우저에서 1440x1000 및 390x844 시작·완료 상태를 캡처함.",
+      "status": "verified",
+      "evidence": [
+        "desktop-primary",
+        "mobile-primary"
+      ]
+    },
+    {
+      "id": "mock-disclosure",
+      "requirement": "가상 프로필과 가격을 실제 데이터처럼 속이지 않는다.",
+      "source": "derived",
+      "implementation": "헤더에 가상 프로필·가격 기능 데모 고지를 상시 표시함.",
+      "status": "verified",
+      "evidence": [
+        "desktop-primary",
+        "mobile-primary"
+      ]
+    },
+    {
+      "id": "constraint-1",
+      "requirement": "marketplace-discovery 아키타입 예시",
+      "source": "user",
+      "implementation": "지역 검색, 가용성 필터, 비교 목록, 마감 상태, 선택 결과로 marketplace-discovery 구조를 구현함.",
+      "status": "verified",
+      "evidence": [
+        "desktop-primary"
+      ]
+    },
+    {
+      "id": "constraint-2",
+      "requirement": "실제 브라우저에서 데스크톱과 모바일 화면 스크린샷을 모두 제공한다.",
+      "source": "user",
+      "implementation": "실제 인앱 브라우저에서 1440x1000과 390x844 캡처를 저장함.",
+      "status": "verified",
+      "evidence": [
+        "desktop-primary",
+        "mobile-primary"
+      ]
+    },
+    {
+      "id": "constraint-3",
+      "requirement": "가상 프로필과 가격을 실제 데이터처럼 보이지 않도록 화면에서 분명히 고지한다.",
+      "source": "derived",
+      "implementation": "헤더에 가상 프로필·가격 기능 데모 문구를 계속 표시함.",
+      "status": "verified",
+      "evidence": [
+        "mobile-primary"
+      ]
+    },
+    {
+      "id": "differentiator-1",
+      "requirement": "강아지 체급 호환성과 산책 가능 슬롯이 검색 결과의 공급 재고와 선택 가능 상태를 바꾼다.",
+      "source": "derived",
+      "implementation": "체급·시간 버튼이 예약 가능 공급과 마감 행을 다시 계산하고 CTA 대상을 갱신함.",
+      "status": "verified",
+      "evidence": [
+        "desktop-primary",
+        "empty-state"
+      ]
+    },
+    {
+      "id": "differentiator-2",
+      "requirement": "거리·산책 방식·리드줄 대응·60분 가격이 동일 순서로 비교된다.",
+      "source": "derived",
+      "implementation": "모든 파트너 행에 거리·방식·리드줄·체급·시간·가격을 같은 정보 순서로 렌더링함.",
+      "status": "verified",
+      "evidence": [
+        "desktop-primary"
+      ]
+    }
+  ],
+  "product_specificity": {
+    "domain_signals": [
+      {
+        "element": "동네·체급·시간 검색 필터",
+        "domain_detail": "마포구, 소형견/중형견/대형견, 오늘/내일 산책 슬롯",
+        "decision_enabled": "사용자가 현재 강아지 체급과 원하는 시각에 실제로 요청 가능한 산책 파트너만 남긴다.",
+        "evidence": "desktop-primary"
+      },
+      {
+        "element": "산책 파트너 비교 행",
+        "domain_detail": "거리, 산책 방식, 리드줄, 가능 체급, 60분, 가격",
+        "decision_enabled": "걷기 방식과 핸들링 조건을 가격과 함께 비교한다.",
+        "evidence": "desktop-primary"
+      },
+      {
+        "element": "마감 및 요청 상태",
+        "domain_detail": "시간 마감 비활성, 요청 완료 영수증, 취소·재시도",
+        "decision_enabled": "가용성을 확인하고 요청을 완료하거나 복구한다.",
+        "evidence": "empty-state"
+      }
+    ],
+    "decision_points": [
+      {
+        "decision": "어떤 산책 파트너에게 오늘 저녁 60분 산책을 요청할지 결정한다.",
+        "inputs": "지역, 체급 호환, 슬롯, 거리, 방식, 리드줄, 60분 가격",
+        "consequence": "선택 행과 요청 CTA의 이름·가격이 바뀌고 완료 영수증에 유지됨.",
+        "evidence": "desktop-primary"
+      },
+      {
+        "decision": "예약 가능 인원이 없는 조건을 유지할지 기본 조건으로 복구할지 결정한다.",
+        "inputs": "예약 가능 0명, 마감 슬롯, 현재 대형견·내일 08:00 조건",
+        "consequence": "한 번의 복구로 중형견·오늘 19:00 공급 목록으로 돌아감.",
+        "evidence": "empty-state"
+      }
+    ],
+    "substitution_test": {
+      "comparisons": [
+        {
+          "alternate_product": "노트북 중고 마켓",
+          "still_fits": false,
+          "breaking_signals": [
+            "강아지 체급 호환과 리드줄 대응은 노트북 속성으로 전환되지 않는다.",
+            "산책 슬롯·60분·요청 취소 흐름은 중고 기기 구매 구조와 맞지 않는다."
+          ]
+        },
+        {
+          "alternate_product": "레시피 탐색 사이트",
+          "still_fits": false,
+          "breaking_signals": [
+            "근거리 산책 파트너와 시간 마감 재고는 레시피 객체가 아니다.",
+            "사람 선택 후 산책 요청 영수증과 오류 재시도는 조리 탐색 흐름과 맞지 않는다."
+          ]
+        }
+      ],
+      "verdict": "product-specific",
+      "rationale": "브랜드 이름과 녹색을 제거해도 강아지 체급 호환, 리드줄 대응, 산책 슬롯, 거리, 60분 가격, 시간 마감, 파트너 요청 영수증이 남는다. 이 구조는 노트북 거래나 레시피 탐색으로 명사만 바꿔 재사용할 수 없다."
+    },
+    "generic_elements_found": []
+  },
+  "action_trace": {
+    "interaction_mode": "functional",
+    "primary": {
+      "label": "민지에게 산책 요청 · 18,000원",
+      "location": "검색 결과 목록 아래 요청 바",
+      "start_state": "마포구·중형견·오늘 19:00 안전 기본값에서 김민지가 선택됨.",
+      "information_scent": "선택한 이름, 시간, 체급, 60분, 가격이 버튼과 바로 옆 문맥에 보인다.",
+      "steps": [
+        {
+          "action": "동네 검색을 적용하고 체급·시간 필터를 누른다.",
+          "feedback": "적용 상태와 예약 가능 인원 수가 즉시 바뀐다.",
+          "result": "호환되고 가능한 산책 파트너만 비교 목록에 남는다.",
+          "evidence": "desktop-primary"
+        },
+        {
+          "action": "파트너 선택 버튼을 누른다.",
+          "feedback": "행 배경과 선택됨 라벨, 요청 바 이름·가격이 바뀐다.",
+          "result": "선택된 산책 파트너와 가격이 요청 바에 반영되어 다음 행동의 대상과 비용이 명확해진다.",
+          "evidence": "desktop-primary"
+        },
+        {
+          "action": "민지에게 산책 요청 · 18,000원을 누른다.",
+          "feedback": "상태 영역이 즉시 요청 완료로 바뀐다.",
+          "result": "파트너, 체급, 시간, 가격 영수증과 요청 취소가 나타난다.",
+          "evidence": "desktop-terminal"
+        },
+        {
+          "action": "완료 패널에서 요청 취소 버튼을 눌러 거래를 되돌린다.",
+          "feedback": "요청 취소 사실이 상태 영역에 공지되고 결과 목록이 즉시 다시 나타난다.",
+          "result": "기존 검색·필터·선택 맥락으로 돌아간다.",
+          "evidence": "desktop-primary"
+        }
+      ],
+      "terminal_state": "산책 요청을 보냈음 패널에 파트너·조건·시작·예상 금액이 표시됨.",
+      "recovery_path": "요청 취소로 기존 결과에 복귀하며 오류 시에는 같은 조건 재시도 또는 목록 복귀가 가능함.",
+      "verified": true
+    },
+    "dead_end_controls": [],
+    "control_inventory": [
+      {
+        "label": "동네 검색 및 적용",
+        "role": "secondary",
+        "location": "좌측 산책 조건 패널 첫 번째 검색 그룹",
+        "behavior": "functional",
+        "result_or_prerequisite": "입력한 문자열을 위치에 포함한 파트너만 남김.",
+        "evidence": "desktop-primary"
+      },
+      {
+        "label": "체급/시간 필터",
+        "role": "secondary",
+        "location": "필터 두 번째·세 번째 그룹",
+        "behavior": "functional",
+        "result_or_prerequisite": "결과 수, 목록, 선택과 CTA 문맥을 갱신함.",
+        "evidence": "desktop-primary"
+      },
+      {
+        "label": "파트너 선택",
+        "role": "secondary",
+        "location": "각 예약 가능 산책 파트너 비교 행 오른쪽",
+        "behavior": "functional",
+        "result_or_prerequisite": "선택 대상과 CTA 이름·가격을 갱신함.",
+        "evidence": "desktop-primary"
+      },
+      {
+        "label": "시간 마감",
+        "role": "secondary",
+        "location": "빈 결과 아래 시간이 마감된 파트너 행",
+        "behavior": "disabled",
+        "result_or_prerequisite": "해당 슬롯이 마감돼 선택할 수 없음.",
+        "evidence": "empty-state"
+      },
+      {
+        "label": "기능 데모: 다음 요청 오류 시연",
+        "role": "secondary",
+        "location": "좌측 산책 조건 패널의 기능 데모 영역",
+        "behavior": "functional",
+        "result_or_prerequisite": "다음 요청을 공개된 데모 오류로 전환함.",
+        "evidence": "error-state"
+      },
+      {
+        "label": "민지에게 산책 요청 · 18,000원",
+        "role": "primary",
+        "location": "결과 목록 아래 요청 바",
+        "behavior": "functional",
+        "result_or_prerequisite": "선택한 산책 파트너에게 요청하고 완료 패널로 전환함.",
+        "evidence": "desktop-primary"
+      },
+      {
+        "label": "요청 취소/재시도/목록 복귀",
+        "role": "secondary",
+        "location": "요청 완료 패널과 요청 오류 패널 하단",
+        "behavior": "functional",
+        "result_or_prerequisite": "요청을 취소하거나 실패 요청을 재시도하고 목록으로 돌아감.",
+        "evidence": "error-state"
+      }
+    ],
+    "prototype_disclosure": "헤더에 가상 프로필·가격 기능 데모를 상시 고지하고 오류 시연 컨트롤도 기능 데모로 명시함."
+  },
+  "state_coverage": [
+    {
+      "state": "disabled",
+      "surface": "마감된 파트너 행",
+      "status": "implemented",
+      "rationale": "선택할 수 없는 슬롯을 실제 disabled 버튼과 마감 설명으로 표시함.",
+      "evidence": [
+        "empty-state"
+      ]
+    },
+    {
+      "state": "empty",
+      "surface": "산책 파트너 검색 결과 목록",
+      "status": "implemented",
+      "rationale": "대형견·내일 08:00 조합에서 0명과 기본 조건 복구를 표시함.",
+      "evidence": [
+        "empty-state"
+      ]
+    },
+    {
+      "state": "error",
+      "surface": "산책 요청 결과",
+      "status": "implemented",
+      "rationale": "보이는 오류 시연을 켠 다음 요청에서 실패, 재시도, 목록 복귀를 표시함.",
+      "evidence": [
+        "error-state"
+      ]
+    },
+    {
+      "state": "loading",
+      "surface": "검색·필터·요청",
+      "status": "not-applicable",
+      "rationale": "원격 데이터나 사용자-visible 비동기 경계가 없는 동기식 로컬 데모라 대기 상태를 만들지 않음.",
+      "evidence": []
+    },
+    {
+      "state": "long-content",
+      "surface": "파트너 위치와 비교 행",
+      "status": "implemented",
+      "rationale": "긴 성산동 위치가 행 안에서 줄바꿈되고 가격·버튼 정렬을 유지함.",
+      "evidence": [
+        "long-content"
+      ]
+    },
+    {
+      "state": "success",
+      "surface": "산책 요청 결과",
+      "status": "implemented",
+      "rationale": "선택한 파트너, 중형견 60분, 시작 시각, 예상 금액을 완료 영수증으로 표시하고 같은 패널에서 요청 취소 복구를 제공함.",
+      "evidence": [
+        "desktop-terminal",
+        "mobile-terminal"
+      ]
+    }
+  ],
+  "task_walkthroughs": [
+    {
+      "viewport": "desktop",
+      "start_state": "마포구·중형견·오늘 19:00, 김민지 선택, 예약 가능 3명.",
+      "steps": [
+        {
+          "action": "검색·체급·시간 조건을 확인하고 김민지 요청을 누름.",
+          "expected_feedback": "요청 완료 상태로 전환되고 선택한 파트너·조건·시간·가격이 그대로 유지된다.",
+          "observed_result": "김민지, 중형견 60분, 오늘 19:00, 18,000원이 완료 패널에 표시됨.",
+          "evidence": "desktop-terminal"
+        },
+        {
+          "action": "완료 패널에서 요청 취소 버튼을 누른다.",
+          "expected_feedback": "완료 패널이 사라지고 기존 검색·필터·선택 결과가 같은 상태로 다시 나타난다.",
+          "observed_result": "마포구·중형견·오늘 19:00 목록과 김민지 요청 버튼이 복원되어 다시 요청할 수 있었다.",
+          "evidence": "desktop-primary"
+        }
+      ],
+      "terminal_state": "김민지에게 산책 요청을 보냈다는 완료 패널과 네 가지 요청 정보가 표시됨.",
+      "failure_or_correction_path": "대형견·내일 08:00 빈 결과에서 기본 조건 복구를 실행함.",
+      "result": "pass",
+      "evidence": [
+        "desktop-primary",
+        "desktop-terminal",
+        "empty-state"
+      ]
+    },
+    {
+      "viewport": "mobile",
+      "start_state": "마포구·중형견·오늘 19:00, 가로 오버플로 0px.",
+      "steps": [
+        {
+          "action": "오류 시연을 켜고 산책 요청을 누름.",
+          "expected_feedback": "요청 오류 패널에서 실패 이유와 같은 조건 재시도, 목록 복귀가 동시에 나타난다.",
+          "observed_result": "요청 오류와 두 복구 선택지가 표시됨.",
+          "evidence": "error-state"
+        },
+        {
+          "action": "같은 조건으로 다시 요청을 누름.",
+          "expected_feedback": "오류 패널이 성공 완료 패널로 바뀌고 선택 조건과 가격이 그대로 유지된다.",
+          "observed_result": "김민지, 중형견 60분, 오늘 19:00, 18,000원이 모바일 완료 영수증에 표시됐다.",
+          "evidence": "mobile-terminal"
+        }
+      ],
+      "terminal_state": "오류 재시도 뒤 모바일 산책 요청 완료 영수증과 취소 복구가 표시됨.",
+      "failure_or_correction_path": "공개된 오류 시연에서 재시도로 성공까지 복구함.",
+      "result": "pass",
+      "evidence": [
+        "mobile-primary",
+        "error-state",
+        "mobile-terminal"
+      ]
+    }
+  ],
+  "visual_review": {
+    "desktop_checked": true,
+    "mobile_checked": true,
+    "brand_reference_compared": true,
+    "ai_slop_visual_compared": true,
+    "ui_craft_compared": true,
+    "comparison_notes": "Airbnb의 검색 우선·일관된 메타데이터 원칙만 채택했다. 둥근 카드 그리드, 가짜 평점, 비활성 필터를 거부하고 평면 목록, 한 액센트, 최소 경계, 자연스러운 한국어 줄바꿈을 확인했다.",
+    "screenshots": {
+      "desktop": "C:/@Dev/genscaff/examples/pet-walker-marketplace-discovery/artifacts/final-desktop-start.png",
+      "mobile": "C:/@Dev/genscaff/examples/pet-walker-marketplace-discovery/artifacts/final-mobile-start.png"
+    },
+    "console_errors": 0,
+    "layout_issues_open": 0,
+    "iteration_log": [
+      {
+        "pass": 1,
+        "focus": "모바일 첫 화면에서 검색·필터와 파트너 선택 결과의 동시 가시성",
+        "screenshot": "C:/@Dev/genscaff/examples/pet-walker-marketplace-discovery/artifacts/review-before-mobile.png",
+        "findings": [
+          {
+            "severity": "minor",
+            "symptom": "지역 검색과 필터의 세로 높이 때문에 첫 파트너 가격과 선택 상태가 844px 첫 화면 아래로 밀렸다.",
+            "criterion": "모바일 CTA 근접성과 비교 정보 밀도",
+            "evidence": {
+              "artifact": "C:/@Dev/genscaff/examples/pet-walker-marketplace-discovery/artifacts/review-before-mobile.png",
+              "region": "390px 모바일 보정 전 첫 파트너 결과",
+              "observation": "첫 파트너의 비교 정보는 보이지만 18,000원과 선택 결과가 844px 첫 화면 아래로 밀려 있었다."
+            }
+          }
+        ],
+        "changes": [
+          {
+            "change": "430px 이하에서 소개 보조 문장을 숨기고 제목, 섹션 간격, 필터 패딩을 줄여 비교 행을 위로 당겼다.",
+            "reason": "검색 조건과 첫 파트너의 가격·선택 결과를 같은 첫 화면에서 판단하게 하기 위해서다.",
+            "files": [
+              "C:/@Dev/genscaff/examples/pet-walker-marketplace-discovery/index.html"
+            ],
+            "evidence": {
+              "artifact": "C:/@Dev/genscaff/examples/pet-walker-marketplace-discovery/artifacts/final-mobile-start.png",
+              "region": "390px 모바일 보정 후 첫 파트너 결과",
+              "observation": "소개와 필터 높이를 줄인 뒤 첫 화면에 김민지의 핵심 비교 사실, 18,000원, 선택됨이 함께 보였다."
+            }
+          }
+        ],
+        "evidence": [
+          "iteration-1"
+        ]
+      },
+      {
+        "pass": 2,
+        "focus": "모바일 보정 후 오버플로, 가격·선택 가시성, 한국어 줄바꿈 재확인",
+        "screenshot": "C:/@Dev/genscaff/examples/pet-walker-marketplace-discovery/artifacts/final-mobile-start.png",
+        "findings": [],
+        "changes": [],
+        "evidence": [
+          "iteration-2"
+        ]
+      }
+    ],
+    "open_findings": [],
+    "independent_review": {
+      "performed": true,
+      "reviewer": "subagent",
+      "reviewer_name": "Peirce / marketplace_review",
+      "product_specificity_verdict": "pass",
+      "action_continuity_verdict": "pass",
+      "findings": [],
+      "notes": "최종 재검토에서 반려견 보호자용 산책 파트너 마켓플레이스와 검색 적용→필터→비교·선택→요청 완료/오류→취소·재시도 흐름을 식별했다. 마포구 포함 검색은 실제 서비스가 아닌 데모 데이터 범위임을 과장하지 않아야 한다.",
+      "evidence": [
+        "independent-review",
+        "error-state"
+      ]
+    }
+  },
+  "measurements": {
+    "lighthouse": {
+      "report": "C:/@Dev/genscaff/examples/pet-walker-marketplace-discovery/artifacts/lighthouse.json",
+      "scores": {
+        "performance": 100,
+        "accessibility": 100,
+        "best_practices": 96,
+        "seo": 100
+      }
+    },
+    "commands": [
+      {
+        "command": "python -m http.server 4174 --directory examples/pet-walker-marketplace-discovery",
+        "exit_code": 0,
+        "result": "pass",
+        "summary": "로컬 서버가 127.0.0.1:4174에서 HTML, CSS, JavaScript를 제공함.",
+        "artifact": "C:/@Dev/genscaff/examples/pet-walker-marketplace-discovery/index.html"
+      },
+      {
+        "command": "Lighthouse CLI + saved JSON threshold parse",
+        "exit_code": 0,
+        "result": "pass",
+        "summary": "유효 JSON 생성 후 performance 100, accessibility 100, best-practices 96, SEO 100을 파싱함. Windows 임시 폴더 정리에서 EPERM이 출력됐지만 감사 결과 파일은 완전하며 후속 임계값 검사는 통과함.",
+        "artifact": "C:/@Dev/genscaff/examples/pet-walker-marketplace-discovery/artifacts/lighthouse.json"
+      },
+      {
+        "command": "In-app browser desktop/mobile walkthrough",
+        "exit_code": 0,
+        "result": "pass",
+        "summary": "검색·필터·비교·요청·취소·빈 결과 복구·오류 재시도를 데스크톱과 모바일에서 관찰함.",
+        "artifact": "C:/@Dev/genscaff/examples/pet-walker-marketplace-discovery/artifacts/final-desktop-terminal.png"
+      }
+    ],
+    "lighthouse_is_technical_floor": true
+  },
+  "judgment": {
+    "verdict": "pass",
+    "product_specificity_score": 5,
+    "action_continuity_score": 5,
+    "visual_coherence_score": 4,
+    "content_integrity_score": 5,
+    "rationale": "체급·산책 슬롯·리드줄·거리·60분 가격·마감 재고가 브랜드 이름과 색 없이도 반려견 산책 중개 도메인을 식별한다. 지역 검색에서 필터, 파트너 비교와 선택, 요청 성공, 공개된 오류 시연, 재시도와 취소까지 실제 브라우저 흐름이 이어진다. 단일 녹색 액센트와 평면 비교 행은 반복 공급을 빠르게 읽게 하며, 가상 데이터 고지가 콘텐츠 신뢰 경계를 분명히 한다.",
+    "limitations": "마포구 가상 데이터만 가진 standalone 기능 데모이며 실사용 공급, 결제, 신원 검증, 대표 사용자 테스트는 포함하지 않는다.",
+    "residual_risks": []
+  },
+  "checks": {
+    "no_placeholder_copy": true,
+    "no_generic_ai_hero": true,
+    "no_decorative_gradient_orbs": true,
+    "no_unverified_fake_metrics": true,
+    "no_nested_card_soup": true,
+    "screen_information_density_restrained": true,
+    "no_inconsistent_spacing": true,
+    "no_text_overflow_or_overlap": true,
+    "default_background_black_or_white": true,
+    "background_variation_confirmed_or_avoided": true,
+    "no_one_note_palette": true,
+    "accent_colors_minimized": true,
+    "no_default_saas_gradient": true,
+    "no_stock_ai_imagery": true,
+    "no_vague_aspirational_copy": true,
+    "copy_information_density_restrained": true,
+    "copy_length_restrained": true,
+    "no_polished_but_empty_sections": true,
+    "no_unnecessary_badges_or_titles": true,
+    "no_hallucinated_or_unverifiable_claims": true,
+    "tokens_or_local_theme_used": true,
+    "semantic_color_tokens_defined": true,
+    "color_roles_tokenized_before_use": true,
+    "expanded_brief_drives_implementation": true,
+    "explicit_user_constraints_preserved": true,
+    "domain_specific_screens_or_sections_defined": true,
+    "shared_components_defined": true,
+    "layout_board_or_page_structure_defined": true,
+    "no_raw_visual_values_when_tokens_exist": true,
+    "spacing_4px_scale_used": true,
+    "type_scale_limited": true,
+    "radius_and_shadow_levels_limited": true,
+    "border_usage_minimized": true,
+    "border_usage_not_overused": true,
+    "border_radius_minimized": true,
+    "border_radius_not_overused": true,
+    "box_shadow_not_overused": true,
+    "borders_and_shadows_restrained": true,
+    "list_item_borders_and_shadows_minimized": true,
+    "semantic_color_roles_used": true,
+    "von_restorff_emphasis_used_deliberately": true,
+    "single_primary_action_per_area": true,
+    "hover_focus_active_disabled_states": true,
+    "loading_empty_error_extreme_states_considered": true,
+    "motion_constraints_respected": true,
+    "touch_targets_and_semantics_checked": true,
+    "responsive_layout_verified": true,
+    "word_break_and_wrapping_verified": true,
+    "interactive_states_present": true,
+    "assets_render_correctly": true,
+    "accessibility_basics_pass": true,
+    "brand_reference_principles_applied": true,
+    "visual_target_matches_result": true,
+    "slop_checklist_compared_visually": true,
+    "user_need_traced_to_ui": true,
+    "product_specificity_verified": true,
+    "domain_objects_and_language_visible": true,
+    "differentiating_decision_present": true,
+    "two_domain_substitution_test_failed": true,
+    "primary_action_information_scent_clear": true,
+    "primary_action_end_to_end_verified": true,
+    "primary_action_feedback_and_terminal_state_present": true,
+    "primary_action_recovery_present": true,
+    "no_undisclosed_dead_end_controls": true,
+    "task_walkthroughs_recorded": true,
+    "requirements_traceable_to_evidence": true,
+    "evidence_artifacts_verified": true,
+    "independent_product_and_action_judgment_recorded": true,
+    "lighthouse_treated_as_technical_floor": true
+  }
+}

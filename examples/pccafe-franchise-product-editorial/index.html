@@ -1,0 +1,780 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="평형별 좌석과 전력 구성을 살펴보고 상권 검토 요청서를 만드는 NOON PC 가상 프랜차이즈 데모">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%2310130f'/%3E%3Cpath d='M7 7h18v18H7z' fill='none' stroke='%23c8ff3d' stroke-width='2'/%3E%3C/svg%3E">
+  <title>NOON PC — 좌석부터 설계하는 PC방 프랜차이즈</title>
+  <style>
+    :root {
+      --bg: #ffffff;
+      --surface: #f3f4f2;
+      --surface-strong: #e5e7e3;
+      --surface-inverse: #10130f;
+      --surface-inverse-2: #1a1f19;
+      --text: #151914;
+      --text-inverse: #f7f8f4;
+      --muted: #62695f;
+      --muted-inverse: #aeb6aa;
+      --border: #d7dbd3;
+      --border-inverse: #343b31;
+      --accent: #c8ff3d;
+      --accent-ink: #13170f;
+      --focus: #ffb347;
+      --success: #2d7a4b;
+      --danger: #b43a32;
+      --r-sm: 8px;
+      --r-lg: 16px;
+      --shadow-modal: 0 24px 64px rgba(0, 0, 0, .28);
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: Pretendard, "Noto Sans KR", system-ui, -apple-system, sans-serif;
+      font-size: 16px;
+      line-height: 1.55;
+      word-break: keep-all;
+    }
+    button, input, select { font: inherit; }
+    button { cursor: pointer; }
+    button:focus-visible, input:focus-visible, select:focus-visible {
+      outline: 3px solid var(--focus);
+      outline-offset: 3px;
+    }
+    [hidden] { display: none !important; }
+
+    .inverse {
+      min-height: 760px;
+      background: var(--surface-inverse);
+      color: var(--text-inverse);
+    }
+    .topbar {
+      border-bottom: 1px solid var(--border-inverse);
+    }
+    .topbar-inner, .hero, .section, .compare-inner, .footer-inner {
+      width: min(1200px, calc(100% - 48px));
+      margin: 0 auto;
+    }
+    .topbar-inner {
+      min-height: 72px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 20px;
+      font-weight: 800;
+      letter-spacing: -.04em;
+    }
+    .brand-mark {
+      width: 32px;
+      height: 32px;
+      display: grid;
+      place-items: center;
+      border: 1px solid var(--accent);
+      color: var(--accent);
+      font-size: 12px;
+      letter-spacing: -.08em;
+    }
+    .demo-note { margin: 0; color: var(--muted-inverse); font-size: 12px; }
+
+    .hero {
+      display: grid;
+      grid-template-columns: minmax(0, 5fr) minmax(520px, 7fr);
+      gap: 48px;
+      align-items: center;
+      padding: 64px 0;
+    }
+    .hero-copy { max-width: 520px; }
+    .kicker {
+      margin: 0 0 16px;
+      color: var(--accent);
+      font-size: 14px;
+      font-weight: 800;
+      letter-spacing: .06em;
+    }
+    h1 {
+      margin: 0 0 16px;
+      font-size: 32px;
+      line-height: 1.25;
+      letter-spacing: -.05em;
+    }
+    .hero-lede { margin: 0 0 32px; color: var(--muted-inverse); max-width: 36ch; }
+    .model-label { display: block; margin-bottom: 10px; font-size: 14px; font-weight: 800; }
+    .model-switch {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 8px;
+      margin-bottom: 24px;
+    }
+    .model-button {
+      min-height: 48px;
+      border: 1px solid var(--border-inverse);
+      border-radius: var(--r-sm);
+      background: var(--surface-inverse-2);
+      color: var(--text-inverse);
+      font-weight: 800;
+      transition: background 180ms ease-out, color 180ms ease-out, border-color 180ms ease-out;
+    }
+    .model-button:hover { border-color: var(--accent); }
+    .model-button[aria-pressed="true"] {
+      border-color: var(--accent);
+      background: var(--accent);
+      color: var(--accent-ink);
+    }
+    .hero-metrics {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px 24px;
+      margin: 0 0 24px;
+    }
+    .hero-metrics div { min-width: 0; }
+    .hero-metrics dt { color: var(--muted-inverse); font-size: 12px; }
+    .hero-metrics dd { margin: 2px 0 0; font-size: 18px; font-weight: 800; font-variant-numeric: tabular-nums; }
+    .primary-button, .secondary-button, .text-button {
+      min-height: 48px;
+      border-radius: var(--r-sm);
+      font-weight: 800;
+      transition: transform 180ms ease-out, background 180ms ease-out, border-color 180ms ease-out;
+    }
+    .primary-button {
+      width: 100%;
+      padding: 0 20px;
+      border: 0;
+      background: var(--accent);
+      color: var(--accent-ink);
+    }
+    .primary-button:hover { transform: translateY(-1px); background: #d4ff65; }
+    .secondary-button {
+      padding: 0 16px;
+      border: 1px solid var(--border);
+      background: var(--bg);
+      color: var(--text);
+    }
+    .secondary-button:hover { border-color: var(--text); }
+    .text-button {
+      padding: 0 8px;
+      border: 0;
+      background: transparent;
+      color: var(--muted);
+    }
+
+    .plan-panel {
+      padding: 24px;
+      border: 1px solid var(--border-inverse);
+      border-radius: var(--r-lg);
+      background: var(--surface-inverse-2);
+    }
+    .hero-photo {
+      position: relative;
+      margin: 0 0 20px;
+      overflow: hidden;
+      border: 1px solid var(--border-inverse);
+      border-radius: var(--r-sm);
+      background: var(--surface-inverse);
+    }
+    .hero-photo img {
+      display: block;
+      width: 100%;
+      height: 248px;
+      object-fit: cover;
+      object-position: center 58%;
+    }
+    .hero-photo::after {
+      content: "";
+      position: absolute;
+      inset: 64% 0 0;
+      background: linear-gradient(transparent, rgba(9, 10, 10, .78));
+      pointer-events: none;
+    }
+    .hero-photo figcaption {
+      position: absolute;
+      z-index: 1;
+      right: 16px;
+      bottom: 14px;
+      left: 16px;
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      color: var(--text-inverse);
+      font-size: 12px;
+      font-weight: 700;
+      text-shadow: 0 1px 4px rgba(0, 0, 0, .9);
+    }
+    .hero-photo figcaption span:last-child { color: var(--accent); white-space: nowrap; }
+    .plan-head {
+      display: flex;
+      align-items: end;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+    .plan-head h2 { margin: 0; font-size: 20px; }
+    .plan-head p { margin: 0; color: var(--muted-inverse); font-size: 12px; text-align: right; }
+    .floorplan {
+      position: relative;
+      min-height: 264px;
+      display: grid;
+      grid-template-columns: repeat(8, minmax(0, 1fr));
+      grid-auto-rows: 52px;
+      gap: 8px;
+      padding: 20px;
+      border: 1px solid var(--border-inverse);
+      background: var(--surface-inverse);
+      overflow: hidden;
+    }
+    .seat-block {
+      position: relative;
+      min-width: 0;
+      display: grid;
+      place-items: center;
+      border: 1px solid var(--border-inverse);
+      border-radius: 4px;
+      color: var(--muted-inverse);
+      font-size: 12px;
+      font-weight: 700;
+    }
+    .seat-block.pro { border-color: var(--accent); color: var(--accent); }
+    .seat-block.team { grid-column: span 2; background: var(--accent); color: var(--accent-ink); }
+    .power-line {
+      position: absolute;
+      right: 20px;
+      bottom: 16px;
+      left: 20px;
+      height: 2px;
+      background: var(--accent);
+    }
+    .power-line::after {
+      content: "전력 버스";
+      position: absolute;
+      right: 0;
+      bottom: 6px;
+      color: var(--accent);
+      font-size: 12px;
+    }
+    .plan-legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px 16px;
+      margin: 16px 0 0;
+      color: var(--muted-inverse);
+      font-size: 12px;
+    }
+    .legend-item::before {
+      content: "";
+      display: inline-block;
+      width: 8px;
+      height: 8px;
+      margin-right: 6px;
+      border: 1px solid var(--border-inverse);
+      vertical-align: 1px;
+    }
+    .legend-item.pro::before { border-color: var(--accent); }
+    .legend-item.team::before { border-color: var(--accent); background: var(--accent); }
+
+    .section { padding: 64px 0; }
+    .section-head {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 48px;
+      align-items: end;
+      margin-bottom: 32px;
+    }
+    .section-head h2 { margin: 0; font-size: 32px; letter-spacing: -.04em; }
+    .section-head p { margin: 0; color: var(--muted); max-width: 52ch; }
+    .system-list { border-top: 1px solid var(--text); }
+    .system-row {
+      display: grid;
+      grid-template-columns: 160px minmax(220px, 1fr) minmax(280px, 1.4fr);
+      gap: 32px;
+      align-items: start;
+      padding: 24px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .system-index { font-size: 14px; color: var(--muted); }
+    .system-row h3 { margin: 0; font-size: 20px; }
+    .system-row p { margin: 0; color: var(--muted); }
+    .spec {
+      display: inline-block;
+      margin-top: 8px;
+      color: var(--text);
+      font-size: 14px;
+      font-weight: 800;
+    }
+
+    .compare { background: var(--surface); }
+    .compare-inner { padding: 64px 0; }
+    .compare-inner h2 { margin: 0 0 24px; font-size: 24px; }
+    .compare-table { width: 100%; border-collapse: collapse; }
+    .compare-table th, .compare-table td {
+      padding: 16px;
+      border-bottom: 1px solid var(--border);
+      text-align: left;
+      vertical-align: top;
+    }
+    .compare-table th { color: var(--muted); font-size: 14px; }
+    .compare-table td { font-weight: 700; font-variant-numeric: tabular-nums; }
+    .compare-table .selected-col { background: var(--bg); color: var(--text); }
+    .compare-note { margin: 16px 0 0; color: var(--muted); font-size: 12px; }
+
+    .closing {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 32px;
+      padding: 48px 0 64px;
+    }
+    .closing h2 { margin: 0 0 8px; font-size: 24px; }
+    .closing p { margin: 0; color: var(--muted); }
+    .closing .secondary-button { min-width: 240px; }
+    footer { border-top: 1px solid var(--border); }
+    .footer-inner {
+      min-height: 72px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    dialog {
+      width: min(560px, calc(100% - 32px));
+      max-height: calc(100dvh - 32px);
+      padding: 0;
+      border: 0;
+      border-radius: var(--r-lg);
+      background: var(--bg);
+      color: var(--text);
+      box-shadow: var(--shadow-modal);
+      overflow: auto;
+    }
+    dialog::backdrop { background: rgba(8, 10, 8, .72); }
+    .dialog-inner { padding: 28px; }
+    .dialog-head {
+      display: flex;
+      align-items: start;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+    .dialog-head h2 { margin: 0 0 4px; font-size: 24px; }
+    .dialog-head p { margin: 0; color: var(--muted); font-size: 14px; }
+    .close-button {
+      width: 44px;
+      height: 44px;
+      flex: none;
+      border: 1px solid var(--border);
+      border-radius: 50%;
+      background: var(--bg);
+      color: var(--text);
+      font-size: 20px;
+    }
+    .request-summary {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-bottom: 24px;
+      padding: 16px;
+      background: var(--surface);
+    }
+    .request-summary dt { color: var(--muted); font-size: 12px; }
+    .request-summary dd { margin: 2px 0 0; font-weight: 800; }
+    .field + .field { margin-top: 16px; }
+    .field label { display: block; margin-bottom: 8px; font-size: 14px; font-weight: 800; }
+    .field input, .field select {
+      width: 100%;
+      min-height: 48px;
+      padding: 0 12px;
+      border: 1px solid var(--border);
+      border-radius: var(--r-sm);
+      background: var(--bg);
+      color: var(--text);
+    }
+    .field input:hover, .field select:hover { border-color: var(--text); }
+    .field input[aria-invalid="true"] { border-color: var(--danger); }
+    .field-error { margin: 6px 0 0; color: var(--danger); font-size: 14px; }
+    .form-note { margin: 16px 0; color: var(--muted); font-size: 12px; }
+    .success-panel {
+      padding: 28px;
+    }
+    .success-mark {
+      width: 44px;
+      height: 44px;
+      display: grid;
+      place-items: center;
+      margin-bottom: 16px;
+      border-radius: 50%;
+      background: var(--success);
+      color: var(--text-inverse);
+      font-weight: 800;
+    }
+    .success-panel h2 { margin: 0 0 8px; font-size: 24px; }
+    .success-panel > p { margin: 0 0 24px; color: var(--muted); }
+    .receipt { margin: 0 0 24px; border-top: 1px solid var(--text); }
+    .receipt div {
+      display: grid;
+      grid-template-columns: 136px minmax(0, 1fr);
+      gap: 16px;
+      padding: 12px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .receipt dt { color: var(--muted); }
+    .receipt dd { margin: 0; text-align: right; font-weight: 800; overflow-wrap: anywhere; }
+    .success-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+
+    @media (max-width: 960px) {
+      .inverse { min-height: auto; }
+      .hero { grid-template-columns: 1fr; gap: 32px; }
+      .hero-copy { max-width: none; }
+      .section-head { grid-template-columns: 1fr; gap: 12px; }
+      .system-row { grid-template-columns: 96px 1fr; gap: 16px; }
+      .system-row p { grid-column: 2; }
+    }
+
+    @media (max-width: 640px) {
+      .topbar-inner, .hero, .section, .compare-inner, .footer-inner { width: calc(100% - 32px); }
+      .topbar-inner { min-height: 64px; }
+      .demo-note { max-width: 20ch; text-align: right; }
+      .hero { padding: 32px 0 40px; }
+      h1 { font-size: 28px; }
+      .hero-lede { margin-bottom: 24px; }
+      .plan-panel { padding: 16px; }
+      .hero-photo img { height: 210px; }
+      .hero-photo figcaption { right: 12px; bottom: 12px; left: 12px; }
+      .hero-photo figcaption span:first-child { max-width: 24ch; }
+      .floorplan { min-height: 304px; grid-template-columns: repeat(6, minmax(0, 1fr)); grid-auto-rows: 44px; padding: 12px; gap: 6px; }
+      .seat-block:nth-child(n+25) { display: none; }
+      .power-line { right: 12px; left: 12px; }
+      .section, .compare-inner { padding: 48px 0; }
+      .section-head h2 { font-size: 24px; }
+      .system-row { grid-template-columns: 1fr; gap: 8px; }
+      .system-row p { grid-column: auto; }
+      .compare-scroll { overflow-x: auto; }
+      .compare-table { min-width: 640px; }
+      .closing { align-items: stretch; flex-direction: column; }
+      .closing .secondary-button { width: 100%; }
+      .footer-inner { align-items: flex-start; flex-direction: column; justify-content: center; padding: 16px 0; }
+      .dialog-inner { padding: 20px; }
+      .success-panel { padding: 20px; }
+      .request-summary { grid-template-columns: 1fr; }
+      .receipt div { grid-template-columns: 1fr; gap: 4px; }
+      .receipt dd { text-align: left; }
+      .success-actions { grid-template-columns: 1fr; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      *, *::before, *::after { transition-duration: .01ms !important; }
+    }
+  </style>
+</head>
+<body>
+  <section class="inverse" aria-labelledby="page-title">
+    <header class="topbar">
+      <div class="topbar-inner">
+        <div class="brand"><span class="brand-mark" aria-hidden="true">N.P</span>NOON PC</div>
+        <p class="demo-note">가상 브랜드·설계 데이터 기능 데모</p>
+      </div>
+    </header>
+
+    <div class="hero">
+      <div class="hero-copy">
+        <p class="kicker">PC방 프랜차이즈 설계 모델</p>
+        <h1 id="page-title">좌석 수보다 먼저,<br>좌석의 이유를 설계합니다.</h1>
+        <p class="hero-lede">평형을 고르면 좌석 등급, 팀룸, 전력 여유가 함께 바뀝니다. 매출 예측보다 운영 구조를 먼저 확인합니다.</p>
+
+        <span class="model-label" id="model-label">검토할 전용 면적</span>
+        <div class="model-switch" aria-labelledby="model-label">
+          <button class="model-button" type="button" data-model="45" aria-pressed="false">45평</button>
+          <button class="model-button" type="button" data-model="60" aria-pressed="true">60평</button>
+          <button class="model-button" type="button" data-model="80" aria-pressed="false">80평</button>
+        </div>
+
+        <dl class="hero-metrics" aria-live="polite">
+          <div><dt>예상 좌석</dt><dd id="metric-seats">82석</dd></div>
+          <div><dt>RTX 존</dt><dd id="metric-pro">24석</dd></div>
+          <div><dt>팀룸</dt><dd id="metric-team">6석</dd></div>
+          <div><dt>설계 전력</dt><dd id="metric-power">110kW</dd></div>
+        </dl>
+        <button class="primary-button" id="open-request" type="button">60평 상권 검토 요청서 만들기</button>
+      </div>
+
+      <div class="plan-panel" aria-label="선택 모델 좌석 평면도">
+        <figure class="hero-photo">
+          <img src="assets/noon-pc-hero-v1.jpg" width="1200" height="800" loading="eager" fetchpriority="high" alt="검은 좌석 데스크와 라임 동선 조명이 배치된 NOON PC 가상 매장 내부">
+          <figcaption><span>좌석 존과 운영 동선을 시각화한 가상 매장</span><span>60평 기준</span></figcaption>
+        </figure>
+        <div class="plan-head">
+          <h2 id="plan-title">60평 좌석 설계도</h2>
+          <p>가상 설계 데이터<br>1블록 = 좌석군</p>
+        </div>
+        <div class="floorplan" id="floorplan" role="img" aria-label="60평 좌석군 배치"></div>
+        <div class="plan-legend" aria-label="평면도 범례">
+          <span class="legend-item">스탠다드</span>
+          <span class="legend-item pro">RTX 존</span>
+          <span class="legend-item team">팀룸</span>
+          <span>통로 1.2m 기준</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <main>
+    <section class="section" aria-labelledby="system-title">
+      <div class="section-head">
+        <h2 id="system-title">PC가 아니라<br>운영선을 연결합니다.</h2>
+        <p>좌석 한 줄이 늘면 전력과 열도 함께 늘어납니다. 세 운영선을 한 평면에서 먼저 맞춥니다.</p>
+      </div>
+      <div class="system-list">
+        <article class="system-row">
+          <span class="system-index">01 / 열</span>
+          <h3>흡기와 배기를 분리함</h3>
+          <p>RTX 존 뒤쪽에 집중 배기 라인을 두고, 입구 쪽 신선 공기와 섞이지 않게 설계합니다.<br><span class="spec">좌석당 열원 기준으로 구분한 존</span></p>
+        </article>
+        <article class="system-row">
+          <span class="system-index">02 / 전력</span>
+          <h3>증설 여유를 먼저 남김</h3>
+          <p>현재 좌석 전력만 채우지 않고 추후 GPU 교체와 팀룸 장비를 위한 배전 여유를 표시합니다.<br><span class="spec" id="system-power">60평 모델 · 110kW 설계</span></p>
+        </article>
+        <article class="system-row">
+          <span class="system-index">03 / 서비스</span>
+          <h3>직원 동선을 끊지 않음</h3>
+          <p>카운터, 조리, 팀룸, 좌석 통로가 서로 교차하지 않게 배치해 피크타임 이동을 단순화합니다.<br><span class="spec">메인 통로 1.2m 기준</span></p>
+        </article>
+      </div>
+    </section>
+
+    <section class="compare" aria-labelledby="compare-title">
+      <div class="compare-inner">
+        <h2 id="compare-title">평형별 구성 비교</h2>
+        <div class="compare-scroll" tabindex="0" aria-label="평형별 구성 비교표 스크롤 영역">
+          <table class="compare-table">
+            <thead><tr><th scope="col">구분</th><th scope="col" data-col="45">45평</th><th scope="col" class="selected-col" data-col="60">60평</th><th scope="col" data-col="80">80평</th></tr></thead>
+            <tbody>
+              <tr><th scope="row">예상 좌석</th><td data-col="45">62석</td><td class="selected-col" data-col="60">82석</td><td data-col="80">112석</td></tr>
+              <tr><th scope="row">RTX 존</th><td data-col="45">16석</td><td class="selected-col" data-col="60">24석</td><td data-col="80">36석</td></tr>
+              <tr><th scope="row">팀룸</th><td data-col="45">4석</td><td class="selected-col" data-col="60">6석</td><td data-col="80">8석</td></tr>
+              <tr><th scope="row">설계 전력</th><td data-col="45">85kW</td><td class="selected-col" data-col="60">110kW</td><td data-col="80">150kW</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="compare-note">모든 값은 화면 흐름 확인용 가상 기준입니다. 실제 공사·전력·좌석 수는 현장 실측과 법규 검토가 필요합니다.</p>
+      </div>
+    </section>
+
+    <section class="section closing" aria-labelledby="closing-title">
+      <div>
+        <h2 id="closing-title">선택한 모델을 상권과 맞춰봄.</h2>
+        <p>실제 접수 없이 요청서 흐름만 확인하는 기능 데모임.</p>
+      </div>
+      <button class="secondary-button" id="open-request-bottom" type="button">60평 요청서 열기</button>
+    </section>
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+      <span>NOON PC · fictional franchise prototype</span>
+      <span>매출·수익·가맹 조건을 제시하지 않음</span>
+    </div>
+  </footer>
+
+  <dialog id="request-dialog" aria-labelledby="dialog-title">
+    <div class="dialog-inner" id="form-view">
+      <div class="dialog-head">
+        <div>
+          <h2 id="dialog-title">상권 검토 요청서</h2>
+          <p>실제 전송되지 않는 로컬 기능 데모임.</p>
+        </div>
+        <button class="close-button" type="button" data-close aria-label="요청서 닫기">×</button>
+      </div>
+      <dl class="request-summary">
+        <div><dt>선택 모델</dt><dd id="form-model">60평</dd></div>
+        <div><dt>예상 좌석</dt><dd id="form-seats">82석</dd></div>
+        <div><dt>설계 전력</dt><dd id="form-power">110kW</dd></div>
+      </dl>
+      <form id="request-form" novalidate>
+        <div class="field">
+          <label for="district">검토할 상권</label>
+          <input id="district" name="district" autocomplete="address-level3" aria-describedby="district-error" placeholder="예: 서울 성수역 2번 출구 인근">
+          <p class="field-error" id="district-error" hidden>검토할 상권을 입력해야 요청서를 만들 수 있습니다.</p>
+        </div>
+        <div class="field">
+          <label for="property-status">상가 상태</label>
+          <select id="property-status" name="propertyStatus">
+            <option value="상가 탐색 중">상가 탐색 중</option>
+            <option value="후보 상가 있음">후보 상가 있음</option>
+            <option value="임대 협의 중">임대 협의 중</option>
+          </select>
+        </div>
+        <p class="form-note">개인 연락처를 받지 않음. 입력 내용은 브라우저 밖으로 전송되지 않음.</p>
+        <button class="primary-button" type="submit" id="prepare-request">선택 모델로 요청서 준비하기</button>
+      </form>
+    </div>
+
+    <div class="dialog-inner success-panel" id="success-view" hidden>
+      <div class="success-mark" aria-hidden="true">✓</div>
+      <h2>상권 검토 요청서가 준비됨</h2>
+      <p>실제 접수는 아님. 선택과 입력 보존 흐름을 보여주는 완료 상태임.</p>
+      <dl class="receipt">
+        <div><dt>선택 모델</dt><dd id="receipt-model">60평 · 82석</dd></div>
+        <div><dt>RTX 존 / 팀룸</dt><dd id="receipt-zones">24석 / 6석</dd></div>
+        <div><dt>검토 상권</dt><dd id="receipt-district">-</dd></div>
+        <div><dt>상가 상태</dt><dd id="receipt-status">상가 탐색 중</dd></div>
+      </dl>
+      <div class="success-actions">
+        <button class="secondary-button" type="button" id="edit-request">내용 수정</button>
+        <button class="primary-button" type="button" data-close>선택 화면으로 돌아가기</button>
+      </div>
+    </div>
+  </dialog>
+
+  <div class="sr-only" id="live-status" role="status" aria-live="polite"></div>
+
+  <script>
+    const models = {
+      45: { seats: 62, pro: 16, team: 4, power: 85, blocks: 24, proBlocks: 6, teamBlocks: 2 },
+      60: { seats: 82, pro: 24, team: 6, power: 110, blocks: 30, proBlocks: 8, teamBlocks: 3 },
+      80: { seats: 112, pro: 36, team: 8, power: 150, blocks: 36, proBlocks: 10, teamBlocks: 4 }
+    };
+    const state = { model: 60 };
+    const floorplan = document.querySelector("#floorplan");
+    const dialog = document.querySelector("#request-dialog");
+    const formView = document.querySelector("#form-view");
+    const successView = document.querySelector("#success-view");
+    const district = document.querySelector("#district");
+    const districtError = document.querySelector("#district-error");
+    const liveStatus = document.querySelector("#live-status");
+    let lastRequestTrigger = document.querySelector("#open-request");
+
+    function renderFloorplan() {
+      const model = models[state.model];
+      floorplan.innerHTML = "";
+      for (let index = 0; index < model.blocks; index += 1) {
+        const block = document.createElement("span");
+        const isTeam = index >= model.blocks - model.teamBlocks;
+        const isPro = !isTeam && index >= model.blocks - model.teamBlocks - model.proBlocks;
+        block.className = `seat-block${isPro ? " pro" : ""}${isTeam ? " team" : ""}`;
+        block.textContent = isTeam ? "TEAM" : isPro ? "RTX" : "STD";
+        block.setAttribute("aria-hidden", "true");
+        floorplan.appendChild(block);
+      }
+      const powerLine = document.createElement("span");
+      powerLine.className = "power-line";
+      powerLine.setAttribute("aria-hidden", "true");
+      floorplan.appendChild(powerLine);
+      floorplan.setAttribute("aria-label", `${state.model}평 좌석군 배치, 예상 ${model.seats}석, RTX 존 ${model.pro}석, 팀룸 ${model.team}석`);
+    }
+
+    function renderModel() {
+      const model = models[state.model];
+      document.querySelectorAll(".model-button").forEach(button => button.setAttribute("aria-pressed", String(Number(button.dataset.model) === state.model)));
+      document.querySelector("#metric-seats").textContent = `${model.seats}석`;
+      document.querySelector("#metric-pro").textContent = `${model.pro}석`;
+      document.querySelector("#metric-team").textContent = `${model.team}석`;
+      document.querySelector("#metric-power").textContent = `${model.power}kW`;
+      document.querySelector("#system-power").textContent = `${state.model}평 모델 · ${model.power}kW 설계`;
+      document.querySelector("#plan-title").textContent = `${state.model}평 좌석 설계도`;
+      document.querySelector("#open-request").textContent = `${state.model}평 상권 검토 요청서 만들기`;
+      document.querySelector("#open-request-bottom").textContent = `${state.model}평 요청서 열기`;
+      document.querySelectorAll("[data-col]").forEach(cell => cell.classList.toggle("selected-col", Number(cell.dataset.col) === state.model));
+      renderFloorplan();
+    }
+
+    function syncFormSummary() {
+      const model = models[state.model];
+      document.querySelector("#form-model").textContent = `${state.model}평`;
+      document.querySelector("#form-seats").textContent = `${model.seats}석`;
+      document.querySelector("#form-power").textContent = `${model.power}kW`;
+    }
+
+    function openRequest(event) {
+      lastRequestTrigger = event.currentTarget;
+      formView.hidden = false;
+      successView.hidden = true;
+      syncFormSummary();
+      dialog.showModal();
+      window.setTimeout(() => district.focus(), 0);
+    }
+
+    function closeRequest() {
+      dialog.close();
+      lastRequestTrigger.focus();
+    }
+
+    document.querySelectorAll(".model-button").forEach(button => button.addEventListener("click", () => {
+      state.model = Number(button.dataset.model);
+      renderModel();
+      liveStatus.textContent = `${state.model}평 모델을 선택했습니다. 예상 ${models[state.model].seats}석, 설계 전력 ${models[state.model].power}kW`;
+      button.focus();
+    }));
+
+    document.querySelector("#open-request").addEventListener("click", openRequest);
+    document.querySelector("#open-request-bottom").addEventListener("click", openRequest);
+    document.querySelectorAll("[data-close]").forEach(button => button.addEventListener("click", closeRequest));
+    dialog.addEventListener("cancel", event => {
+      event.preventDefault();
+      closeRequest();
+    });
+
+    document.querySelector("#request-form").addEventListener("submit", event => {
+      event.preventDefault();
+      const value = district.value.trim();
+      if (!value) {
+        district.setAttribute("aria-invalid", "true");
+        districtError.hidden = false;
+        district.focus();
+        liveStatus.textContent = "검토할 상권을 입력해야 요청서를 만들 수 있음";
+        return;
+      }
+      district.removeAttribute("aria-invalid");
+      districtError.hidden = true;
+      const model = models[state.model];
+      document.querySelector("#receipt-model").textContent = `${state.model}평 · ${model.seats}석`;
+      document.querySelector("#receipt-zones").textContent = `${model.pro}석 / ${model.team}석`;
+      document.querySelector("#receipt-district").textContent = value;
+      document.querySelector("#receipt-status").textContent = document.querySelector("#property-status").value;
+      formView.hidden = true;
+      successView.hidden = false;
+      liveStatus.textContent = `${state.model}평 상권 검토 요청서가 준비됨`;
+      document.querySelector("#edit-request").focus();
+    });
+
+    district.addEventListener("input", () => {
+      if (district.value.trim()) {
+        district.removeAttribute("aria-invalid");
+        districtError.hidden = true;
+      }
+    });
+    document.querySelector("#edit-request").addEventListener("click", () => {
+      successView.hidden = true;
+      formView.hidden = false;
+      district.focus();
+      liveStatus.textContent = "입력 내용을 유지한 채 상권 검토 요청서 수정으로 돌아옴";
+    });
+
+    renderModel();
+  </script>
+</body>
+</html>

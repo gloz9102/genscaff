@@ -29,18 +29,20 @@ $genscaff strict          # v2.0 호환 경로, v2.1에서 제거
 - 사용자에게 보이는 모든 비동기 경계에는 대기 제거 우선 로딩 계약을 적용합니다. 사용할 수 있는 맥락을 보존하고, 정직한 상태와 복구 수단을 제공하며, 스피너를 완료 근거로 대신하지 않고 관찰한 경계를 기록합니다.
 - Standard·Strict 보고서는 불완전한 로딩 경계 기록을 거부합니다. Strict의 `async`·`generation` 작업은 로딩 경험을 선언하고 근거를 남겨야 합니다.
 
-## v2.0 주요 변경
+## 현재 프런트엔드 워크플로
 
-- schema v5가 `IMPLEMENTED_UNVERIFIED`, `VERIFIED_RENDER`, `VERIFIED_FLOW`, `VERIFIED_STANDARD`를 구분합니다.
-- 렌더, 흐름, 키보드, 초점, 자동 접근성, 보조기술 사용자 검증을 별도 차원으로 기록합니다.
-- `VERIFIED_STANDARD`에는 실제 키보드 조작과 서로 다른 데스크톱·모바일 초점 근거가 필요합니다. boolean 자기신고만으로 상태를 올릴 수 없습니다.
+- schema v6는 검증 `result`, `method`, `coverage`, 근거, 문제, 제한사항을 분리합니다.
+- 새 보고서는 `IMPLEMENTED_UNVERIFIED`, `VERIFIED_RENDER`, `VERIFIED_PRIMARY_FLOW`, `VERIFIED_KEYBOARD_FLOW`, `VERIFIED_STANDARD_BASELINE`을 사용합니다. 근거 없는 boolean이나 `pass` 문자열로 상태를 올릴 수 없습니다.
+- Standard는 broad 작업 전에 `project_mode`, 네 가지 reference mode, primary experience archetype 하나, 관련 surface type, change scope를 분류합니다.
+- Product/Design contract가 제품, reference, content, visual system, engineering 결정을 다룹니다. 실패·취소·되돌리기·미완료·네트워크·transaction이 실제 의미가 있을 때만 recovery를 요구합니다.
+- product editorial, marketplace discovery, media discovery, workflow application, content editorial, transaction용 craft 모듈 6개를 제공합니다.
+- 유명 사이트 참고는 원리와 deliberate difference를 추출하며 logo, copy, asset, composition, navigation, geometry, interaction을 복제하지 않습니다.
 - 상품·트랜잭션 craft는 검증용으로 지어낸 선택 단계와 비활성 CTA를 `FABRICATED_FRICTION`으로 거부합니다.
-- 커머스, 대시보드, 트랜잭션, 마케팅, 에디토리얼 전용 craft 모듈을 제공합니다.
 - Strict는 구형 AI-slop·브랜드 연구 문서를 연쇄 로드하지 않고 공통 workflow rubric을 사용합니다.
-- 결정적 A/B 하네스가 PR 8개 과제 또는 Release 120회 실행을 준비하고 조건 블라인드, 좌우 교환 판정 불일치, 사람 판정 병합을 관리합니다.
+- 기존 결정적 A/B 하네스는 PR 8개 과제 또는 Release 120회 실행 계약을 유지합니다. JSON 정의에는 reference intent, degradation, keyboard, schema migration, command safety를 보는 정적 behavior case도 추가했습니다.
 - 코어 스킬에는 Node, Playwright, Lighthouse 의존성이 없으며 해당 도구는 release-audit에만 포함됩니다.
 
-schema v3·v4 Strict 보고서는 계속 지원합니다. schema v4 Standard의 `VERIFIED_STANDARD`는 `VERIFIED_FLOW`로 강등되며 `SCHEMA_V4_DOWNGRADED_TO_VERIFIED_FLOW`를 출력합니다.
+release-audit는 schema v3·v4 Strict 보고서를 계속 지원합니다. 코어는 schema v5 Standard 보고서를 계속 읽습니다. legacy `VERIFIED_FLOW`는 최대 `VERIFIED_PRIMARY_FLOW`, `VERIFIED_STANDARD`는 근거 재검사 후 최대 `VERIFIED_KEYBOARD_FLOW`로 변환하며 새 보고서는 legacy 상태명을 내보내지 않습니다.
 
 ## 프로필
 
@@ -51,6 +53,34 @@ schema v3·v4 Strict 보고서는 계속 지원합니다. schema v4 Standard의 
 | `$genscaff-release-audit` | 신뢰한 배포 중요 프런트엔드 | 4단계 캡처, 전체 컨트롤, Lighthouse, provenance, 독립 리뷰 |
 
 Genscaff는 그라디언트, 글래스, 블러, 글로우 자체를 금지하지 않습니다. 사용자, 잠긴 참고 자료, 프로젝트 시스템이 요구한 효과는 보존합니다. 작성 주체 탐지기, 독창성 인증서, 실제 사용자 검증의 대체재가 아닙니다.
+
+## 분류와 reference
+
+Reference mode는 `locked-reproduction`, `structural-reference`, `aesthetic-inspiration`, `no-reference`입니다. 스크린샷을 제공했다는 이유만으로 자동 잠금하지 않습니다. 정확한 재현은 명시적인 lock 범위와 제공 asset 사용 권리가 필요합니다.
+
+Experience archetype은 제품 과제를 설명합니다: `product-editorial`, `marketplace-discovery`, `media-discovery`, `workflow-application`, `content-editorial`, `transaction`. Surface type은 변경 화면을 설명하며 `landing`, `search`, `listing`, `detail`, `dashboard`, `form`, `checkout` 등이 있습니다.
+
+```text
+"Apple 제품 페이지의 명료함과 pacing 원리를 사용하되 layout, asset,
+navigation, copy, typography, interaction은 복제하지 않는다."
+→ aesthetic-inspiration / product-editorial / landing
+
+"Airbnb 같은 성숙한 search, comparison, availability, trust 원리를
+사용하되 branding과 component geometry는 복제하지 않는다."
+→ aesthetic-inspiration / marketplace-discovery / search, listing
+
+"Netflix 같은 content discovery 원리를 progress, missing media,
+complete keyboard navigation에 적용하되 실제 제품은 복제하지 않는다."
+→ aesthetic-inspiration / media-discovery / landing, listing
+```
+
+이 분류는 craft 방향을 잡을 뿐 사용자 요구나 기존 정보구조를 대체하지 않습니다.
+
+## Runtime과 승인 모델
+
+Chrome이 없으면 Standard의 browser evidence만 막히며 안전한 source 구현은 계속합니다. Lighthouse 부재는 해당 감사만 막습니다. Strict 전용 의존성이나 reviewer가 없으면 Strict는 incomplete입니다.
+
+Read-only inspection, project command 실행, dependency 설치, active browser, network command, destructive operation은 별도 권한입니다. Workspace 수정·테스트 요청은 검사한 비파괴 lint/test/build를 허용할 수 있지만 install, deploy, migration, credential, network, cleanup까지 허용하지 않습니다. 검증 출력은 범위가 제한된 근거이며 WCAG 준수나 법적·독창성 인증이 아닙니다.
 
 ## 동일 브리프 샘플
 
@@ -74,7 +104,7 @@ tools/                   # 검증기, 재현 패키징, 평가 하네스
 
 ## 검증
 
-코어 검증에는 Python 3.10 이상이 필요합니다. Strict에는 Node.js 22.19 이상, Chrome 또는 Chromium, lockfile 기반 npm 의존성이 추가로 필요합니다.
+코어 검증은 Python을 사용합니다. Strict는 bundled manifest에 선언된 Node version과 production dependency, Chrome 또는 Chromium을 추가로 사용하며 manifest를 runtime source of truth로 봅니다.
 
 ```shell
 python tools/check_skill.py

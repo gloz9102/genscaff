@@ -1,0 +1,643 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="견종 크기와 시간에 맞는 산책 파트너를 비교하고 요청하는 곁길 마켓플레이스 데모">
+  <title>곁길 — 산책 파트너 찾기</title>
+  <style>
+    :root {
+      --bg: #ffffff;
+      --surface: #f4f6f4;
+      --surface-strong: #e8eee9;
+      --text: #17201a;
+      --muted: #5c675f;
+      --border: #d7ded9;
+      --accent: #176b4d;
+      --accent-hover: #0f573d;
+      --accent-contrast: #ffffff;
+      --focus: #f1a23c;
+      --success: #176b4d;
+      --danger: #a7332b;
+      --disabled: #9aa39d;
+      --r-sm: 8px;
+      --r-lg: 16px;
+      --shadow-float: 0 16px 40px rgba(23, 32, 26, .14);
+    }
+
+    * { box-sizing: border-box; }
+    html { color-scheme: light; }
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: Pretendard, "Noto Sans KR", system-ui, -apple-system, sans-serif;
+      font-size: 16px;
+      line-height: 1.55;
+      word-break: keep-all;
+    }
+    button { font: inherit; }
+    button:focus-visible, a:focus-visible {
+      outline: 3px solid var(--focus);
+      outline-offset: 3px;
+    }
+    button { cursor: pointer; }
+    button:disabled { cursor: not-allowed; }
+
+    .topbar {
+      border-bottom: 1px solid var(--border);
+      background: var(--bg);
+    }
+    .topbar-inner {
+      width: min(1184px, calc(100% - 48px));
+      min-height: 72px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 20px;
+      font-weight: 800;
+      letter-spacing: -.04em;
+    }
+    .brand-mark {
+      width: 32px;
+      height: 32px;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      background: var(--accent);
+      color: var(--accent-contrast);
+      font-size: 14px;
+    }
+    .demo-note {
+      margin: 0;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .shell {
+      width: min(1184px, calc(100% - 48px));
+      margin: 0 auto;
+      padding: 40px 0 64px;
+    }
+    .intro {
+      display: flex;
+      align-items: end;
+      justify-content: space-between;
+      gap: 24px;
+      padding-bottom: 32px;
+    }
+    h1 {
+      margin: 0 0 8px;
+      font-size: clamp(24px, 3vw, 32px);
+      line-height: 1.25;
+      letter-spacing: -.04em;
+    }
+    .intro p { margin: 0; color: var(--muted); }
+    .route-summary {
+      min-width: max-content;
+      color: var(--accent);
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    .workspace {
+      display: grid;
+      grid-template-columns: 304px minmax(0, 1fr);
+      gap: 48px;
+      align-items: start;
+    }
+    .filters {
+      position: sticky;
+      top: 24px;
+      padding: 24px;
+      background: var(--surface);
+      border-radius: var(--r-lg);
+    }
+    .filter-group + .filter-group { margin-top: 24px; }
+    .filter-label {
+      display: block;
+      margin-bottom: 10px;
+      font-size: 14px;
+      font-weight: 700;
+    }
+    .segmented, .time-list {
+      display: grid;
+      gap: 8px;
+    }
+    .search-row { display: grid; grid-template-columns: minmax(0, 1fr) 72px; gap: 8px; }
+    .search-input {
+      min-width: 0;
+      min-height: 44px;
+      padding: 0 12px;
+      border: 1px solid var(--border);
+      border-radius: var(--r-sm);
+      background: var(--bg);
+      color: var(--text);
+    }
+    .search-input:hover { border-color: var(--accent); }
+    .segmented { grid-template-columns: repeat(3, 1fr); }
+    .filter-button {
+      min-height: 44px;
+      border: 1px solid var(--border);
+      border-radius: var(--r-sm);
+      background: var(--bg);
+      color: var(--text);
+      font-size: 14px;
+      font-weight: 700;
+      transition: border-color 180ms ease-out, background 180ms ease-out, color 180ms ease-out;
+    }
+    .filter-button:hover { border-color: var(--accent); }
+    .filter-button[aria-pressed="true"] {
+      border-color: var(--accent);
+      background: var(--accent);
+      color: var(--accent-contrast);
+    }
+    .filter-context {
+      margin: 24px 0 0;
+      padding-top: 16px;
+      border-top: 1px solid var(--border);
+      color: var(--muted);
+      font-size: 14px;
+    }
+    .demo-error-button {
+      min-height: 40px;
+      margin-top: 12px;
+      padding: 0;
+      border: 0;
+      background: transparent;
+      color: var(--muted);
+      font-size: 12px;
+      text-decoration: underline;
+    }
+    .demo-error-button[aria-pressed="true"] { color: var(--danger); font-weight: 700; }
+
+    .results-header {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 16px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--text);
+    }
+    .results-header h2 { margin: 0; font-size: 20px; letter-spacing: -.03em; }
+    .results-header p { margin: 0; color: var(--muted); font-size: 14px; }
+    .result-list { margin: 0; padding: 0; list-style: none; }
+    .walker-row {
+      display: grid;
+      grid-template-columns: 72px minmax(180px, 1.15fr) minmax(280px, 1.7fr) auto;
+      gap: 20px;
+      align-items: center;
+      min-height: 152px;
+      padding: 24px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .walker-row[data-selected="true"] {
+      background: var(--surface);
+    }
+    .avatar {
+      width: 72px;
+      height: 88px;
+      display: grid;
+      place-items: center;
+      border-radius: var(--r-sm);
+      background: var(--surface-strong);
+      color: var(--accent);
+      font-size: 24px;
+      font-weight: 800;
+      overflow: hidden;
+    }
+    .avatar.missing { color: var(--muted); font-size: 12px; text-align: center; }
+    .walker-name { margin: 0 0 4px; font-size: 18px; }
+    .walker-location { margin: 0; color: var(--muted); font-size: 14px; overflow-wrap: anywhere; }
+    .facts {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px 16px;
+      margin: 0;
+    }
+    .fact { min-width: 0; }
+    .fact dt { color: var(--muted); font-size: 12px; }
+    .fact dd { margin: 1px 0 0; font-size: 14px; font-weight: 700; }
+    .row-action { min-width: 132px; text-align: right; }
+    .price { display: block; margin-bottom: 8px; font-variant-numeric: tabular-nums; font-weight: 800; }
+    .select-button, .primary-button, .tertiary-button {
+      min-height: 44px;
+      border-radius: var(--r-sm);
+      font-weight: 800;
+      transition: background 180ms ease-out, color 180ms ease-out, border-color 180ms ease-out, transform 180ms ease-out;
+    }
+    .select-button {
+      width: 100%;
+      border: 1px solid var(--accent);
+      background: var(--bg);
+      color: var(--accent);
+    }
+    .select-button:hover { background: var(--surface); }
+    .walker-row[data-selected="true"] .select-button {
+      border-color: var(--text);
+      color: var(--text);
+    }
+    .select-button:disabled {
+      border-color: var(--border);
+      color: var(--disabled);
+      background: var(--surface);
+    }
+    .availability { margin: 8px 0 0; color: var(--muted); font-size: 12px; }
+    .availability.available { color: var(--success); font-weight: 700; }
+
+    .empty-state, .error-state {
+      padding: 48px 24px;
+      text-align: center;
+      background: var(--surface);
+    }
+    .empty-state h3, .error-state h3 { margin: 0 0 8px; font-size: 20px; }
+    .empty-state p, .error-state p { margin: 0 auto 20px; color: var(--muted); max-width: 42ch; }
+    .tertiary-button {
+      padding: 0 16px;
+      border: 1px solid var(--border);
+      background: var(--bg);
+      color: var(--text);
+    }
+    .tertiary-button:hover { border-color: var(--text); }
+
+    .request-bar {
+      margin-top: 24px;
+      padding: 20px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+      background: var(--text);
+      color: var(--accent-contrast);
+      border-radius: var(--r-lg);
+    }
+    .request-bar p { margin: 0; }
+    .request-meta { font-size: 14px; color: #dfe6e1; }
+    .primary-button {
+      min-width: 280px;
+      padding: 0 20px;
+      border: 0;
+      background: var(--accent);
+      color: var(--accent-contrast);
+    }
+    .primary-button:hover { background: var(--accent-hover); transform: translateY(-1px); }
+
+    .terminal {
+      padding: 32px;
+      background: var(--surface);
+      border-left: 4px solid var(--success);
+    }
+    .terminal h2 { margin: 0 0 8px; font-size: 24px; }
+    .terminal p { margin: 0 0 20px; color: var(--muted); }
+    .receipt {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin: 0 0 24px;
+    }
+    .receipt div { min-width: 0; }
+    .receipt dt { color: var(--muted); font-size: 12px; }
+    .receipt dd { margin: 2px 0 0; font-weight: 800; overflow-wrap: anywhere; }
+    .terminal-actions { display: flex; gap: 8px; }
+    .terminal .primary-button { min-width: 0; }
+    .danger-text { color: var(--danger); }
+
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+
+    @media (max-width: 900px) {
+      .shell, .topbar-inner { width: min(calc(100% - 32px), 680px); }
+      .shell { padding-top: 24px; }
+      .intro { align-items: start; flex-direction: column; padding-bottom: 24px; }
+      .workspace { grid-template-columns: 1fr; gap: 24px; }
+      .filters { position: static; padding: 16px; }
+      .filter-group + .filter-group { margin-top: 16px; }
+      .time-list { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .filter-context { margin-top: 16px; padding-top: 12px; }
+      .walker-row { grid-template-columns: 56px minmax(0, 1fr) auto; gap: 12px; min-height: 0; padding: 20px 0; }
+      .avatar { width: 56px; height: 68px; }
+      .facts { grid-column: 2 / -1; }
+      .row-action { grid-column: 2 / -1; display: flex; align-items: center; justify-content: space-between; gap: 12px; min-width: 0; text-align: left; }
+      .price { margin: 0; }
+      .select-button { width: auto; min-width: 112px; }
+      .request-bar { margin-inline: -4px; padding: 16px; }
+      .request-meta { display: none; }
+      .primary-button { min-width: min(220px, 62vw); }
+      .receipt { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    @media (max-width: 430px) {
+      .topbar-inner { min-height: 64px; }
+      .demo-note { max-width: 18ch; text-align: right; }
+      .shell { padding-top: 16px; padding-bottom: 40px; }
+      .intro { gap: 8px; padding-bottom: 16px; }
+      .intro p { display: none; }
+      h1 { font-size: 24px; }
+      .filters { padding: 12px; }
+      .filter-group + .filter-group { margin-top: 12px; }
+      .route-summary { white-space: normal; }
+      .results-header { align-items: flex-end; }
+      .results-header p { text-align: right; }
+      .segmented { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+      .facts { grid-template-columns: 1fr 1fr; }
+      .filter-button, .select-button, .primary-button { white-space: normal; }
+      .filter-context { display: none; }
+      .demo-error-button { margin-top: 8px; }
+      .request-bar { align-items: stretch; flex-direction: column; gap: 8px; }
+      .request-bar strong { font-size: 14px; }
+      .primary-button { width: 100%; min-width: 0; }
+      .terminal { padding: 24px 20px; }
+      .terminal-actions { flex-direction: column; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; }
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="topbar-inner">
+      <div class="brand"><span class="brand-mark" aria-hidden="true">ㄱ</span>곁길</div>
+      <p class="demo-note">가상 프로필·가격을 쓴 기능 데모</p>
+    </div>
+  </header>
+
+  <main class="shell">
+    <section class="intro" aria-labelledby="page-title">
+      <div>
+        <h1 id="page-title">오늘 산책을 맡길 사람을 고르자</h1>
+        <p>강아지 체급과 가능한 시간을 먼저 맞춘 뒤 비교함.</p>
+      </div>
+      <div class="route-summary" id="route-summary">중형견 · 오늘 19:00 · 60분</div>
+    </section>
+
+    <div class="workspace" id="workspace">
+      <aside class="filters" aria-label="산책 조건">
+        <div class="filter-group">
+          <label class="filter-label" for="location-search">동네 검색</label>
+          <form class="search-row" id="location-form">
+            <input class="search-input" id="location-search" type="search" value="마포구" autocomplete="address-level2">
+            <button class="filter-button" type="submit">적용</button>
+          </form>
+        </div>
+        <div class="filter-group">
+          <span class="filter-label" id="size-label">강아지 체급</span>
+          <div class="segmented" aria-labelledby="size-label">
+            <button class="filter-button size-filter" type="button" data-size="소형견" aria-pressed="false">소형견</button>
+            <button class="filter-button size-filter" type="button" data-size="중형견" aria-pressed="true">중형견</button>
+            <button class="filter-button size-filter" type="button" data-size="대형견" aria-pressed="false">대형견</button>
+          </div>
+        </div>
+        <div class="filter-group">
+          <span class="filter-label" id="time-label">산책 시작</span>
+          <div class="time-list" aria-labelledby="time-label">
+            <button class="filter-button time-filter" type="button" data-time="오늘 19:00" aria-pressed="true">오늘 19:00</button>
+            <button class="filter-button time-filter" type="button" data-time="내일 08:00" aria-pressed="false">내일 08:00</button>
+          </div>
+        </div>
+        <p class="filter-context">필터는 즉시 반영됨. 결과가 없으면 기본 조건으로 되돌릴 수 있음.</p>
+        <button class="demo-error-button" id="toggle-error" type="button" aria-pressed="false">기능 데모: 다음 요청 오류 시연</button>
+      </aside>
+
+      <section aria-labelledby="result-title">
+        <div class="results-header">
+          <h2 id="result-title">맞는 산책 파트너</h2>
+          <p id="result-count" aria-live="polite">예약 가능 2명</p>
+        </div>
+        <div id="result-region"></div>
+      </section>
+    </div>
+
+    <div id="status-region" class="sr-only" role="status" aria-live="polite"></div>
+  </main>
+
+  <script>
+    const walkers = [
+      {
+        id: "minji",
+        name: "김민지",
+        initial: "민",
+        location: "마포구 망원동 · 0.8km",
+        sizes: ["소형견", "중형견"],
+        slots: ["오늘 19:00", "내일 08:00"],
+        style: "냄새 맡기 충분히",
+        leash: "이중 리드줄 가능",
+        duration: "60분",
+        price: 18000
+      },
+      {
+        id: "seoyun",
+        name: "박서윤",
+        initial: "서",
+        location: "마포구 성산동 월드컵시장 안쪽 긴 골목 · 1.6km",
+        sizes: ["소형견", "중형견"],
+        slots: ["오늘 19:00"],
+        style: "천천히 동네 한 바퀴",
+        leash: "짧은 리드 중심",
+        duration: "60분",
+        price: 16000
+      },
+      {
+        id: "jaeho",
+        name: "이재호",
+        initial: "재",
+        location: "마포구 연남동 · 2.1km",
+        sizes: ["중형견", "대형견"],
+        slots: ["오늘 19:00"],
+        style: "빠른 걸음 운동형",
+        leash: "대형견 하네스 가능",
+        duration: "60분",
+        price: 21000
+      },
+      {
+        id: "hyeon",
+        name: "최현",
+        initial: "사진 없음",
+        location: "마포구 합정동 · 1.2km",
+        sizes: ["소형견"],
+        slots: ["내일 08:00"],
+        style: "짧은 휴식 포함",
+        leash: "기본 리드 가능",
+        duration: "60분",
+        price: 17000,
+        missing: true
+      }
+    ];
+
+    const state = { location: "마포구", size: "중형견", time: "오늘 19:00", selectedId: "minji", requested: false, demoError: false };
+    const resultRegion = document.querySelector("#result-region");
+    const resultCount = document.querySelector("#result-count");
+    const routeSummary = document.querySelector("#route-summary");
+    const statusRegion = document.querySelector("#status-region");
+    const money = new Intl.NumberFormat("ko-KR");
+
+    function availableWalkers() {
+      return walkers.filter(walker => walker.location.includes(state.location) && walker.sizes.includes(state.size) && walker.slots.includes(state.time));
+    }
+
+    function unavailableWalkers() {
+      return walkers.filter(walker => walker.location.includes(state.location) && walker.sizes.includes(state.size) && !walker.slots.includes(state.time));
+    }
+
+    function walkerRow(walker, available) {
+      const selected = available && walker.id === state.selectedId;
+      return `
+        <li class="walker-row" data-selected="${selected}">
+          <div class="avatar ${walker.missing ? "missing" : ""}" aria-label="${walker.missing ? `${walker.name} 프로필 사진 없음` : `${walker.name} 프로필 일러스트`}">${walker.initial}</div>
+          <div>
+            <h3 class="walker-name">${walker.name}</h3>
+            <p class="walker-location">${walker.location}</p>
+            <p class="availability ${available ? "available" : ""}">${available ? `${state.time} 산책 가능` : `${state.time} 마감`}</p>
+          </div>
+          <dl class="facts">
+            <div class="fact"><dt>산책 방식</dt><dd>${walker.style}</dd></div>
+            <div class="fact"><dt>리드줄</dt><dd>${walker.leash}</dd></div>
+            <div class="fact"><dt>가능 체급</dt><dd>${walker.sizes.join(" · ")}</dd></div>
+            <div class="fact"><dt>시간</dt><dd>${walker.duration}</dd></div>
+          </dl>
+          <div class="row-action">
+            <span class="price">${money.format(walker.price)}원</span>
+            <button class="select-button" type="button" data-walker="${walker.id}" ${available ? "" : "disabled"}>
+              ${available ? (selected ? "선택됨" : `${walker.name.slice(1)} 선택`) : "시간 마감"}
+            </button>
+          </div>
+        </li>`;
+    }
+
+    function renderResults() {
+      const available = availableWalkers();
+      const unavailable = unavailableWalkers();
+      if (!available.some(walker => walker.id === state.selectedId)) state.selectedId = available[0]?.id ?? null;
+      const selected = walkers.find(walker => walker.id === state.selectedId);
+
+      routeSummary.textContent = `${state.location} · ${state.size} · ${state.time}`;
+      resultCount.textContent = `예약 가능 ${available.length}명`;
+      document.querySelectorAll(".size-filter").forEach(button => button.setAttribute("aria-pressed", String(button.dataset.size === state.size)));
+      document.querySelectorAll(".time-filter").forEach(button => button.setAttribute("aria-pressed", String(button.dataset.time === state.time)));
+
+      if (!available.length) {
+        resultRegion.innerHTML = `
+          <div class="empty-state">
+            <h3>지금 가능한 파트너가 없음</h3>
+            <p>${state.location} · ${state.size} · ${state.time} 조건임. 기본 조건으로 돌아가면 바로 비교할 수 있음.</p>
+            <button type="button" class="tertiary-button" id="reset-filters">중형견 · 오늘 19:00으로 복구</button>
+          </div>
+          ${unavailable.length ? `<ul class="result-list" aria-label="시간이 마감된 파트너">${unavailable.map(walker => walkerRow(walker, false)).join("")}</ul>` : ""}`;
+      } else {
+        resultRegion.innerHTML = `
+          <ul class="result-list" aria-label="예약 가능한 산책 파트너">
+            ${available.map(walker => walkerRow(walker, true)).join("")}
+            ${unavailable.slice(0, 1).map(walker => walkerRow(walker, false)).join("")}
+          </ul>
+          <div class="request-bar">
+            <div>
+              <strong>${selected.name} · ${state.time}</strong>
+              <p class="request-meta">${state.size} · 60분 · 취소 가능</p>
+            </div>
+            <button class="primary-button" id="request-walk" type="button">${selected.name.slice(1)}에게 산책 요청 · ${money.format(selected.price)}원</button>
+          </div>`;
+      }
+      bindDynamicControls();
+    }
+
+    function renderTerminal(kind = "success") {
+      const selected = walkers.find(walker => walker.id === state.selectedId);
+      const failed = kind === "error";
+      resultRegion.innerHTML = `
+        <section class="terminal" aria-labelledby="terminal-title">
+          <h2 id="terminal-title" class="${failed ? "danger-text" : ""}">${failed ? "요청을 보내지 못했음" : "산책 요청을 보냈음"}</h2>
+          <p>${failed ? "데모 오류 상태임. 같은 조건으로 다시 시도하거나 목록으로 돌아갈 수 있음." : "상대가 수락하면 연락 방법이 열림. 이 화면은 기능 흐름용 가상 데모임."}</p>
+          <dl class="receipt">
+            <div><dt>산책 파트너</dt><dd>${selected.name}</dd></div>
+            <div><dt>조건</dt><dd>${state.size} · 60분</dd></div>
+            <div><dt>시작</dt><dd>${state.time}</dd></div>
+            <div><dt>예상 금액</dt><dd>${money.format(selected.price)}원</dd></div>
+          </dl>
+          <div class="terminal-actions">
+            ${failed ? `<button class="primary-button" id="retry-request" type="button">같은 조건으로 다시 요청</button>` : ""}
+            <button class="tertiary-button" id="cancel-request" type="button">${failed ? "목록으로 돌아가기" : "요청 취소"}</button>
+          </div>
+        </section>`;
+      resultCount.textContent = failed ? "요청 오류" : "요청 완료";
+      statusRegion.textContent = failed ? "산책 요청 전송에 실패함" : `${selected.name}에게 산책 요청을 보냈음`;
+      document.querySelector("#cancel-request").addEventListener("click", () => {
+        state.requested = false;
+        renderResults();
+        statusRegion.textContent = failed ? "산책 파트너 목록으로 돌아옴" : "산책 요청을 취소하고 파트너 목록으로 돌아옴";
+        document.querySelector("#request-walk")?.focus();
+      });
+      document.querySelector("#retry-request")?.addEventListener("click", () => renderTerminal("success"));
+    }
+
+    function bindDynamicControls() {
+      document.querySelectorAll("[data-walker]:not(:disabled)").forEach(button => {
+        button.addEventListener("click", () => {
+          state.selectedId = button.dataset.walker;
+          renderResults();
+          statusRegion.textContent = `${walkers.find(w => w.id === state.selectedId).name} 선택됨`;
+          document.querySelector(`[data-walker="${state.selectedId}"]`)?.focus();
+        });
+      });
+      document.querySelector("#request-walk")?.addEventListener("click", () => {
+        state.requested = true;
+        renderTerminal(state.demoError || new URLSearchParams(location.search).get("state") === "error" ? "error" : "success");
+        document.querySelector("#terminal-title")?.focus?.();
+      });
+      document.querySelector("#reset-filters")?.addEventListener("click", () => {
+        state.location = "마포구";
+        state.size = "중형견";
+        state.time = "오늘 19:00";
+        state.selectedId = "minji";
+        document.querySelector("#location-search").value = state.location;
+        renderResults();
+        statusRegion.textContent = "기본 산책 조건으로 복구함";
+        document.querySelector(".size-filter[data-size='중형견']")?.focus();
+      });
+    }
+
+    document.querySelectorAll(".size-filter").forEach(button => button.addEventListener("click", () => {
+      state.size = button.dataset.size;
+      renderResults();
+      statusRegion.textContent = `${state.size} 조건 적용, 예약 가능 ${availableWalkers().length}명`;
+      document.querySelector(`.size-filter[data-size="${state.size}"]`)?.focus();
+    }));
+    document.querySelectorAll(".time-filter").forEach(button => button.addEventListener("click", () => {
+      state.time = button.dataset.time;
+      renderResults();
+      statusRegion.textContent = `${state.time} 조건 적용, 예약 가능 ${availableWalkers().length}명`;
+      document.querySelector(`.time-filter[data-time="${state.time}"]`)?.focus();
+    }));
+    document.querySelector("#location-form").addEventListener("submit", event => {
+      event.preventDefault();
+      state.location = document.querySelector("#location-search").value.trim() || "마포구";
+      renderResults();
+      statusRegion.textContent = `${state.location} 검색 결과, 예약 가능 ${availableWalkers().length}명`;
+    });
+    document.querySelector("#toggle-error").addEventListener("click", event => {
+      state.demoError = !state.demoError;
+      event.currentTarget.setAttribute("aria-pressed", String(state.demoError));
+      event.currentTarget.textContent = state.demoError ? "오류 시연 켜짐 · 다시 누르면 해제" : "기능 데모: 다음 요청 오류 시연";
+      statusRegion.textContent = state.demoError ? "다음 산책 요청은 오류 시연 상태임" : "요청 오류 시연을 해제함";
+    });
+
+    renderResults();
+  </script>
+</body>
+</html>

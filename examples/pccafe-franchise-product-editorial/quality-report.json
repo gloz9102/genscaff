@@ -1,0 +1,689 @@
+{
+  "schema_version": 2,
+  "evidence_catalog": {
+    "desktop-primary": {
+      "artifact": "C:/@Dev/genscaff/examples/pccafe-franchise-product-editorial/artifacts/final-desktop-start.png",
+      "region": "1440px 첫 화면의 매장 이미지, 평형 선택, 운영 수치, 좌석 평면도와 상권 검토 CTA",
+      "observation": "생성한 가상 매장 이미지와 60평 기본값의 82석, RTX 존 24석, 팀룸 6석, 110kW, 좌석군 평면도와 요청서 CTA가 한 화면에 보임."
+    },
+    "desktop-terminal": {
+      "artifact": "C:/@Dev/genscaff/examples/pccafe-franchise-product-editorial/artifacts/final-desktop-terminal.png",
+      "region": "데스크톱 상권 검토 요청서 완료 모달",
+      "observation": "60평·82석, RTX 존 24석, 팀룸 6석, 긴 성수 상권명, 후보 상가 상태와 내용 수정·선택 화면 복귀가 모달 안에서 보임."
+    },
+    "mobile-primary": {
+      "artifact": "C:/@Dev/genscaff/examples/pccafe-franchise-product-editorial/artifacts/final-mobile-start.png",
+      "region": "390px 첫 화면의 60평 선택과 가상 매장 이미지",
+      "observation": "모바일에서 브랜드, 45/60/80평 선택, 운영 수치, CTA와 좌석·통로가 보이는 가상 매장 이미지가 가로 넘침 없이 보임."
+    },
+    "mobile-terminal": {
+      "artifact": "C:/@Dev/genscaff/examples/pccafe-franchise-product-editorial/artifacts/final-mobile-terminal.png",
+      "region": "390px 45평 상권 검토 요청서 완료 모달",
+      "observation": "45평·62석, RTX 존 16석, 팀룸 4석, 부산 센텀 상권과 상가 탐색 중 상태가 한 열 영수증으로 보임."
+    },
+    "error-state": {
+      "artifact": "C:/@Dev/genscaff/examples/pccafe-franchise-product-editorial/artifacts/desktop-error.png",
+      "region": "상권명 미입력 요청서 폼 오류 상태",
+      "observation": "검토할 상권 필드에 오류 테두리와 입력 필요 문장이 나타나고 나머지 60평·82석·110kW 선택 요약은 유지됨."
+    },
+    "long-content": {
+      "artifact": "C:/@Dev/genscaff/examples/pccafe-franchise-product-editorial/artifacts/final-desktop-terminal.png",
+      "region": "완료 영수증의 긴 검토 상권 값 행",
+      "observation": "긴 서울 성수 역세권 상권명이 값 열 안에서 줄바꿈되고 라벨 열, 상가 상태, 완료 액션 정렬이 유지됨."
+    },
+    "iteration-1": {
+      "artifact": "C:/@Dev/genscaff/examples/pccafe-franchise-product-editorial/artifacts/review-before-terminal.png",
+      "region": "1차 성공 모달의 완료 영수증 전체",
+      "observation": "성공 패널의 4px 패딩이 공용 모달 패딩을 덮어 제목 첫 글자와 긴 상권값이 좌우 경계에 붙어 잘리는 결함이 보임."
+    },
+    "iteration-2": {
+      "artifact": "C:/@Dev/genscaff/examples/pccafe-franchise-product-editorial/artifacts/final-desktop-terminal.png",
+      "region": "2차 성공 모달의 패딩과 긴 상권 영수증",
+      "observation": "성공 패널에 28px 패딩과 136px 라벨 열을 적용한 뒤 제목, 긴 상권값, 두 완료 액션이 모달 경계 안에 안정적으로 보임."
+    },
+    "independent-review": {
+      "artifact": "C:/@Dev/genscaff/examples/pccafe-franchise-product-editorial/artifacts/final-desktop-start.png",
+      "region": "최종 PC방 평형 선택과 좌석 설계 제품 표면",
+      "observation": "독립 검토자가 새 데스크톱·모바일 캡처에서 히어로 이미지의 브랜드 적합성, 크롭, 대비, 모바일 오버플로와 alt를 재확인하고 PASS로 판정함."
+    }
+  },
+  "context": {
+    "work_type": "new",
+    "scope": "site",
+    "product_name": "NOON PC",
+    "product_type": "PC방 프랜차이즈 출점 설계·상권 검토 웹사이트",
+    "target_user": "상가 면적과 상권에 맞는 PC방 좌석 구성을 검토하는 예비 점주",
+    "user_need": "내 점포 크기에서 좌석 수, 좌석 등급, 팀룸, 전력 여유가 어떻게 구성되는지 보고 검토 요청서를 만들고 싶다.",
+    "primary_task": "45·60·80평 모델을 비교해 하나를 선택하고 상권과 상가 상태가 보존된 검토 요청서를 만든다.",
+    "success_outcome": "선택 모델, 예상 좌석, RTX 존, 팀룸, 입력 상권과 상가 상태가 완료 영수증에 표시되고 수정이나 닫기로 복구된다.",
+    "primary_cta": "60평 상권 검토 요청서 만들기",
+    "constraints": [
+      "PC방 프랜차이즈 웹사이트를 만든다.",
+      "제품에 맞는 아키타입을 자율적으로 선택한다.",
+      "가상 수치와 실제 접수 여부를 화면에서 정직하게 고지한다.",
+      "이미지 생성 도구로 PC방 프랜차이즈에 적합한 히어로 이미지를 만들고 히어로 영역에 넣는다."
+    ],
+    "differentiators": [
+      "평형 선택이 좌석 수, RTX 존, 팀룸, 전력, 평면도, CTA를 동시에 변경한다.",
+      "선택 모델과 상권·상가 상태가 검토 폼과 완료 영수증까지 유지된다.",
+      "차콜·라임 가상 매장 이미지와 동적 좌석 평면도를 한 설계 패널에서 연결한다."
+    ],
+    "domain_objects": [
+      "전용 평형",
+      "예상 좌석",
+      "RTX 존",
+      "팀룸 좌석",
+      "설계 전력",
+      "좌석군 평면도",
+      "전력 버스",
+      "흡배기 동선",
+      "검토 상권",
+      "상가 상태",
+      "상권 검토 요청서"
+    ],
+    "assumptions": [
+      "NOON PC 브랜드와 모든 공간·전력·좌석 수치는 가상 데모 데이터다.",
+      "product-editorial을 주 아키타입, transaction을 보조 아키타입으로 선택한 것은 제품 흐름 기반 가정이다."
+    ]
+  },
+  "visual_target": {
+    "created_before_coding": true,
+    "expanded_design_brief_created": true,
+    "artifact": "C:/@Dev/genscaff/examples/pccafe-franchise-product-editorial/visual-target-image-update-2026-08-05.md",
+    "created_at": "2026-08-05T10:15:50+09:00",
+    "baseline_context": "기존 좌석 평면도 중심 히어로에 생성 이미지를 추가하되 제품 판단 도구와 상호작용을 보존했다.",
+    "brief_summary": "예비 점주가 실제에 가까운 매장 분위기와 평형별 좌석·전력·팀룸 설계를 연속해서 이해하고 검토 요청서를 만드는 흐름.",
+    "summary": "차콜·라임 가상 매장 사진과 동적 좌석 설계도를 결합한 절제된 B2B 프랜차이즈 히어로.",
+    "direction_options": [
+      {
+        "name": "가상 매장 이미지와 운영 설계도 결합",
+        "product_fit": "평형 선택이 좌석군, GPU 존, 팀룸, 전력과 요청서에 연속적으로 반영돼 예비 점주의 핵심 결정을 직접 지원한다.",
+        "tradeoff": "실제 매장 사진과 감성적 공간 경험은 보여주지 않으며 운영 구조 판단에 집중한다."
+      },
+      {
+        "name": "감성 매장 사진 중심",
+        "product_fit": "실제 브랜드가 가진 고품질 매장 사진과 공간 경험을 전달하는 단계에는 적합하다.",
+        "tradeoff": "현재 가상 데모에서는 허구 사진과 분위기 카피가 좌석·전력 결정을 가릴 위험이 크다."
+      }
+    ],
+    "selected_direction": "가상 매장 이미지와 운영 설계도 결합",
+    "selection_rationale": "생성 이미지는 좌석 밀도, 중앙 통로, 팀룸과 천장 설비를 보여주고 기존 동적 평면도는 정량 판단을 유지한다. 분위기와 운영 구조를 같은 패널에서 연결해 이미지가 장식으로 끝나지 않게 했다.",
+    "benchmark_principles": [
+      {
+        "source": "번들 Apple·Linear 관찰 원칙",
+        "principle": "하나의 제품 표면을 지배적 시각 앵커로 두고 실제 작업 데이터와 상태를 첫 화면에서 보여준다.",
+        "relevance": "복잡한 B2B 가맹 상품을 추상 홍보보다 조작 가능한 구성 결과로 이해시키는 같은 상호작용 문제다.",
+        "application": "첫 화면 오른쪽 7열을 평형에 따라 갱신되는 좌석 설계도에 주고 왼쪽에서 평형·좌석·전력·CTA를 같은 상태로 연결했다.",
+        "non_copy_boundary": "브랜드, 로고, 카피, 색 조합, 내비게이션, 제품 이미지, 정확한 구도와 전환 효과를 복제하지 않았다."
+      }
+    ],
+    "risk_hypotheses": [
+      "네온 그라디언트와 유리 카드가 PC방 분위기를 대신하는 시각 슬롭",
+      "근거 없는 매출·가맹점 수·성공률을 실제 지표처럼 쓰는 콘텐츠 슬롭",
+      "평형 선택과 CTA가 수치·평면·요청서 상태를 바꾸지 않는 상호작용 슬롭",
+      "성공 모달과 긴 상권명이 작은 화면이나 경계에서 잘리는 반응형 위험"
+    ],
+    "primary_cta": "60평 상권 검토 요청서 만들기",
+    "token_strategy": "CSS custom properties로 배경·inverse 표면·텍스트·경계·라임 액센트·포커스·성공·오류 역할을 정의하고 4px 배수 간격과 두 radius 수준을 사용했다."
+  },
+  "requirement_trace": [
+    {
+      "id": "primary-task",
+      "requirement": "평형 모델을 선택하고 상권·상가 상태가 보존된 검토 요청서를 완료한다.",
+      "source": "derived",
+      "implementation": "모델 세그먼트, 좌석 평면도, 요청서 dialog, 필수 검증, 완료 영수증, 내용 수정·닫기 복구.",
+      "status": "verified",
+      "evidence": [
+        "desktop-primary",
+        "desktop-terminal",
+        "mobile-primary",
+        "mobile-terminal",
+        "error-state"
+      ]
+    },
+    {
+      "id": "primary-cta",
+      "requirement": "기본 60평 선택으로 상권 검토 요청서 흐름을 시작한다.",
+      "source": "derived",
+      "implementation": "60평 수치와 평면도 바로 아래 `60평 상권 검토 요청서 만들기` 버튼.",
+      "status": "verified",
+      "evidence": [
+        "desktop-primary",
+        "desktop-terminal"
+      ]
+    },
+    {
+      "id": "constraint-1",
+      "requirement": "PC방 프랜차이즈 상품과 출점 검토가 첫 화면에서 식별되는 웹사이트를 만든다.",
+      "source": "user",
+      "implementation": "평형, 좌석, RTX 존, 팀룸, kW, 좌석군 평면도와 상권 검토 요청서를 첫 흐름으로 구성함.",
+      "status": "verified",
+      "evidence": [
+        "desktop-primary",
+        "mobile-primary"
+      ]
+    },
+    {
+      "id": "constraint-2",
+      "requirement": "제품 특성과 사용자 과업에 맞는 아키타입을 자율적으로 선택하고 결과에 반영한다.",
+      "source": "user",
+      "implementation": "product-editorial로 좌석 설계 상품을 설명하고 transaction 보조 흐름으로 검토 요청서 오류·완료·수정을 구현함.",
+      "status": "verified",
+      "evidence": [
+        "desktop-primary",
+        "desktop-terminal",
+        "error-state"
+      ]
+    },
+    {
+      "id": "constraint-3",
+      "requirement": "가상 수치와 실제 접수 여부를 실제 운영 데이터처럼 속이지 않고 화면에서 고지한다.",
+      "source": "derived",
+      "implementation": "헤더, 평면도, 비교표, 폼, 완료 패널에 가상 설계 데이터와 실제 접수 아님을 표시함.",
+      "status": "verified",
+      "evidence": [
+        "desktop-primary",
+        "desktop-terminal"
+      ]
+    },
+    {
+      "id": "constraint-4",
+      "requirement": "이미지 생성 도구로 PC방 프랜차이즈에 맞는 히어로 이미지를 만들고 히어로 영역에 넣는다.",
+      "source": "user",
+      "implementation": "차콜 매장, 라임 동선, 좌석군, 팀룸과 노출 설비가 보이는 이미지를 생성하고 좌석 설계도 위의 figure로 통합함.",
+      "status": "verified",
+      "evidence": [
+        "desktop-primary",
+        "mobile-primary"
+      ]
+    },
+    {
+      "id": "differentiator-1",
+      "requirement": "평형 선택이 좌석·존·전력·평면도와 CTA 결과를 같은 상태로 함께 바꾼다.",
+      "source": "derived",
+      "implementation": "모델 데이터 객체 한 곳에서 모든 지표, 평면 블록, 비교표 강조, CTA 문자열을 다시 렌더링함.",
+      "status": "verified",
+      "evidence": [
+        "desktop-primary",
+        "mobile-primary"
+      ]
+    },
+    {
+      "id": "differentiator-2",
+      "requirement": "선택 모델과 상권·상가 상태가 검토 폼에서 완료 영수증과 수정 흐름까지 유지된다.",
+      "source": "derived",
+      "implementation": "dialog 요약과 완료 receipt가 state와 입력값을 공유하며 내용 수정은 값과 모델을 보존함.",
+      "status": "verified",
+      "evidence": [
+        "desktop-terminal",
+        "mobile-terminal"
+      ]
+    }
+  ],
+  "product_specificity": {
+    "domain_signals": [
+      {
+        "element": "평형별 좌석 설계도",
+        "domain_detail": "45·60·80평, STD·RTX·TEAM 좌석군과 전력 버스를 평면 블록으로 표시함.",
+        "decision_enabled": "예비 점주가 전용 면적에 따라 좌석 등급과 팀룸을 어떤 모델로 검토할지 결정한다.",
+        "evidence": "desktop-primary"
+      },
+      {
+        "element": "운영 수치와 동선 설명",
+        "domain_detail": "예상 좌석, RTX 존, 팀룸, kW, 흡배기, 배전 여유, 직원 동선을 같은 제품 서사에 둠.",
+        "decision_enabled": "단순 좌석 최대화가 아니라 열·전력·서비스 제약을 포함한 출점 모델을 비교한다.",
+        "evidence": "desktop-primary"
+      },
+      {
+        "element": "상권 검토 요청서",
+        "domain_detail": "선택 모델·좌석·전력과 검토 상권·상가 상태를 한 요청 문서와 완료 영수증에 보존함.",
+        "decision_enabled": "선택한 PC방 모델을 특정 상권 후보와 함께 다음 검토 상태로 넘긴다.",
+        "evidence": "desktop-terminal"
+      }
+    ],
+    "decision_points": [
+      {
+        "decision": "어떤 전용 평형의 PC방 좌석·전력 모델을 상권 검토 대상으로 선택할지 결정한다.",
+        "inputs": "전용 면적, 예상 좌석, RTX 존, 팀룸, 설계 전력, 좌석군 평면 배치",
+        "consequence": "수치, 평면도, 비교표 강조, CTA, 요청 폼과 완료 영수증이 선택 평형으로 갱신된다.",
+        "evidence": "desktop-primary"
+      },
+      {
+        "decision": "현재 상가 확보 단계와 상권명을 어떤 요청서 내용으로 준비할지 결정한다.",
+        "inputs": "필수 상권명과 상가 탐색 중·후보 있음·임대 협의 중 상태",
+        "consequence": "유효 입력은 완료 영수증에 보존되고 빈 상권명은 인라인 오류로 차단된다.",
+        "evidence": "error-state"
+      }
+    ],
+    "substitution_test": {
+      "comparisons": [
+        {
+          "alternate_product": "피부과 상담 사이트",
+          "still_fits": false,
+          "breaking_signals": [
+            "전용 평형별 좌석군, RTX 존, 팀룸, kW 전력 버스는 의료 상담 객체와 맞지 않는다.",
+            "흡배기·배전·직원 통로와 상권 출점 요청서는 시술 선택·예약 흐름으로 바꿀 수 없다."
+          ]
+        },
+        {
+          "alternate_product": "식품 구독 서비스",
+          "still_fits": false,
+          "breaking_signals": [
+            "평형·좌석 수·GPU 존·설계 전력 평면도는 구독 식품 데이터가 아니다.",
+            "상가 확보 상태와 PC방 상권 검토 완료 영수증은 배송 주기·장바구니 흐름으로 전환되지 않는다."
+          ]
+        }
+      ],
+      "verdict": "product-specific",
+      "rationale": "브랜드와 라임색을 제거해도 45·60·80평, 좌석군 평면, RTX 존, 팀룸, 설계 전력, 흡배기, 상가 상태와 상권 검토 요청서가 남는다. 이 구조와 언어는 PC방 출점 상품을 구체적으로 식별하며 의료 상담이나 식품 구독으로 명사만 바꿔 재사용할 수 없다."
+    },
+    "generic_elements_found": []
+  },
+  "action_trace": {
+    "interaction_mode": "functional",
+    "primary": {
+      "label": "60평 상권 검토 요청서 만들기",
+      "location": "첫 화면 60평 운영 수치 바로 아래",
+      "start_state": "60평이 안전 기본값으로 선택되어 82석, RTX 24석, 팀룸 6석, 110kW와 평면도가 보임.",
+      "information_scent": "CTA 바로 위에 선택 평형, 좌석, GPU 존, 팀룸, 전력 결과가 있어 열리는 요청서의 대상을 예측할 수 있다.",
+      "steps": [
+        {
+          "action": "45·60·80평 모델 버튼 중 하나를 선택한다.",
+          "feedback": "선택 상태, 좌석 수, RTX 존, 팀룸, 전력, 평면도와 CTA가 즉시 갱신된다.",
+          "result": "상권 검토 요청서의 모델과 좌석·전력 전제 조건이 확정된다.",
+          "evidence": "desktop-primary"
+        },
+        {
+          "action": "60평 상권 검토 요청서 만들기 버튼을 누른다.",
+          "feedback": "60평·82석·110kW 요약을 유지한 요청서 dialog가 열리고 상권 필드에 포커스가 간다.",
+          "result": "상권과 상가 상태를 입력할 수 있는 로컬 요청서 단계에 진입한다.",
+          "evidence": "desktop-primary"
+        },
+        {
+          "action": "상권명을 비운 채 요청서 준비 버튼을 누른다.",
+          "feedback": "상권 필드에 오류 테두리와 입력 필요 문장이 나타나며 포커스가 해당 필드에 유지된다.",
+          "result": "필수 상권 없이 완료 영수증으로 진행되는 잘못된 제출이 차단된다.",
+          "evidence": "error-state"
+        },
+        {
+          "action": "상권명과 상가 상태를 입력하고 요청서 준비 버튼을 누른다.",
+          "feedback": "상태 영역이 완료를 알리고 성공 패널과 영수증이 즉시 나타난다.",
+          "result": "60평·82석, 존 구성, 긴 상권명, 후보 상가 상태가 완료 영수증에 보존된다.",
+          "evidence": "desktop-terminal"
+        },
+        {
+          "action": "내용 수정 또는 선택 화면으로 돌아가기를 누른다.",
+          "feedback": "수정은 입력을 유지한 폼으로 복귀하고 닫기는 dialog를 닫아 원래 실행 버튼으로 포커스를 돌린다.",
+          "result": "사용자가 내용 교정이나 모델 선택 화면 복귀를 안전하게 선택할 수 있다.",
+          "evidence": "desktop-terminal"
+        }
+      ],
+      "terminal_state": "상권 검토 요청서가 준비됨 패널에 모델, 좌석, 존 구성, 상권, 상가 상태가 표시된다.",
+      "recovery_path": "내용 수정으로 입력을 보존한 폼에 복귀하고 닫기로 실제 모달을 연 상단 또는 하단 CTA에 포커스가 돌아간다.",
+      "verified": true
+    },
+    "dead_end_controls": [],
+    "control_inventory": [
+      {
+        "label": "45평·60평·80평 모델 선택",
+        "role": "secondary",
+        "location": "첫 화면 왼쪽 전용 면적 선택 그룹",
+        "behavior": "functional",
+        "result_or_prerequisite": "좌석·존·전력·평면도·비교표·CTA를 선택 평형으로 갱신함.",
+        "evidence": "desktop-primary"
+      },
+      {
+        "label": "60평 상권 검토 요청서 만들기",
+        "role": "primary",
+        "location": "첫 화면 운영 수치 아래 주요 액션",
+        "behavior": "functional",
+        "result_or_prerequisite": "60평 선택 요약을 가진 요청서 dialog를 열고 필수 상권 입력을 요구함.",
+        "evidence": "desktop-primary"
+      },
+      {
+        "label": "선택 모델로 요청서 준비하기",
+        "role": "secondary",
+        "location": "상권 검토 요청서 폼 하단",
+        "behavior": "functional",
+        "result_or_prerequisite": "필수 상권을 검증한 뒤 완료 영수증을 생성함.",
+        "evidence": "error-state"
+      },
+      {
+        "label": "요청서 닫기",
+        "role": "secondary",
+        "location": "상권 검토 요청서 dialog 우상단",
+        "behavior": "functional",
+        "result_or_prerequisite": "dialog를 닫고 실제 실행한 상단·하단 CTA에 포커스를 복귀함.",
+        "evidence": "desktop-primary"
+      },
+      {
+        "label": "내용 수정",
+        "role": "secondary",
+        "location": "상권 검토 요청서 완료 패널 하단",
+        "behavior": "functional",
+        "result_or_prerequisite": "입력 상권과 상가 상태를 보존한 폼으로 돌아감.",
+        "evidence": "desktop-terminal"
+      },
+      {
+        "label": "선택 화면으로 돌아가기",
+        "role": "secondary",
+        "location": "상권 검토 요청서 완료 패널 하단",
+        "behavior": "functional",
+        "result_or_prerequisite": "완료 dialog를 닫고 모델 선택 화면으로 돌아감.",
+        "evidence": "desktop-terminal"
+      },
+      {
+        "label": "60평 요청서 열기",
+        "role": "secondary",
+        "location": "비교표 아래 최종 상권 검토 섹션",
+        "behavior": "functional",
+        "result_or_prerequisite": "같은 60평 요청서를 열고 닫을 때 이 하단 버튼으로 포커스가 복귀함.",
+        "evidence": "desktop-primary"
+      }
+    ],
+    "prototype_disclosure": "헤더와 평면도는 가상 설계 데이터로, 폼과 완료 패널은 실제 전송·접수가 아닌 로컬 기능 데모로 명시한다."
+  },
+  "state_coverage": [
+    {
+      "state": "disabled",
+      "surface": "요청서 제출 액션",
+      "status": "not-applicable",
+      "rationale": "제출이 원격 비동기 작업이 아닌 즉시 로컬 상태 전환이라 중복 제출을 막기 위한 지속 disabled 구간이 존재하지 않는다.",
+      "evidence": []
+    },
+    {
+      "state": "empty",
+      "surface": "평형 모델 선택과 요청서 요약",
+      "status": "not-applicable",
+      "rationale": "45·60·80평의 유효한 안전 기본값 60평이 항상 존재하며 상품 재고가 비는 목록형 표면이 아니다.",
+      "evidence": []
+    },
+    {
+      "state": "error",
+      "surface": "상권 검토 요청서 필수 상권 필드",
+      "status": "implemented",
+      "rationale": "빈 상권 제출에서 인라인 오류, aria-invalid, 상태 공지와 필드 포커스를 제공한다.",
+      "evidence": [
+        "error-state"
+      ]
+    },
+    {
+      "state": "loading",
+      "surface": "평형 선택과 요청서 준비",
+      "status": "not-applicable",
+      "rationale": "원격 데이터, 네트워크 제출, 지연 미디어가 없는 동기식 로컬 데모라 사용자에게 대기 상태를 만들지 않는다.",
+      "evidence": []
+    },
+    {
+      "state": "long-content",
+      "surface": "완료 영수증의 검토 상권 값",
+      "status": "implemented",
+      "rationale": "긴 서울 성수 역세권 설명이 데스크톱 값 열과 모바일 단일 열 안에서 자연스럽게 줄바꿈된다.",
+      "evidence": [
+        "long-content"
+      ]
+    },
+    {
+      "state": "success",
+      "surface": "상권 검토 요청서 완료 패널",
+      "status": "implemented",
+      "rationale": "모델·좌석·존·상권·상가 상태가 완료 영수증에 표시되고 내용 수정과 선택 화면 복귀를 제공한다.",
+      "evidence": [
+        "desktop-terminal",
+        "mobile-terminal"
+      ]
+    }
+  ],
+  "task_walkthroughs": [
+    {
+      "viewport": "desktop",
+      "start_state": "1440x1000에서 60평·82석·RTX 24석·팀룸 6석·110kW와 좌석 설계도가 보임.",
+      "steps": [
+        {
+          "action": "80평을 선택해 평면·수치·비교표 강조 변화를 확인한 뒤 60평으로 복귀한다.",
+          "expected_feedback": "선택 평형과 모든 운영 결과 및 CTA 문자열이 같은 모델로 동기화된다.",
+          "observed_result": "80평에서 112석·36석·8석·150kW와 80평 비교 열이 선택됐고 새로고침 뒤 60평 기본값이 복귀했다.",
+          "evidence": "desktop-primary"
+        },
+        {
+          "action": "60평 요청서를 열고 빈 상권으로 준비 버튼을 누른다.",
+          "expected_feedback": "상권 필드 오류와 상태 공지가 나타나고 완료 단계는 차단된다.",
+          "observed_result": "입력 필요 문장이 표시되고 필드가 오류 상태로 포커스를 유지했다.",
+          "evidence": "error-state"
+        },
+        {
+          "action": "긴 성수 상권명과 후보 상가 상태를 입력해 완료한 뒤 내용 수정과 닫기를 확인한다.",
+          "expected_feedback": "완료 영수증이 값을 보존하고 수정은 폼, 닫기는 원래 CTA로 복귀한다.",
+          "observed_result": "긴 값이 영수증 열에서 줄바꿈됐고 수정·닫기와 하단 CTA 포커스 복귀가 관찰됐다.",
+          "evidence": "desktop-terminal"
+        }
+      ],
+      "terminal_state": "60평 상권 검토 요청서 완료 영수증이 생성되고 두 복구 액션이 표시된다.",
+      "failure_or_correction_path": "빈 필수 필드 오류를 먼저 확인한 뒤 유효 값으로 수정하고 완료했으며 내용 수정으로 입력 보존도 확인했다.",
+      "result": "pass",
+      "evidence": [
+        "desktop-primary",
+        "error-state",
+        "desktop-terminal"
+      ]
+    },
+    {
+      "viewport": "mobile",
+      "start_state": "390x844에서 60평 선택, 네 운영 지표, 요청 CTA와 좌석 설계도 시작이 가로 오버플로 없이 보임.",
+      "steps": [
+        {
+          "action": "45평을 선택하고 45평 상권 검토 요청서를 연다.",
+          "expected_feedback": "62석·16석·4석·85kW가 반영된 요청서 요약과 상권 필드가 나타난다.",
+          "observed_result": "45평 CTA와 62석·85kW 요청서 요약이 표시됐다.",
+          "evidence": "mobile-primary"
+        },
+        {
+          "action": "부산 센텀 복합 상권을 입력하고 요청서를 준비한다.",
+          "expected_feedback": "45평 모델과 입력한 상권이 한 열 완료 영수증에 표시된다.",
+          "observed_result": "45평·62석, RTX 16석, 팀룸 4석, 부산 상권과 상가 탐색 중이 완료 패널에 보였다.",
+          "evidence": "mobile-terminal"
+        }
+      ],
+      "terminal_state": "모바일 45평 상권 검토 요청서 완료 영수증과 수정·복귀 액션이 표시된다.",
+      "failure_or_correction_path": "데스크톱과 같은 검증 코드를 사용하는 빈 상권 오류가 확인됐고 모바일에서는 완료 뒤 내용 수정으로 입력을 유지할 수 있다.",
+      "result": "pass",
+      "evidence": [
+        "mobile-primary",
+        "mobile-terminal",
+        "error-state"
+      ]
+    }
+  ],
+  "visual_review": {
+    "desktop_checked": true,
+    "mobile_checked": true,
+    "brand_reference_compared": true,
+    "ai_slop_visual_compared": true,
+    "ui_craft_compared": true,
+    "comparison_notes": "Apple의 단일 제품 집중과 Linear의 실제 작업면 우선 원칙을 좌석 설계도에 적용했다. 네온 그라디언트·유리 카드·가짜 수익 지표를 제거하고 white/black 배경, 라임 단일 액센트, 평면 목록 구분선, 두 radius, 모달 전용 그림자, 한국어와 긴 상권값 줄바꿈을 비교했다.",
+    "screenshots": {
+      "desktop": "C:/@Dev/genscaff/examples/pccafe-franchise-product-editorial/artifacts/final-desktop-start.png",
+      "mobile": "C:/@Dev/genscaff/examples/pccafe-franchise-product-editorial/artifacts/final-mobile-start.png"
+    },
+    "console_errors": 0,
+    "layout_issues_open": 0,
+    "iteration_log": [
+      {
+        "pass": 1,
+        "focus": "생성 이미지의 데스크톱 크롭과 모바일 좌석·통로 가시성",
+        "screenshot": "C:/@Dev/genscaff/examples/pccafe-franchise-product-editorial/artifacts/image-pass1-mobile.png",
+        "findings": [
+          {
+            "severity": "minor",
+            "symptom": "작은 화면에서 캡션용 검은 그라디언트가 매장 좌석과 중앙 통로 디테일을 과도하게 덮었다.",
+            "criterion": "히어로 이미지의 제품 정보 가시성",
+            "evidence": {
+              "artifact": "C:/@Dev/genscaff/examples/pccafe-franchise-product-editorial/artifacts/image-pass1-mobile.png",
+              "region": "모바일 히어로 이미지 하단",
+              "observation": "하단 절반의 강한 오버레이 때문에 생성 이미지의 좌석과 통로 정보가 어둡게 보였다."
+            }
+          }
+        ],
+        "changes": [
+          {
+            "change": "그라디언트 시작 지점을 64%로 내리고 끝 불투명도를 .78로 낮춘 뒤 캡션에 텍스트 그림자를 추가했다.",
+            "reason": "캡션 대비를 유지하면서 이미지의 좌석·통로 디테일을 더 많이 보여주기 위해서다.",
+            "files": [
+              "C:/@Dev/genscaff/examples/pccafe-franchise-product-editorial/index.html"
+            ],
+            "evidence": {
+              "artifact": "C:/@Dev/genscaff/examples/pccafe-franchise-product-editorial/artifacts/final-mobile-start.png",
+              "region": "수정된 모바일 히어로 이미지",
+              "observation": "좌석 행, 중앙 통로, 천장 설비와 캡션이 함께 읽히며 가로 넘침이 없다."
+            }
+          }
+        ],
+        "evidence": [
+          "mobile-primary"
+        ]
+      },
+      {
+        "pass": 2,
+        "focus": "최적화 이미지의 최종 데스크톱·모바일 렌더, 모델 전환과 요청서 복구",
+        "screenshot": "C:/@Dev/genscaff/examples/pccafe-franchise-product-editorial/artifacts/final-desktop-start.png",
+        "findings": [],
+        "changes": [],
+        "evidence": [
+          "desktop-primary",
+          "mobile-primary",
+          "independent-review"
+        ]
+      }
+    ],
+    "open_findings": [],
+    "independent_review": {
+      "performed": true,
+      "reviewer": "subagent",
+      "reviewer_name": "hero_visual_review",
+      "product_specificity_verdict": "pass",
+      "action_continuity_verdict": "pass",
+      "findings": [],
+      "notes": "독립 검토자는 갱신된 데스크톱과 모바일 최종 캡처를 다시 열어 차콜·라임 매장 이미지의 브랜드 적합성, 좌석·통로 중심 크롭, 캡션 대비, 대체 텍스트와 모바일 가로 오버플로를 확인했다. 처음에는 구버전 캡처를 근거로 FAIL을 냈고, 새 캡처가 현재 HTML과 일치함을 확인한 뒤 최종 PASS로 판정했다.",
+      "evidence": [
+        "independent-review",
+        "desktop-terminal"
+      ]
+    }
+  },
+  "measurements": {
+    "lighthouse": {
+      "report": "C:/@Dev/genscaff/examples/pccafe-franchise-product-editorial/artifacts/lighthouse.json",
+      "scores": {
+        "performance": 100,
+        "accessibility": 100,
+        "best_practices": 100,
+        "seo": 100
+      }
+    },
+    "commands": [
+      {
+        "command": "python -m http.server 4175 --directory examples/pccafe-franchise-product-editorial",
+        "exit_code": 0,
+        "result": "pass",
+        "summary": "로컬 서버가 standalone HTML, CSS, JavaScript를 127.0.0.1:4175에서 제공했다.",
+        "artifact": "C:/@Dev/genscaff/examples/pccafe-franchise-product-editorial/index.html"
+      },
+      {
+        "command": "In-app browser desktop/mobile product and request walkthrough",
+        "exit_code": 0,
+        "result": "pass",
+        "summary": "생성 이미지 로드, 390px 가로 넘침 없음, 80평 전환 시 112석·36개 좌석 블록 갱신, 요청서 열기와 닫기를 관찰했다.",
+        "artifact": "C:/@Dev/genscaff/examples/pccafe-franchise-product-editorial/artifacts/final-desktop-terminal.png"
+      },
+      {
+        "command": "Lighthouse CLI + saved JSON threshold parse",
+        "exit_code": 0,
+        "result": "pass",
+        "summary": "최종 HTML에서 performance 100, accessibility 100, best-practices 100, SEO 100을 파싱했다. Windows 임시 폴더 정리 EPERM 출력과 무관하게 JSON은 완전했고 임계값 검사는 통과했다.",
+        "artifact": "C:/@Dev/genscaff/examples/pccafe-franchise-product-editorial/artifacts/lighthouse.json"
+      }
+    ],
+    "lighthouse_is_technical_floor": true
+  },
+  "judgment": {
+    "verdict": "pass",
+    "product_specificity_score": 5,
+    "action_continuity_score": 5,
+    "visual_coherence_score": 5,
+    "content_integrity_score": 5,
+    "rationale": "차콜 매장, 라임 동선, 좌석군, 팀룸과 천장 설비가 보이는 생성 이미지가 PC방 공간 경험을 전달하고, 평형별 좌석 수·RTX 존·팀룸·설계 전력·전력 버스 평면도가 정량 판단을 이어간다. 선택 평형은 수치·평면도·비교표·CTA·요청 폼·완료 영수증까지 연결된다. 가상 수치와 미전송 상태를 반복 고지하며 단일 라임 액센트와 현실적인 공간 이미지가 generic 네온 PC방 랜딩을 피한다.",
+    "limitations": "실제 브랜드, 현장 실측, 법규, 전력 계약, 공사비, 수익성, 가맹 계약, CRM 전송과 대표 사용자 테스트를 포함하지 않는 standalone 기능 데모다.",
+    "residual_risks": []
+  },
+  "checks": {
+    "no_placeholder_copy": true,
+    "no_generic_ai_hero": true,
+    "no_decorative_gradient_orbs": true,
+    "no_unverified_fake_metrics": true,
+    "no_nested_card_soup": true,
+    "screen_information_density_restrained": true,
+    "no_inconsistent_spacing": true,
+    "no_text_overflow_or_overlap": true,
+    "default_background_black_or_white": true,
+    "background_variation_confirmed_or_avoided": true,
+    "no_one_note_palette": true,
+    "accent_colors_minimized": true,
+    "no_default_saas_gradient": true,
+    "no_stock_ai_imagery": true,
+    "no_vague_aspirational_copy": true,
+    "copy_information_density_restrained": true,
+    "copy_length_restrained": true,
+    "no_polished_but_empty_sections": true,
+    "no_unnecessary_badges_or_titles": true,
+    "no_hallucinated_or_unverifiable_claims": true,
+    "tokens_or_local_theme_used": true,
+    "semantic_color_tokens_defined": true,
+    "color_roles_tokenized_before_use": true,
+    "expanded_brief_drives_implementation": true,
+    "explicit_user_constraints_preserved": true,
+    "domain_specific_screens_or_sections_defined": true,
+    "shared_components_defined": true,
+    "layout_board_or_page_structure_defined": true,
+    "no_raw_visual_values_when_tokens_exist": true,
+    "spacing_4px_scale_used": true,
+    "type_scale_limited": true,
+    "radius_and_shadow_levels_limited": true,
+    "border_usage_minimized": true,
+    "border_usage_not_overused": true,
+    "border_radius_minimized": true,
+    "border_radius_not_overused": true,
+    "box_shadow_not_overused": true,
+    "borders_and_shadows_restrained": true,
+    "list_item_borders_and_shadows_minimized": true,
+    "semantic_color_roles_used": true,
+    "von_restorff_emphasis_used_deliberately": true,
+    "single_primary_action_per_area": true,
+    "hover_focus_active_disabled_states": true,
+    "loading_empty_error_extreme_states_considered": true,
+    "motion_constraints_respected": true,
+    "touch_targets_and_semantics_checked": true,
+    "responsive_layout_verified": true,
+    "word_break_and_wrapping_verified": true,
+    "interactive_states_present": true,
+    "assets_render_correctly": true,
+    "accessibility_basics_pass": true,
+    "brand_reference_principles_applied": true,
+    "visual_target_matches_result": true,
+    "slop_checklist_compared_visually": true,
+    "user_need_traced_to_ui": true,
+    "product_specificity_verified": true,
+    "domain_objects_and_language_visible": true,
+    "differentiating_decision_present": true,
+    "two_domain_substitution_test_failed": true,
+    "primary_action_information_scent_clear": true,
+    "primary_action_end_to_end_verified": true,
+    "primary_action_feedback_and_terminal_state_present": true,
+    "primary_action_recovery_present": true,
+    "no_undisclosed_dead_end_controls": true,
+    "task_walkthroughs_recorded": true,
+    "requirements_traceable_to_evidence": true,
+    "evidence_artifacts_verified": true,
+    "independent_product_and_action_judgment_recorded": true,
+    "lighthouse_treated_as_technical_floor": true
+  }
+}

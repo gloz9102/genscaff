@@ -4,6 +4,8 @@
 
 이 문서는 2026년 7월 31일에 진행한 정성 A/B 실행 1회를 기록합니다. 검토 가능한 근거이며 벤치마크나 인과관계 증명은 아닙니다.
 
+당시 처리 조건은 legacy `product-commerce` 경로를 사용했습니다. 현재 분류는 실제 구매 과제를 검사한 뒤 `transaction` 또는 `marketplace-discovery`와 관련 `detail`/`checkout` surface를 기록합니다. 이 설명은 기존 실행 점수를 다시 매기지 않습니다.
+
 ## 조건
 
 | 통제 항목 | 값 |

@@ -14,7 +14,7 @@ Run only when the user explicitly invokes `$genscaff-release-audit`, or through 
 - Treat package scripts and repository-local executables as arbitrary code.
 - Require explicit repository trust and exact command approval before replaying commands.
 - Require approval before active browser audit; page JavaScript and external requests may execute.
-- Stop at preflight if Python 3.10+, Node 22.19+, locked npm dependencies, Chrome/Chromium, or a fresh reviewer is unavailable.
+- Inspect the bundled manifest for exact runtime requirements. Missing Strict-only runtime or a fresh reviewer makes Strict incomplete; it does not block safe source work or a separately reported Standard ceiling.
 
 ## Audit
 
@@ -36,4 +36,4 @@ python <skill-dir>/scripts/quality_gate.py --report <report.json> --allow-active
 python <skill-dir>/scripts/quality_gate.py --report <report.json> --allow-active-browser-audit --execute-approved-commands
 ```
 
-Schema v3 and v4 Strict reports remain supported. Finish only when the validator passes and reviewer provenance is valid. Report commands, evidence, skipped checks, limitations, and any `COMMAND_EXECUTION_SKIPPED_UNTRUSTED` result.
+Schema v3 and v4 Strict reports remain supported. Finish only when the validator passes and reviewer provenance is valid. Missing browser runtime blocks browser evidence; missing Lighthouse blocks only its audit. Report commands, evidence, skipped checks, limitations, and any `COMMAND_EXECUTION_SKIPPED_UNTRUSTED` result.

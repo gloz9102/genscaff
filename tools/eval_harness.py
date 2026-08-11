@@ -14,7 +14,13 @@ ROOT = Path(__file__).resolve().parent.parent
 CASES = ROOT / "evals" / "cases.json"
 RUBRIC = ROOT / "evals" / "rubric.json"
 CORE_SKILL = ROOT / "plugins" / "genscaff" / "skills" / "genscaff"
-DIMENSIONS = ("functional_completeness", "efficiency", "project_fit", "visual_hierarchy", "responsive_accessibility")
+DIMENSIONS = tuple(json.loads(RUBRIC.read_text(encoding="utf-8"))["dimensions"])
+EXPECTED_FIELDS = {
+    "profile", "project_mode", "reference_mode", "experience_archetype",
+    "surface_types", "required_references", "required_states", "must_include",
+    "must_not_include", "verification_ceiling", "strict_delegation_expected",
+    "legacy_compatibility_expected",
+}
 
 
 def read_json(path: Path):
@@ -40,14 +46,56 @@ def tree_digest(root: Path) -> str:
     return digest.hexdigest()
 
 
+def validate_definitions() -> list[str]:
+    errors = []
+    data = read_json(CASES)
+    cases = data.get("cases")
+    if data.get("schema_version") != 2 or not isinstance(cases, list):
+        return ["evals/cases.json must use schema_version 2 with a cases list"]
+    ids = [case.get("id") for case in cases if isinstance(case, dict)]
+    if len(ids) != len(set(ids)) or any(not isinstance(value, str) or not value for value in ids):
+        errors.append("eval case ids must be unique non-empty strings")
+    for case in cases:
+        if not isinstance(case, dict):
+            errors.append("every eval case must be an object")
+            continue
+        if case.get("behavior_only"):
+            expected = case.get("expected")
+            if not isinstance(expected, dict):
+                errors.append(f"{case.get('id')}: behavior case requires expected")
+                continue
+            missing = EXPECTED_FIELDS - set(expected)
+            if missing:
+                errors.append(f"{case.get('id')}: missing expected fields {sorted(missing)}")
+            for field in ("surface_types", "required_references", "required_states", "must_include", "must_not_include"):
+                if not isinstance(expected.get(field), list):
+                    errors.append(f"{case.get('id')}: expected.{field} must be a list")
+        elif not all(key in case for key in ("type", "pr", "brief")):
+            errors.append(f"{case.get('id')}: runnable case requires type, pr, and brief")
+    rubric = read_json(RUBRIC)
+    if rubric.get("schema_version") != 2:
+        errors.append("evals/rubric.json must use schema_version 2")
+    for field in ("hard_gates", "dimensions"):
+        values = rubric.get(field)
+        if not isinstance(values, list) or not values or len(values) != len(set(values)):
+            errors.append(f"rubric.{field} must be a unique non-empty list")
+    baseline = read_json(ROOT / "evals" / "baselines" / "v2.0.0.json")
+    if baseline.get("version") != "2.0.0" or baseline.get("schema_version") != 1:
+        errors.append("v2.0.0 baseline format changed unexpectedly")
+    return errors
+
+
 def prepare(args: argparse.Namespace) -> int:
+    definition_errors = validate_definitions()
+    if definition_errors:
+        raise ValueError("; ".join(definition_errors))
     output = args.output.resolve()
     if output.exists() and any(output.iterdir()):
         raise ValueError(f"output directory is not empty: {output}")
     output.mkdir(parents=True, exist_ok=True)
     snapshot = output / "inputs" / "genscaff"
     shutil.copytree(CORE_SKILL, snapshot, ignore=shutil.ignore_patterns("__pycache__", "node_modules"))
-    cases = read_json(CASES)["cases"]
+    cases = [case for case in read_json(CASES)["cases"] if not case.get("behavior_only")]
     selected = [case for case in cases if args.suite == "release" or case.get("pr")]
     repeats = 3 if args.suite == "release" else 1
     runs = []

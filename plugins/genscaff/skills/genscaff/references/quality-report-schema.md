@@ -1,42 +1,35 @@
-# Standard Report Schema v5
+# Standard Report Schema v6
 
-Use this reference only when a Standard JSON report is useful. Quick does not require JSON. Strict belongs to `$genscaff-release-audit`.
+Use JSON only when requested or needed by the validator. Quick does not require it; Strict belongs to `$genscaff-release-audit`.
 
-Initialize and validate with the core Python-only validator:
+Always initialize a new Standard report with the current validator and validate the finished file. Do not hand-author an older schema or copy a historical report shape.
 
 ```bash
 python <skill-dir>/scripts/quality_gate.py --init <report.json> --profile standard
 python <skill-dir>/scripts/quality_gate.py --report <report.json>
 ```
 
-## Completion status
+Schema v6 records classification, a product/design contract, separated verification dimensions, in-root evidence, runtime checks, relevant-state coverage, interaction cost, loading experience, and distinct execution permissions.
 
-- `IMPLEMENTED_UNVERIFIED`: implementation exists but browser evidence does not.
-- `VERIFIED_RENDER`: desktop/mobile render, console, and horizontal overflow were observed.
-- `VERIFIED_FLOW`: Render plus primary action, terminal result, and recovery were observed.
-- `VERIFIED_STANDARD`: Flow plus actual Tab and Enter or Space operation and visible, unobscured focus were observed at desktop/mobile.
+Record first-render and anti-slop findings in the existing structure rather than adding a boolean checklist. Put the concrete finding, rendered location, evidence, and `keep`, `replace`, `remove`, or project-evidenced `exception` response in the relevant verification dimension's `issues`; put unresolved scope or uncertainty in `limitations`. `notes` may summarize the review. A visual finding that remains cannot coexist with an unsupported clean claim such as `no_nested_card_soup: true`.
 
-`VERIFIED_RENDER` needs distinct desktop/mobile `start` PNGs. `VERIFIED_FLOW` adds distinct `terminal` PNGs. `VERIFIED_STANDARD` adds distinct `focus` PNGs. Every artifact needs a concrete observation. A boolean without matching evidence cannot raise status.
+Each verification dimension contains:
 
-## Verification dimensions
+```json
+{
+  "result": "pass | fail | partial | pass_with_limitations | not_run | blocked",
+  "method": "observed | manual | automated | static | none",
+  "coverage": "what was checked",
+  "evidence": [],
+  "issues": [],
+  "limitations": []
+}
+```
 
-Record each of these independently as `observed`, `static_only`, `automated`, or `not_tested`:
+The canonical statuses are `IMPLEMENTED_UNVERIFIED`, `VERIFIED_RENDER`, `VERIFIED_PRIMARY_FLOW`, `VERIFIED_KEYBOARD_FLOW`, and `VERIFIED_STANDARD_BASELINE`. The main Skill routes verification work to the separate baseline reference; this schema document does not require another reference to be loaded.
 
-- `render`
-- `flow`
-- `keyboard`
-- `focus`
-- `automated_accessibility`
-- `assistive_technology_user_validation`
+Schema v5 remains readable. Its mixed method/result values are converted conservatively. Legacy `VERIFIED_FLOW` maps at most to `VERIFIED_PRIMARY_FLOW`; `VERIFIED_STANDARD` maps at most to `VERIFIED_KEYBOARD_FLOW`. Missing classification is recorded as a migration limitation. New reports never emit legacy statuses.
 
-Automation is not assistive-technology user validation. Source inspection is not observed keyboard or focus behavior.
+Artifacts must be relative to the report directory, remain inside it after symlink resolution, exist, be readable PNG files, and be distinct where the status requires distinct states. A boolean, status string, or `pass` without matching evidence cannot raise completion.
 
-## Interaction cost
-
-Record non-negative `required_decisions` and `actions_to_primary_success`, a string `default_selection_rationale`, and an empty `fabricated_friction` list. Any unsupported extra step is `FABRICATED_FRICTION` and fails validation.
-
-## Runtime checks
-
-For desktop and mobile, record `inner_width`, `scroll_width`, console errors/warnings, primary action, recovery, keyboard path, visible focus, and unobscured focus. Required booleans depend on completion status. `scroll_width` must equal `inner_width` for a verified render.
-
-Successful output is `GENSCAFF_STANDARD_REPORT_VALID`. `IMPLEMENTED_UNVERIFIED` also emits `STANDARD_BROWSER_EVIDENCE_UNVERIFIED`. Neither token represents a Strict live audit, authorship, originality, universal accessibility, or representative-user success.
+`GENSCAFF_STANDARD_REPORT_VALID` means only that the declared Standard structure and local evidence passed these checks. It is not a Strict audit or proof of authorship, originality, legal clearance, complete accessibility, or representative-user success.

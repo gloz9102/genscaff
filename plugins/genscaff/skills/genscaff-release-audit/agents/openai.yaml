@@ -1,6 +1,6 @@
 interface:
   display_name: "Genscaff Release Audit"
-  short_description: "Strict live-browser release evidence audit"
+  short_description: "Explicit Strict and release-critical frontend audit"
   default_prompt: "Use $genscaff-release-audit to run the Strict release audit for this trusted frontend repository."
   brand_color: "#182C51"
 policy:

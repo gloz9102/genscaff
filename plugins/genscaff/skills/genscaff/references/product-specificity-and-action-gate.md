@@ -98,25 +98,29 @@ Use a real browser at desktop and mobile viewport sizes. Check the primary walkt
 
 Use a screenshot or browser artifact to support material claims. Describe what the artifact shows with product-specific nouns; do not write only `checked`, `looks good`, `works`, `pass`, or `as expected`.
 
-Browser evidence is required before assigning `VERIFIED_STANDARD`. Without real desktop and mobile browser evidence, assign `IMPLEMENTED_UNVERIFIED` and list the unverified risks.
+Browser evidence is required before assigning any verified status. Without real desktop and mobile browser evidence, assign `IMPLEMENTED_UNVERIFIED` and list the unverified risks.
 
 ## 8. Review The First Render
 
-Judge the rendered surface before declaring it done. Revise up to two times when any applicable area is weak:
+Judge the rendered surface before declaring it done. First confirm the product flow and signature, then apply the routed anti-slop cluster review. Do not treat a single CSS feature or component pattern as a failure. Batch all applicable corrections after the first render and recheck desktop and mobile once; stop after two rendered review passes total.
+
+Before editing, record the first-pass result for each applicable area. When the anti-slop reference is routed, explicitly inspect any visible decorative eyebrow/kicker, non-semantic section numbering, repeated card geometry, and container layering as possible evidence of a cluster; none fails alone, but none may be silently marked clean. Use the first pass to identify:
 
 - Composition: guide attention to the primary task without accidental imbalance.
 - Product storytelling: make the product, domain object, or work surface communicate its value.
 - Hierarchy: make title, product information, price or consequence, and CTA readable in their intended order.
 - Brand coherence: align color, type, shape, imagery, and effects with project or user evidence.
 - Interaction polish: make selection, feedback, terminal state, and recovery feel connected.
+- Generic-default clusters: when unsupported choices occur across at least two design domains, record the finding, location, rendered evidence, rationale, and `keep`, `replace`, `remove`, or project-evidenced `exception` response.
 
-Keep the review grounded in the actual capture. Do not convert it into a numerical quality score, an originality claim, or a substitute for user testing.
+Preserve product-specific objects, proof, workflow states, action continuity, accessibility, and responsive behavior while correcting presentation. Keep the review grounded in the actual capture. Do not convert it into a numerical quality score, an originality claim, or a substitute for user testing. If a finding remains, report it as an issue or limitation rather than a clean claim.
 
 ## 9. Completion Boundary
 
 Report the product contract, browser evidence collected, checks skipped, known limitations, and one status:
 
 - `IMPLEMENTED_UNVERIFIED`: implementation exists, but actual browser evidence at both desktop and mobile is missing.
-- `VERIFIED_STANDARD`: actual browser evidence confirms the applicable desktop/mobile primary flow, start and terminal states when changed, console and overflow checks, and primary keyboard/focus basics.
+- `VERIFIED_KEYBOARD_FLOW`: actual browser evidence confirms the applicable desktop/mobile primary flow, start and terminal states when changed, console and overflow checks, and the complete critical keyboard/focus path.
+- `VERIFIED_STANDARD_BASELINE`: adds relevant state coverage and tested-state automated accessibility evidence; it does not claim complete WCAG conformance or representative-user success.
 
 Do not report Strict checks, independent review, fresh-context validation, full control coverage, capture manifests, provenance, or command re-execution unless the Strict profile ran them under `aggressive-hard-gate.md`.

@@ -1,0 +1,21 @@
+## Visual Target
+
+- Artifact / route: `index.html` standalone NOON PC franchise configuration page.
+- Task type and rationale: Product / commerce; visitors configure a store model before starting a consultation flow.
+- Primary user and need: 예비 PC방 점주가 상가 면적에 맞는 좌석·구역·전력을 빠르게 검토해야 함. (user)
+- Primary task, CTA, and observable success: 45·60·80평을 선택하고 상권을 입력해 `60평 상담 구성 확인하기`에서 상담 요약 완료 화면을 확인함. (user)
+- Recovery after success or error: 빈 상권 입력은 안내 후 필드에 다시 초점을 맞추고, 완료 후 내용 수정 또는 닫기로 복구함. (user)
+- Product/domain objects and vocabulary: 전용 평형, 예상 좌석, RTX 존, 팀룸, 설계 전력, 상권, 상담 구성. (user)
+- User requirements and locked references: 흰 배경·검정 타이포·제한된 라임 CTA, 제공 이미지 `../../pccafe-franchise-product-editorial/assets/noon-pc-hero-v1.jpg`, Apple 원칙 참고. (user)
+- Repository evidence and explicit assumptions: 독립 단일 파일 페이지라 재사용할 토큰·컴포넌트가 없었음. 평형별 수치는 가상 데모용 가정임. (repository, assumption)
+- First-viewport message, visual anchor, and CTA: 면적부터 운영 밀도까지라는 짧은 메시지, 대형 매장 이미지, 현재 평형을 반영한 상담 CTA.
+- Desktop composition and information order: 얇은 내비게이션 → 중앙 카피/CTA → 넓은 매장 이미지 → 평형 선택 → 운영 수치/상담 CTA.
+- Mobile composition and CTA proximity: 16px 여백의 한 열, 카피/CTA → 이미지 → 평형 선택과 수치/CTA 순서.
+- Existing system to preserve (tokens, components, conventions): 기존 시스템 없음; `:root`에 색·반경·여백·그림자 역할 토큰을 정의함.
+- Typography, spacing, contrast, and content-wrapping constraints: 시스템 산세리프, 400/600/700 세 굵기, 4px 단위 여백, 최소 12px, 자연스러운 한국어 줄바꿈, 모바일 가로 넘침 금지.
+- Product-specific signals or task-specific decisions (minimum three): 평형별 좌석/RTX 존/팀룸/전력 수치, 평형 선택 시 즉시 바뀌는 결과, 상권 입력을 포함한 상담 완료 요약.
+- Option/input, its visible consequence, and invalid/disabled state: 45·60·80평 라디오 선택이 네 운영 수치와 CTA를 갱신함. 상권은 필수이며 비어 있으면 오류를 표시함. 기본 60평은 브리프가 지정한 안전한 초기값임.
+- Relevant loading, empty, error, success, and long-content states: 원격 작업·지연이 없는 즉시 반응 페이지라 로딩/빈 상태는 해당 없음. 상권 오류, 완료, 내용 수정, 닫기 상태를 제공함.
+- Visual effects used, their evidence, and any decorative-risk warning: 대화상자에만 낮은 알파의 그림자를 사용함. 비주얼 효과는 매장 이미지와 상담 창의 계층에만 쓰며 장식 위험은 낮음.
+- Screenshot evidence to capture (desktop, mobile, start, terminal): 1440×1000·390×844 시작 화면, 동일 뷰포트의 상담 완료 화면, 두 뷰포트 키보드 포커스.
+- Pass/revise evidence and up to two targeted iteration hypotheses: 브라우저 증거는 별도 캡처 단계에서 수집 예정. 가로 넘침이 보이면 모델 선택 폭을 먼저 축소하고, 모바일 CTA 맥락이 약하면 구성 결과 바로 뒤 CTA 간격을 축소함.

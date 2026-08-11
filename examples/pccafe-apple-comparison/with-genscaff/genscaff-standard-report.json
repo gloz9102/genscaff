@@ -1,0 +1,39 @@
+{
+  "schema_version": 5,
+  "profile": "standard",
+  "completion_status": "VERIFIED_FLOW",
+  "context": {
+    "target_user": "상가 면적에 맞는 PC방 좌석과 전력 구성을 검토하는 예비 점주",
+    "primary_task": "45·60·80평 중 하나를 선택하고 상권 상담 요약을 완료한 뒤 수정하거나 닫는 일",
+    "success_outcome": "선택 평형의 운영 수치와 입력한 상권이 완료 화면에 표시되는 일",
+    "primary_cta": "60평 상담 구성 확인하기",
+    "recovery": "상권 오류를 수정하거나 완료 후 내용을 수정 또는 닫을 수 있음"
+  },
+  "verification_dimensions": {
+    "render": "observed",
+    "flow": "observed",
+    "keyboard": "static_only",
+    "focus": "static_only",
+    "automated_accessibility": "not_tested",
+    "assistive_technology_user_validation": "not_tested"
+  },
+  "evidence": {
+    "desktop": { "start": { "artifact": "C:/@Dev/genscaff/examples/pccafe-apple-comparison/with-genscaff/artifacts/desktop-start.png", "observation": "1440px에서 60평 CTA, 매장 이미지와 평형 구성 시작이 가로 넘침 없이 보임." }, "terminal": { "artifact": "C:/@Dev/genscaff/examples/pccafe-apple-comparison/with-genscaff/artifacts/desktop-terminal.png", "observation": "80평 선택과 서울 성수역 상권이 상담 완료 화면에 유지됨." }, "focus": { "artifact": "", "observation": "" } },
+    "mobile": { "start": { "artifact": "C:/@Dev/genscaff/examples/pccafe-apple-comparison/with-genscaff/artifacts/mobile-start.png", "observation": "390px에서 CTA, 매장 이미지와 평형 선택이 한 열로 보이며 가로 넘침이 없음." }, "terminal": { "artifact": "C:/@Dev/genscaff/examples/pccafe-apple-comparison/with-genscaff/artifacts/mobile-terminal.png", "observation": "390px 실제 흐름에서 부산 센텀 상권의 상담 완료와 닫기 복구를 확인함." }, "focus": { "artifact": "", "observation": "" } }
+  },
+  "runtime_checks": {
+    "desktop": { "inner_width": 1425, "scroll_width": 1425, "console_errors": 0, "console_warnings": 0, "primary_action_verified": true, "recovery_verified": true, "keyboard_path_verified": false, "focus_visible_verified": false, "focus_not_obscured_verified": false },
+    "mobile": { "inner_width": 375, "scroll_width": 375, "console_errors": 0, "console_warnings": 0, "primary_action_verified": true, "recovery_verified": true, "keyboard_path_verified": false, "focus_visible_verified": false, "focus_not_obscured_verified": false }
+  },
+  "interaction_cost": {
+    "required_decisions": 1,
+    "actions_to_primary_success": 2,
+    "default_selection_rationale": "브리프가 60평을 기본 선택으로 지정했으며, 선택 없이도 안전하게 상담 구성을 확인할 수 있음.",
+    "fabricated_friction": []
+  },
+  "loading_experience": { "applicable": false, "boundaries": [] },
+  "notes": [
+    "루트 에이전트가 동일 조건의 브라우저에서 데스크톱·모바일 렌더, 모델 전환, 필수 입력 오류, 완료, 수정·닫기 복구와 콘솔 오류 0을 확인함. 실제 Tab·Enter 키보드 경로와 포커스 캡처는 수행하지 않아 VERIFIED_FLOW로 제한함.",
+    "원격 전송, 지연 작업, 비동기 경계가 없는 가상 데모라 loading_experience는 적용하지 않음."
+  ]
+}

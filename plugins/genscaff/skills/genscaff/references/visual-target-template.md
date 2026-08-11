@@ -1,33 +1,40 @@
-# Standard Visual Target Template
+# Product and Design Contract
 
-Fill this before broad or new UI work. Keep each line short and judgeable from
-the rendered result; omit fields that do not affect this task.
+Complete this compact contract before broad or new UI. Keep entries testable and omit optional fields only when irrelevant.
 
 ```markdown
-## Visual Target
+## Product
+- Target user / primary job / success outcome:
+- Domain objects and vocabulary:
+- Primary CTA / secondary actions:
+- Required decisions / actions to success / safe defaults:
+- Failure or recovery when applicable:
 
-- Artifact / route:
-- Task type and rationale:
-- Primary user and need:
-- Primary task, CTA, and observable success:
-- Recovery after success or error:
-- Product/domain objects and vocabulary:
-- User requirements and locked references:
-- Repository evidence and explicit assumptions:
-- First-viewport message, visual anchor, and CTA:
-- Desktop composition and information order:
-- Mobile composition and CTA proximity:
-- Existing system to preserve (tokens, components, conventions):
-- Typography, spacing, contrast, and content-wrapping constraints:
-- Product-specific signals or task-specific decisions (minimum three):
-- Option/input, its visible consequence, and invalid/disabled state:
-- Relevant loading, empty, error, success, and long-content states:
-- Visual effects used, their evidence, and any decorative-risk warning:
-- Screenshot evidence to capture (desktop, mobile, start, terminal):
-- Pass/revise evidence and up to two targeted iteration hypotheses:
+## Reference
+- Mode / primary archetype / optional secondary / surfaces:
+- Adopted principles and product-fit rationale:
+- Deliberate differences (minimum three for inspiration):
+- Locked requirements and allowed changes:
+
+## Content
+- Hierarchy / expected item count:
+- Long-content and missing-data behavior:
+- Localization and writing-direction needs:
+
+## Visual system
+- Surface mode / dominant idea / focal point / information density:
+- Product-specific visual signature:
+- Deliberate non-default composition choice and product rationale:
+- Typography / spacing / color roles:
+- Radius / elevation strategy:
+- Image or media strategy:
+- Motion intent / reduced-motion behavior:
+
+## Engineering
+- Framework / router / rendering model / styling system:
+- Token source / reusable components:
+- State ownership / data boundary:
+- Browser support / performance risks / verification plan:
 ```
 
-For Product / commerce work, use this with `product-page-craft.md` and record
-the five visual outcome judgments there. This template intentionally excludes
-Strict-only provenance, manifests, Lighthouse, control inventories, and
-subagent review.
+Recovery is required only when an action can fail, be cancelled, be reversed, leave the user incomplete, or cross a meaningful network/transaction boundary. Do not add fake recovery to informational pages.

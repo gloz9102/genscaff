@@ -1,7 +1,7 @@
 {
   "name": "genscaff",
   "version": "2.0.1",
-  "description": "Evidence-backed frontend craft and release verification for Codex.",
+  "description": "Frontend creation, modernization, Standard verification, and explicit Strict release auditing for Codex.",
   "author": {
     "name": "gloz9102",
     "url": "https://github.com/gloz9102"
@@ -13,8 +13,8 @@
   "skills": "./skills/",
   "interface": {
     "displayName": "Genscaff",
-    "shortDescription": "Evidence-backed frontend craft and audits.",
-    "longDescription": "Build focused browser interfaces with lightweight craft guidance, then run a separate Strict release audit when exhaustive live evidence is warranted.",
+    "shortDescription": "Build and verify production browser frontends.",
+    "longDescription": "Inspect, create, and modernize browser interfaces with reference-aware craft and evidence-bounded Standard verification, then use the separate Strict release audit only when exhaustive live evidence is explicitly requested.",
     "developerName": "gloz9102",
     "category": "Productivity",
     "capabilities": ["Interactive", "Write"],
