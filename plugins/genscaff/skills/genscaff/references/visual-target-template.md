@@ -1,6 +1,6 @@
 # Product and Design Contract
 
-Complete this compact contract before broad or new UI. Keep entries testable and omit optional fields only when irrelevant.
+Complete this compact contract once before broad or new UI. Keep entries testable and omit optional fields only when irrelevant. Update the same entries with implementation and evidence; reviews and completion reports refer to them instead of copying the contract. For a new project, derive invariants from the brief rather than inventing a baseline.
 
 ```markdown
 ## Product
@@ -53,3 +53,17 @@ Complete this compact contract before broad or new UI. Keep entries testable and
 ```
 
 Recovery is required only when an action can fail, be cancelled, be reversed, leave the user incomplete, or cross a meaningful network/transaction boundary. Do not add fake recovery to informational pages.
+
+## Inspect before completing the contract
+
+Before editing an existing project, inspect lockfiles, manifests and scripts, framework, router, rendering and build model, language and type checking, styling system, tokens, layouts and primitives, responsive conventions, breakpoints and container queries, state and data boundaries, localization and writing direction, media handling, lint/type-check/tests/browser tests/build, and CI. Keep confirmed facts separate from heuristic detections and assumptions.
+
+When a reusable JSON inventory is useful, run `scripts/inspect_project.py <project-root>`. It reads metadata only, executes no project command, and separates facts from heuristic detections.
+
+Do not replace the package manager, routing, or state management for visual convenience. Do not add a second styling system or UI library before proving the existing system cannot satisfy the task. Reuse components instead of renaming duplicates. Do not rewrite unrelated files, make absolute positioning the primary layout mechanism, or bury example data inside complex presentation logic.
+
+For a new project, honor an explicit stack or choose the least complex stack that satisfies the request. Prefer semantic HTML and accessible primitives, separate example data from presentation, expose working dev/check/build paths, state mock boundaries honestly, and do not stop at a static mockup when working implementation was requested.
+
+HTML or DOM identity alone does not prove preservation. Preserve required rendered information, accessible names, meaningful order, and action outcomes; justified semantic or responsive DOM changes are allowed. Never remove required information merely to improve composition.
+
+Establish one dominant visual idea and hierarchy before decoration. Match density to the task, use deliberate component patterns and semantic tokens, make media serve understanding or discovery, and make motion explain hierarchy, continuity, or feedback. Keep the product recognizable without brand color. Avoid fixed-height variable-text containers; tolerate long, localized, and bidirectional content. Implement loading, partial, empty, error, disabled, unavailable, success, long-content, and media-failure states only where relevant.

@@ -1,0 +1,152 @@
+{
+  "schema_version": 1,
+  "date": "2026-09-17",
+  "artifact_bundle": "20260917-v21",
+  "package_version": "2.0.1",
+  "v2_1_transition": "deferred_until_behavioral_evaluation_recovers",
+  "instruction_candidate": "candidate-1",
+  "baseline_core_sha256": "e114579229c841dc238d35b4edfc788a8d7be8264dc790c4e6c6ceb1315afa46",
+  "candidate_core_sha256": "07430809243eb3f9ba4964e62c06053cafbeae53185086c63fe865c3f5ddda36",
+  "ui_craft_guidelines_sha256": "c22edde6873df9086cc4288eb195fbd0f6aec7157e6ae965b4de7425e19d179c",
+  "core_lines": {
+    "before": 208,
+    "after": 103
+  },
+  "evaluation": {
+    "status": "blocked_runtime",
+    "reason": "Windows native sandbox permits shell writes after scoped trust, but apply_patch consistently fails even for relative probe.txt. Paired generation is not a valid comparison.",
+    "pr_planned_runs": 16,
+    "behavior_planned_runs": 12,
+    "completed_pr_results": 2,
+    "completed_behavior_results": 0,
+    "valid_scored_pairs": 0,
+    "model": "gpt-5.6-terra",
+    "reasoning": "medium",
+    "release_120_runs": "not_run",
+    "notes": [
+      "Original and recovered traces retained. Running evaluator processes stopped after reproducing the patch failure.",
+      "No model replacement or unrestricted sandbox bypass used.",
+      "Exit code zero is not acceptance: some agents report that implementation was blocked."
+    ]
+  },
+  "strict_validation": {
+    "baseline_tests": 87,
+    "prototype_tests": 87,
+    "function_class_ast_equivalence": 93,
+    "differential": {
+      "tests_run": 87,
+      "successful": true,
+      "ordered_error_list_comparisons": 71
+    }
+  },
+  "claim": "Instruction consolidation and audit modularization are structural changes; behavioral and visual improvement are not established.",
+  "artifact_manifest_sha256": "0e546cc92b490c30333731dde229b3b599d29c72edfe0de76884611593507bfc",
+  "structural_checks": {
+    "tool_tests": 23,
+    "core_tests": 18,
+    "strict_tests": 87,
+    "node_syntax_checks": 3,
+    "npm_audit_vulnerabilities": 0,
+    "extracted_zip_cli": "passed",
+    "legacy_and_node_runtime_files": "unchanged",
+    "ui_craft_files": "byte_identical",
+    "commands": {
+      "structure": {
+        "argv": [
+          "python",
+          "tools/check_skill.py"
+        ],
+        "exit_code": 0
+      },
+      "tools": {
+        "argv": [
+          "python",
+          "-m",
+          "unittest",
+          "discover",
+          "-s",
+          "tools",
+          "-p",
+          "test_*.py"
+        ],
+        "exit_code": 0
+      },
+      "core": {
+        "argv": [
+          "python",
+          "-m",
+          "unittest",
+          "discover",
+          "-s",
+          "plugins/genscaff/skills/genscaff/scripts",
+          "-p",
+          "test_*.py"
+        ],
+        "exit_code": 0
+      },
+      "node-runtime": {
+        "argv": [
+          "node",
+          "--check",
+          "plugins/genscaff/skills/genscaff-release-audit/scripts/runtime_probe.js"
+        ],
+        "exit_code": 0
+      },
+      "node-live": {
+        "argv": [
+          "node",
+          "--check",
+          "plugins/genscaff/skills/genscaff-release-audit/scripts/live_audit.js"
+        ],
+        "exit_code": 0
+      },
+      "node-lighthouse": {
+        "argv": [
+          "node",
+          "--check",
+          "plugins/genscaff/skills/genscaff-release-audit/scripts/lighthouse_audit.js"
+        ],
+        "exit_code": 0
+      },
+      "whitespace": {
+        "argv": [
+          "git",
+          "diff",
+          "--check"
+        ],
+        "exit_code": 0
+      },
+      "legacy-unchanged": {
+        "argv": [
+          "git",
+          "diff",
+          "--exit-code",
+          "--",
+          "skill/genscaff"
+        ],
+        "exit_code": 0
+      },
+      "runtime-unchanged": {
+        "argv": [
+          "git",
+          "diff",
+          "--exit-code",
+          "--",
+          "plugins/genscaff/skills/genscaff-release-audit/scripts/live_audit.js",
+          "plugins/genscaff/skills/genscaff-release-audit/scripts/lighthouse_audit.js",
+          "plugins/genscaff/skills/genscaff-release-audit/scripts/runtime_probe.js",
+          "plugins/genscaff/skills/genscaff-release-audit/scripts/package.json",
+          "plugins/genscaff/skills/genscaff-release-audit/scripts/package-lock.json"
+        ],
+        "exit_code": 0
+      },
+      "strict": {
+        "argv": [
+          "python",
+          "<artifact-bundle>/compare_strict.py"
+        ],
+        "exit_code": 0
+      }
+    }
+  }
+}

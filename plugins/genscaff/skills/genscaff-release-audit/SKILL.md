@@ -5,7 +5,7 @@ description: "Explicitly invoked Strict release audit for trusted browser fronte
 
 # Genscaff Release Audit
 
-Run only when the user explicitly invokes `$genscaff-release-audit`, or through the deprecated v2.0 `$genscaff strict` compatibility route. This is a release audit, not a default design workflow.
+Run only when the user explicitly invokes `$genscaff-release-audit`, including delegation from an explicit release-audit request. The retired `$genscaff strict` invocation does not start this audit. This is a release audit, not a default design workflow.
 
 ## Preconditions
 

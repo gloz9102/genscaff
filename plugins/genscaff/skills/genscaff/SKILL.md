@@ -5,11 +5,11 @@ description: "Build, modernize, or review production browser frontends in new or
 
 # Genscaff
 
-Run only when the user explicitly invokes `$genscaff`, `$genscaff quick`, or the deprecated `$genscaff strict` route.
+Run only when the user explicitly invokes `$genscaff` or `$genscaff quick`.
 
-## Purpose
+The retired `$genscaff strict` invocation is unsupported in v2.1. Explain its retirement and direct the user to `$genscaff-release-audit`; do not automatically start Standard or Strict work for that invocation.
 
-Create and modernize browser frontends, then make evidence-bounded verification claims. Preserve user and project intent. Extract reusable experience principles from references; do not generate direct brand clones, impose a house style, or claim originality, authorship, copyright clearance, or non-infringement.
+Create and modernize browser frontends, preserve user and project intent, and make evidence-bounded verification claims. Do not impose a house style or claim originality, authorship, legal clearance, full WCAG conformance, or representative-user success.
 
 ## Priority
 
@@ -25,110 +25,24 @@ Record conflicts, repository facts, and assumptions. A lower rule never silently
 
 ## Profiles
 
-Use Standard for `$genscaff`. Use Quick only when the user requests it or the task clearly fits the Quick contract. Never escalate to Strict automatically.
+- **Quick:** copy, one component, or local styling with a narrow affected path. Inspect affected code and conventions; preserve required information, accessible names, and action outcomes; verify changed behavior and one representative viewport when rendering changed. Record requested changes and unverified risks. No broad contract, alternative designs, JSON, Lighthouse, independent review, or command replay. A small diff alone does not establish suitability. Read `references/loading-ux.md` for an affected user-visible async boundary and report its boundary record.
+- **Standard:** default for ordinary generation, redesign, routes, or multi-component work. Follow the workflow below. JSON is needed only when requested or required by a loaded validator/workflow.
+- **Strict:** never escalate automatically. An explicit Strict or release-critical request delegates to `$genscaff-release-audit`. Missing audit skill, runtime, or reviewer makes Strict incomplete; continue safe implementation and separately bounded Standard checks where possible.
 
-### Quick
+## Standard workflow
 
-- Use for copy, one component, or local styling with a narrow affected path.
-- Inspect affected code and existing conventions, verify changed behavior, and inspect one representative viewport when rendering changed.
-- Preserve affected required information, accessible names, and action outcomes; record any explicitly requested changes. Do not require a broad contract or alternative designs.
-- Do not require JSON, Lighthouse, independent review, or command replay.
-- If a changed path has a user-visible asynchronous boundary, read `references/loading-ux.md` and report the relevant boundary record.
-- State every unverified risk. A small diff alone is not proof that Quick is appropriate.
+1. Inspect project facts without executing project code. Read the contract's inspection guidance before editing broad or new UI.
+2. Record `project_mode`, `reference_mode`, archetype, surfaces, and change scope using `references/task-type-craft-router.md`. Select only the directly applicable references below.
+3. Complete `references/visual-target-template.md` once: product/design decisions, required information and behavior, allowed changes, implementation, and evidence share one contract. Do not invent recovery or disabled states for an informational page (`FABRICATED_FRICTION`).
+4. For open-direction new surfaces or major redesigns, read `references/design-exploration.md` before implementation. Compare two representative candidates, then select: the user chooses by default; explicit delegation lets you choose after comparison. Only an explicit single-direction request or a routed exception skips the pair. Without a browser, retain two comparable, clearly unverified direction descriptions before selection.
+5. Preserve architecture and implement the selected direction, primary flow, and relevant states. Follow the routed craft requirements without weakening them for exploration.
+6. Inspect the first selected-product render for product flow and, when routed, the clusters in `references/anti-slop.md`. Record findings before edits, batch aesthetic corrections, and recheck desktop/mobile once. Candidate comparison is separate. Content, functional, accessibility, and runtime fixes still require affected checks to run again.
+7. Read `references/verification-baseline.md` before verification claims. Observe desktop/mobile render, console, overflow/clipping, primary flow, critical keyboard path, visible unobscured focus, and relevant states. Update the contract's existing preservation/reference evidence rather than writing it again.
+8. Report the highest evidenced status and unresolved findings. `VERIFIED_STANDARD_BASELINE` is the Standard ceiling, not universal quality or full accessibility certification.
 
-### Standard
+## Korean production copy
 
-- Use for ordinary generation, redesign, route, or multi-component work.
-- Inspect the project; classify task and reference intent; define the product and design contract; implement the primary flow and relevant states end to end.
-- For new surfaces or major redesigns with open visual direction, default to two representative-screen candidates and user selection. Honor a user's single-direction choice; read `references/design-exploration.md` only when applicable.
-- Observe desktop/mobile rendering, console errors, clipping and overflow, the primary action, complete critical keyboard path, and visible unobscured focus.
-- Capture evidence and issue a human-readable completion report. Create JSON only when requested or needed by the validator.
-
-### Strict compatibility
-
-When the user explicitly requests Strict or release-critical verification, delegate to `$genscaff-release-audit`.
-
-A legacy `$genscaff strict` request is accepted for the existing v2.0 migration period. Emit a deprecation notice and delegate to the release-audit workflow. Do not duplicate its visible-control manifest, four-checkpoint protocol, Lighthouse thresholds, reviewer provenance, command replay, or legacy Strict schema rules here.
-
-If the release-audit Skill, Strict runtime, or reviewer is unavailable, continue safe implementation and Standard verification where possible, then report Strict as incomplete. Never claim Strict from Standard evidence.
-
-## Task classification
-
-Record:
-
-- `project_mode`: `existing` or `new`
-- `reference_mode`: `locked-reproduction`, `structural-reference`, `aesthetic-inspiration`, or `no-reference`
-- one primary `experience_archetype`: `product-editorial`, `marketplace-discovery`, `media-discovery`, `workflow-application`, `content-editorial`, or `transaction`
-- at most one justified secondary archetype
-- only relevant `surface_type` values: `landing`, `search`, `listing`, `detail`, `dashboard`, `form`, `checkout`, `authentication`, `settings`, or `onboarding`
-- `change_scope`: `local`, `component-set`, `route`, or `multi-route`
-
-Classify from the user task, domain objects, and repository evidence. A brand name is a reference signal, not a classifier. Read `references/task-type-craft-router.md` for legacy page-type migration.
-
-## Reference intent
-
-Read `references/reference-intent.md` for any supplied image or named-site reference.
-
-- Use `locked-reproduction` only when exact reproduction and lock scope are explicit and the user represents that supplied assets may be used.
-- Use `structural-reference` for hierarchy, relationships, information order, behavior, or task-flow fidelity while adapting responsive and visual treatment.
-- Default named-brand inspiration to `aesthetic-inspiration`: extract product-experience principles and record at least three deliberate differences. Do not copy logos, proprietary copy or media, exact composition, navigation, geometry, iconography, brand color combinations, or distinctive interaction sequences.
-- Use `no-reference` when the request and repository define the target.
-
-A supplied image does not automatically lock all text, order, component count, or CTA labels. Generate a page mockup first only when the user requests a mockup-first workflow. A single generated asset request does not imply a page mockup.
-
-## Workflow
-
-1. Inspect project facts without running project code.
-2. Select profile, classification, reference intent, and directly relevant references.
-3. Define the product and design contract, including required information and behavior invariants and permitted changes.
-4. When exploration applies, state the two-candidate default and single-direction option, build comparable representative screens, and obtain the user's selection before expanding a direction unless that choice was explicitly delegated.
-5. Preserve architecture and implement the selected direction, primary flow, and relevant states.
-6. Review the first render of the selected implementation for product flow and, when routed, anti-slop clusters. Explicitly inspect visible eyebrow/kicker copy, non-semantic numbering, repeated card geometry, and container layering as possible members of a broader cluster; do not fail any one pattern alone. Record the cluster review before edits, batch aesthetic corrections, and recheck desktop/mobile once (two aesthetic review passes for the selected implementation). Candidate comparison is a separate bounded stage. This limit never prevents verification after fixing content, functionality, accessibility, or runtime defects.
-7. Verify invariants and the implementation to the highest status supported by actual evidence.
-8. Report commands, evidence, issues, limitations, and incomplete checks.
-
-## Project inspection
-
-Before editing an existing project, inspect lockfiles, manifests and scripts, framework, router, rendering and build model, language and type checking, styling system, tokens, layouts and primitives, responsive conventions, breakpoints and container queries, state and data boundaries, localization and writing direction, media handling, lint/type-check/tests/browser tests/build, and CI. Keep confirmed facts separate from heuristic detections and assumptions.
-
-When a reusable JSON inventory is useful, run `scripts/inspect_project.py <project-root>`. It reads metadata only, executes no project command, and separates facts from heuristic detections.
-
-Do not replace the package manager, routing, or state management for visual convenience. Do not add a second styling system or UI library before proving the existing system cannot satisfy the task. Reuse components instead of renaming duplicates. Do not rewrite unrelated files, make absolute positioning the primary layout mechanism, or bury example data inside complex presentation logic.
-
-For a new project, honor an explicit stack or choose the least complex stack that satisfies the request. Prefer semantic HTML and accessible primitives, separate example data from presentation, expose working dev/check/build paths, state mock boundaries honestly, and do not stop at a static mockup when working implementation was requested.
-
-## Product and design contract
-
-For broad work, complete `references/visual-target-template.md`. It covers:
-
-- Product: target user, job, success, domain objects, CTA/actions, decision cost, and recovery only when failure/cancel/reversal/incompletion is meaningful
-- Reference: mode, archetype, surfaces, adopted principles, deliberate differences, and locks
-- Content: hierarchy, item count, missing data, long/localized content, and writing direction
-- Preservation: required information, values, accessible names, action outcomes, meaningful reading/focus order, allowed changes, and evidence for each affected invariant
-- Exploration when applicable: comparison or user-selected single direction, representative surface, shared content/state/viewports, candidate differences, and user selection or explicit delegation
-- Visual system: dominant idea, focal point, density, type/space/color/depth roles, media, motion, and reduced motion
-- Engineering: stack, tokens/components, state/data boundaries, browser support, performance, and verification
-
-Never fabricate recovery or disabled states for an informational page. Unsupported steps remain `FABRICATED_FRICTION`.
-
-HTML or DOM identity does not prove preservation. Check rendered required information, CSS-generated or hidden content, accessible names, and observed action outcomes. Permit justified semantic or responsive DOM changes when they preserve the contract; never remove required information merely to improve composition. For a new project, derive invariants from the brief rather than inventing a baseline.
-
-## Implementation and visual policy
-
-- For user-facing Korean production copy, default to professional 존댓말. Prefer `-습니다` / `-합니다` for explanatory sentences, instructions, confirmations, errors, and other sentence-form copy.
-- Do not transfer the assistant's conversational tone into the product. Unless the user explicitly requests the voice or the existing product system establishes it, never ship 반말 or 음슴체 endings such as `-함`, `-음`, `-됨`, `-아님`, `-없음`, or `-했음` in rendered Korean UI copy.
-- When concise sentence fragments are appropriate for headings, labels, table headers, navigation, buttons, or status names, use a clean noun phrase or stem without an 음슴체 ending. Write `좌석 수보다 먼저, 좌석의 이유를 설계` rather than `좌석 수보다 먼저, 좌석의 이유를 설계함.`
-- When a full sentence is appropriate, write `좌석 수보다 먼저, 좌석의 이유를 설계합니다.` Never use `좌석 수보다 먼저, 좌석의 이유를 설계함.` as default production copy.
-- Treat this language register as a release requirement: inspect source copy and rendered desktop/mobile evidence, fix violations before reporting completion, and record any user-requested or project-established exception explicitly.
-- Establish one dominant visual idea and hierarchy before decoration.
-- Match density to the product task; use consistent typography and spacing roles.
-- Make media serve understanding or discovery and motion explain hierarchy, continuity, or feedback.
-- Prefer a small set of deliberate component patterns and semantic tokens already supported by the project.
-- Keep the product recognizable without depending on brand color.
-- Avoid fixed-height variable-text containers; tolerate long, localized, and bidirectional content.
-- Implement possible loading, partial, empty, error, disabled, unavailable, success, long-content, and media-failure states only where relevant.
-
-Gradients, glass, blur, glow, and similar CSS are not defects by themselves. Preserve supported project/reference choices. Revise them only when they compete with the task, reduce contrast, repeat without meaning, contradict the depth system, hurt performance, or make unrelated products interchangeable. This is craft guidance, not WCAG or originality detection.
+For user-facing Korean sentences, default to professional 존댓말 (`-합니다` / `-습니다`); never ship 반말 or 음슴체 endings unless explicitly requested or established by the product. Use natural noun/stem labels for headings, buttons, tables, and statuses. This is a release requirement: inspect source and rendered desktop/mobile copy, fix violations, and record evidenced exceptions. The assistant's conversational tone does not determine product copy.
 
 ## Reference routing
 
@@ -139,7 +53,7 @@ Read only references needed for the task; Quick loads none by default except its
 | External image or named-site reference | `references/reference-intent.md` |
 | New or broad UI | `references/visual-target-template.md` |
 | New surface or major redesign with open visual direction; user may choose a single direction | `references/design-exploration.md` |
-| Task classification or legacy page type | `references/task-type-craft-router.md` |
+| Standard task classification or legacy page type | `references/task-type-craft-router.md` |
 | Product or interactive flow | `references/product-specificity-and-action-gate.md` |
 | Visual direction is open | `references/ui-craft-guidelines.md` |
 | New landing/page/surface, major redesign, open-direction first render, aesthetic inspiration conversion, or user-reported generic/bland/AI-looking/template-like/slop output | `references/anti-slop.md` |
@@ -161,28 +75,11 @@ Treat a JSON quality report required or created by any concurrently loaded workf
 
 Do not make one reference require a chain of other references.
 
-## Standard verification
+## Reports and verification
 
-Use one honest status:
+Use the status definitions and evidence requirements in `references/verification-baseline.md`. Keep result, method, coverage, evidence, issues, and limitations distinct; browser, keyboard, automation, assistive-technology, and representative-user validation are not interchangeable.
 
-- `IMPLEMENTED_UNVERIFIED`: source work exists; required browser evidence does not.
-- `VERIFIED_RENDER`: required desktop/mobile render, console, overflow, and clipping evidence exists.
-- `VERIFIED_PRIMARY_FLOW`: Render plus primary start, feedback, terminal result, and applicable recovery evidence exists.
-- `VERIFIED_KEYBOARD_FLOW`: Primary Flow plus the complete critical keyboard path and visible unobscured focus evidence exists.
-- `VERIFIED_STANDARD_BASELINE`: Keyboard Flow plus relevant state coverage and no unresolved critical automated accessibility finding in tested states. This is not full WCAG conformance or representative-user validation.
-
-Keep `result`, `method`, `coverage`, `evidence`, `issues`, and `limitations` separate for render, flow, keyboard, focus, automated accessibility, manual accessibility, assistive-technology user validation, and representative-user validation. Axe, Lighthouse, or keyboard checks do not establish assistive-technology or representative-user validation.
-
-Read `references/verification-baseline.md` before claiming a verified status. When a Standard JSON report is requested or generated, initialize it with the current validator and validate the completed report:
-
-```bash
-python <skill-dir>/scripts/quality_gate.py --init <report.json> --profile standard
-python <skill-dir>/scripts/quality_gate.py --report <report.json>
-```
-
-Do not hand-author an older schema. Record rendered visual findings through existing `issues` and `limitations`, including location, evidence, and `keep`, `replace`, `remove`, or project-evidenced `exception`. A remaining finding cannot be represented by a clean boolean claim.
-
-Schema v5 Standard reports remain readable and are migrated conservatively. Legacy `VERIFIED_FLOW` can map only to `VERIFIED_PRIMARY_FLOW`; legacy `VERIFIED_STANDARD` can map only to `VERIFIED_KEYBOARD_FLOW` when its evidence still validates. New reports never emit legacy status names.
+Before creating any Standard JSON report, including one required by another loaded workflow, read `references/quality-report-schema.md`. Initialize and validate with the current `scripts/quality_gate.py`; do not copy an older report shape. The current schema takes precedence over historical shapes. Keep visual findings in existing issues/limitations, not clean booleans.
 
 ## Execution safety
 
@@ -203,6 +100,6 @@ Inspect the bundled manifest for exact Skill runtime versions and preserve targe
 
 ## Completion
 
-For affected invariants, report the observed preservation result and unresolved discrepancies. When exploration applies, report both candidate locations or unverified descriptions and the user's choice or explicit delegation; otherwise record the single-direction preference or inapplicability reason. Summarize adopted-reference traces through actual implementation evidence rather than just listing intended principles.
+Report profile and evidenced status, actual changes and commands, observations/artifacts, affected preservation results, and unresolved issues or skipped checks. Refer to the existing contract for classification and decisions rather than copying it. When exploration applies, give candidate locations or unverified descriptions and the user's choice or explicit delegation; otherwise identify the single-direction choice or inapplicability. Summarize implemented reference traces using actual evidence.
 
-Report profile, classification, contract decisions, files changed, commands actually run, evidence, exact status, issues, skipped checks, and limitations. `GENSCAFF_STANDARD_REPORT_VALID` validates the declared Standard report structure and local evidence only; it does not prove authorship, originality, legal clearance, universal quality, full accessibility, or representative-user success.
+`GENSCAFF_STANDARD_REPORT_VALID` validates report structure and local evidence only; it does not certify semantic preservation, aesthetic quality, authorship, originality, legal clearance, full accessibility, or representative-user success.

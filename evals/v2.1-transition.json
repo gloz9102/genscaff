@@ -1,0 +1,96 @@
+{
+  "schema_version": 1,
+  "version": "2.1.0",
+  "status": "structurally_verified_behavioral_trials_complete_acceptance_withheld",
+  "artifact_bundle": "20260917-v21-resume",
+  "model": "gpt-5.6-terra",
+  "reasoning": "medium",
+  "batches": {
+    "pr-v21": {
+      "attempted": 16,
+      "process_success": 9
+    },
+    "behavior-v21": {
+      "attempted": 12,
+      "process_success": 12
+    },
+    "pr-v21-revision-2": {
+      "attempted": 16,
+      "process_success": 0
+    },
+    "behavior-v21-revision-2": {
+      "attempted": 2,
+      "process_success": 0
+    },
+    "pr-v21-revision-2-funded": {
+      "attempted": 16,
+      "process_success": 16
+    },
+    "behavior-v21-revision-2-funded": {
+      "attempted": 2,
+      "process_success": 2
+    }
+  },
+  "release_120_runs": "not_run",
+  "human_review": {
+    "status": "sampled_winner_preferences_completed",
+    "booking": "control",
+    "transfer": "treatment",
+    "scope": "winner preferences only; scores and hard gates remain model judgments"
+  },
+  "baseline_core_sha256": "e114579229c841dc238d35b4edfc788a8d7be8264dc790c4e6c6ceb1315afa46",
+  "applied_core_sha256": "4d531fa375dca883d5c120cd0e638b8eadf51c0e0e3cdbea8f221becb6485086",
+  "ui_craft_sha256": "c22edde6873df9086cc4288eb195fbd0f6aec7157e6ae965b4de7425e19d179c",
+  "checks": {
+    "repository_tests": 26,
+    "core_tests": 18,
+    "strict_tests": 87,
+    "node_syntax_checks": 3
+  },
+  "claim": "Candidate comparison improved in observed trials; design improvement, cost reduction, and full behavioral acceptance are not established.",
+  "paired_preference": {
+    "treatment": 6,
+    "tie": 0,
+    "control": 2,
+    "booking_disagreement": "resolved by user preference for control"
+  },
+  "dimension_results": {
+    "project_fit": {
+      "win": 1,
+      "tie": 5,
+      "loss": 2
+    },
+    "visual_hierarchy": {
+      "win": 1,
+      "tie": 3,
+      "loss": 4
+    },
+    "responsive_accessibility": {
+      "win": 1,
+      "tie": 7,
+      "loss": 0
+    }
+  },
+  "median_treatment_minus_control": {
+    "elapsed_seconds": -16.125500000000002,
+    "completed_tool_calls": -1.5,
+    "input_tokens": 17498.0,
+    "output_tokens": -1353.5,
+    "cached_input_tokens": 4608.0
+  },
+  "remaining_defects": [
+    "390px document overflow in both incident and inventory pairs",
+    "Incident treatment does not retain filters across reload; it retains action/undo state"
+  ],
+  "artifact_hashes": {
+    "funded-metrics.json": "2ae27593b23c1ad23181a39f1150ded0b6a70f31053d76e20b2b1b8a6715bab6",
+    "funded-paired-review.json": "b09b9df30837cb28e08e5ca55d1459562ebef19ec91f9b53fc47a3e7c6e24f1d",
+    "funded-parent-observations.json": "4ed7ba4056968c98bda02064e4d63b43955234a323c06497b269c194fb1521fc",
+    "funded-render-overview.json": "609bfb957c88d14b56c05cef06a6c1c4f09985e7699d8651ff752554e9d77152",
+    "funded-behavior-observations.json": "bb550d792f2ef8977d1854674d653a23fcbf0a1887c690dda69a6cc07798e7cf",
+    "human-preferences.json": "da1f6479c5a211c9ec38e38e7579fc3501878029ae1ac28e0a9871b80b5686bf",
+    "pr-v21-revision-2-funded/summary.json": "88c18ebba398471c84e6bdc4c2ca1d596101b7920a468107e7a8a5bb67536b2b",
+    "pr-v21-revision-2-funded/manifest.json": "bdb3468fcc4a7c8fe954449378e273cfd3c09cbb8092aef51374e9fde7a013c0"
+  },
+  "harness_validation": "EVAL_RUN_VALID (record consistency, not rendered-quality acceptance)"
+}

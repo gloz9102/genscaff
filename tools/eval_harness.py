@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import argparse
 import collections
+import concurrent.futures
 import hashlib
 import json
 import shutil
@@ -170,40 +171,75 @@ def snapshot_errors(root: Path, manifest: dict) -> list[str]:
     return errors
 
 
+def generated_workspace(root: Path, item: dict) -> Path:
+    run_id = item["run_id"]
+    if not isinstance(run_id, str) or not run_id or any(char in run_id for char in "/\\") or run_id in {".", ".."}:
+        raise ValueError("invalid generated run id")
+    run_root = (root / "runs").resolve()
+    workspace = (root / item["workspace"]).resolve()
+    expected = root.resolve() / "runs" / run_id / "workspace"
+    if workspace != expected or not run_root.is_relative_to(root.resolve()) or not workspace.is_relative_to(run_root):
+        raise ValueError("evaluation workspace must remain inside its generated run")
+    return workspace
+
+
+def execution_argv(codex: str, manifest: dict, workspace: Path, prompt: str,
+                   windows_sandbox: str | None = None) -> list[str]:
+    # Trust only the disposable workspace created by this harness, never a parent.
+    trust = "projects." + json.dumps(str(workspace.resolve())) + '.trust_level="trusted"'
+    command = [codex, "exec", "--ephemeral", "--ignore-user-config", "--ignore-rules",
+               "--sandbox", "workspace-write", "--model", manifest["model"],
+               "-c", f"model_reasoning_effort={manifest['reasoning']}",
+               "-c", 'approval_policy="never"', "-c", trust]
+    if windows_sandbox is not None:
+        command += ["-c", f'windows.sandbox="{windows_sandbox}"']
+    return command + ["--json", prompt]
+
+
 def run(args: argparse.Namespace) -> int:
     root = args.run_dir.resolve()
     manifest = read_json(root / "manifest.json")
     errors = snapshot_errors(root, manifest)
     if errors:
         raise ValueError("; ".join(errors))
-    codex = shutil.which("codex")
-    git = shutil.which("git")
+    selected_codex = getattr(args, "codex_bin", None)
+    codex, git = shutil.which(str(selected_codex) if selected_codex else "codex"), shutil.which("git")
     if not codex or not git:
         raise RuntimeError("codex and git must be available on PATH")
-    failures = 0
-    for item in manifest["runs"]:
+    codex_version = subprocess.check_output([codex, "--version"], text=True, encoding="utf-8").strip()
+    policy = {"codex_binary": str(Path(codex).resolve()), "codex_version": codex_version,
+              "windows_sandbox": getattr(args, "windows_sandbox", None),
+              "jobs": getattr(args, "jobs", 1), "sandbox": "workspace-write",
+              "approval_policy": "never", "trust": "generated-workspace-only"}
+    policy_path = root / "execution-policy.json"
+    if policy_path.exists() and read_json(policy_path) != policy:
+        raise ValueError("execution policy changed; prepare a fresh run directory")
+    write_json(policy_path, policy)
+
+    def run_one(item: dict) -> int:
         run_root = root / "runs" / item["run_id"]
-        workspace = root / item["workspace"]
+        workspace = generated_workspace(root, item)
         if (run_root / "result.json").exists() and not args.rerun:
-            continue
+            return int(read_json(run_root / "result.json")["exit_code"] != 0)
         stage_workspace(root, item, workspace)
         subprocess.run([git, "init", "--quiet"], cwd=workspace, check=True)
         prompt = (root / item["prompt"]).read_text(encoding="utf-8")
-        command = [
-            codex, "exec", "--ephemeral", "--ignore-user-config", "--ignore-rules",
-            "--sandbox", "workspace-write", "--model", manifest["model"],
-            "-c", f"model_reasoning_effort={manifest['reasoning']}", "--json", prompt,
-        ]
-        trace = run_root / "trace.jsonl"
+        command = execution_argv(codex, manifest, workspace, prompt, policy["windows_sandbox"])
         started = time.monotonic()
-        with trace.open("w", encoding="utf-8") as stream:
-            completed = subprocess.run(command, cwd=workspace, stdout=stream, stderr=subprocess.PIPE, text=True, check=False)
+        with (run_root / "trace.jsonl").open("w", encoding="utf-8") as stream:
+            completed = subprocess.run(command, cwd=workspace, stdin=subprocess.DEVNULL,
+                                       stdout=stream, stderr=subprocess.PIPE, text=True,
+                                       encoding="utf-8", errors="replace", check=False)
         write_json(run_root / "result.json", {
             "schema_version": 1, "exit_code": completed.returncode,
             "stderr": completed.stderr[-4000:], "argv": command[1:-1],
             "elapsed_seconds": round(time.monotonic() - started, 3)
         })
-        failures += completed.returncode != 0
+        print(f"FINISHED={item['run_id']} EXIT={completed.returncode}", flush=True)
+        return int(completed.returncode != 0)
+
+    with concurrent.futures.ThreadPoolExecutor(max_workers=policy["jobs"]) as pool:
+        failures = sum(pool.map(run_one, manifest["runs"]))
     print(f"RUN_FAILURES={failures}")
     return 1 if failures else 0
 
@@ -386,6 +422,9 @@ def parser() -> argparse.ArgumentParser:
     p = commands.add_parser("run")
     p.add_argument("--run-dir", type=Path, required=True)
     p.add_argument("--rerun", action="store_true")
+    p.add_argument("--codex-bin", type=Path, help="explicit Codex executable; recorded with its version for reproducible runtime selection")
+    p.add_argument("--windows-sandbox", choices=("elevated", "unelevated"), help="explicit native Windows sandbox mode; no global config is changed")
+    p.add_argument("--jobs", type=int, choices=(1, 2, 4), default=1, help="concurrent isolated runs")
     p.set_defaults(func=run)
     for name, function in (("blind", blind), ("score", score), ("validate", validate)):
         p = commands.add_parser(name)

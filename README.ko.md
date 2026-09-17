@@ -21,17 +21,27 @@ Codex를 다시 시작하거나 새 작업을 열어 주세요. 두 스킬 모�
 $genscaff                 # Standard: 일반적인 생성·개편
 $genscaff quick           # Quick: 작은 로컬 변경
 $genscaff-release-audit   # Strict: 배포 중요 전체 감사
-$genscaff strict          # v2.0 호환 경로, v2.1에서 제거
+$genscaff strict          # v2.1에서 종료, $genscaff-release-audit 사용
 ```
 
-## v2.0.1 주요 변경
+## 2.1.0 전환
+
+레거시 소스 트리·ZIP과 `$genscaff strict` 호환 경로를 제거합니다. 종료된 호출에는 이전 방법만 안내하며 감사나 Standard 작업을 자동으로 시작하지 않습니다. 기존 보고서 스키마 호환성은 유지합니다. 소스 버전 변경은 릴리스 게시를 의미하지 않습니다.
+
+## 유지되는 v2.0.1 로딩 계약
 
 - 사용자에게 보이는 모든 비동기 경계에는 대기 제거 우선 로딩 계약을 적용합니다. 사용할 수 있는 맥락을 보존하고, 정직한 상태와 복구 수단을 제공하며, 스피너를 완료 근거로 대신하지 않고 관찰한 경계를 기록합니다.
 - Standard·Strict 보고서는 불완전한 로딩 경계 기록을 거부합니다. Strict의 `async`·`generation` 작업은 로딩 경험을 선언하고 근거를 남겨야 합니다.
 
+## 미배포 변경: 지침 중복 제거와 감사 구현 분리
+
+Core는 제품·디자인 계약을 한 번 기록하고 상세 요구사항을 기존 reference로 안내하도록 정리했습니다. 일반 UI 디자인 지침 파일의 내용·강제 수준·적용 조건은 유지합니다. Strict 내부 구현은 책임별로 분리하며 CLI 진입점, 보고서 스키마와 검증 규칙은 유지합니다.
+
+Windows 패치 쓰기는 앱에 포함된 CLI 0.155.0-alpha.2.6을 사용하여 workspace-write 격리를 유지한 상태로 복구했습니다. 크레딧 복구 후 수정 후보의 PR 16회와 브라우저 없는 조건 2회를 모두 완료했습니다. 블라인드·순서 교환 비교 8쌍과 사용자의 예약·송금 선호 판정을 반영한 결과는 수정판 6승·이전판 2승입니다. 이는 지침 준수를 포함한 선호이며 시각 품질 개선의 입증은 아닙니다. 두 대시보드 쌍 모두 390px에서 가로 넘침이 남아 전체 행동 채택 판정은 보류합니다. PR 실행 시간 중앙값은 줄었지만 입력 토큰 중앙값은 증가하여 비용 절감을 주장하지 않습니다. [v2.1 평가 기록](evals/v2.1-transition.md)에 최초 실패·재실행·모델 점수·사용자 선호·잔여 결함을 구분했습니다. 120회 릴리스 평가는 실행하지 않았습니다. [이전 중단 기록과 Strict 동등성 근거](evals/instruction-refactor.md)도 보존합니다.
+
 ## 미배포 변경: 디자인 탐색과 보존 검증
 
-아래 내용은 작업 중인 소스의 변경이며 새 릴리스 발표가 아닙니다. 패키지 버전은 2.0.1을 유지합니다.
+아래 흐름은 2.1.0 소스 버전에서도 유지합니다. 릴리스 게시는 별도 단계입니다.
 
 - 방향이 열려 있는 신규 화면·대규모 개편은 같은 조건의 대표 화면 두 안을 비교하고 사용자가 선택하는 방식이 기본입니다. 사용자는 단일안 진행 또는 선택 위임을 지정할 수 있습니다. Quick, 잠금 재현, 구성이 확정된 기존 시스템 확장은 비교를 생략합니다.
 - 필수 정보, 접근 가능한 이름, 의미 있는 순서와 동작 결과를 보존합니다. HTML이 같다는 사실만으로 보존을 판정하지 않으며, 레퍼런스 관찰을 구현 위치와 실제 화면 증거까지 연결합니다.
@@ -57,7 +67,7 @@ $genscaff 두 방향을 비교한 뒤 적합한 안을 대신 골라 주세요. 
 - 유명 사이트 참고는 원리와 deliberate difference를 추출하며 logo, copy, asset, composition, navigation, geometry, interaction을 복제하지 않습니다.
 - 상품·트랜잭션 craft는 검증용으로 지어낸 선택 단계와 비활성 CTA를 `FABRICATED_FRICTION`으로 거부합니다.
 - Strict는 구형 AI-slop·브랜드 연구 문서를 연쇄 로드하지 않고 공통 workflow rubric을 사용합니다.
-- 결정적 A/B 하네스는 PR 8개 과제의 쌍별 비교(16회) 또는 Release 120회 실행 계약을 유지합니다. 정적 행동 사례 29개에는 보존, 디자인 선택, 레퍼런스 추적, 결함 재검증이 포함되며 사례 정의 자체는 실행 결과가 아닙니다. 이전 스킬의 고정 사본을 대조군으로 지정해 변경 전후를 비교할 수 있습니다.
+- 결정적 A/B 하네스는 PR 8개 과제의 쌍별 비교(16회) 또는 Release 120회 실행 계약을 유지합니다. 정적 행동 사례 30개에는 보존, 디자인 선택, 레퍼런스 추적, 결함 재검증이 포함되며 사례 정의 자체는 실행 결과가 아닙니다. 이전 스킬의 고정 사본을 대조군으로 지정해 변경 전후를 비교할 수 있습니다.
 - 코어 스킬에는 Node, Playwright, Lighthouse 의존성이 없으며 해당 도구는 release-audit에만 포함됩니다.
 
 release-audit는 schema v3·v4 Strict 보고서를 계속 지원합니다. 코어는 schema v5 Standard 보고서를 계속 읽습니다. legacy `VERIFIED_FLOW`는 최대 `VERIFIED_PRIMARY_FLOW`, `VERIFIED_STANDARD`는 근거 재검사 후 최대 `VERIFIED_KEYBOARD_FLOW`로 변환하며 새 보고서는 legacy 상태명을 내보내지 않습니다.
@@ -102,6 +112,8 @@ Read-only inspection, project command 실행, dependency 설치, active browser,
 
 ## 동일 브리프 샘플
 
+공개 샘플은 v2.1 이전의 결과입니다. 과거 사례로 보존하며 현재 지침의 성능 근거로 사용하지 않습니다.
+
 서로 독립적인 `terra-medium` 에이전트 2개에 같은 상품 페이지 브리프를 제공했습니다. 적용 조건만 Genscaff Standard를 명시적으로 호출했습니다.
 
 | Genscaff Standard | 대조군 |
@@ -115,7 +127,6 @@ Read-only inspection, project command 실행, dependency 설치, active browser,
 ```text
 .agents/plugins/marketplace.json
 plugins/genscaff/{.codex-plugin,assets,skills/{genscaff,genscaff-release-audit}}
-skill/genscaff/          # v2.0 동결 legacy, v2.1에서 제거
 evals/                   # 과제, rubric, 평가 절차, Git에 넣는 요약
 tools/                   # 검증기, 재현 패키징, 평가 하네스
 ```
@@ -148,11 +159,13 @@ python tools/eval_harness.py score --run-dir eval-run
 python tools/eval_harness.py validate --run-dir eval-run
 ```
 
+여러 CLI가 설치되어 있으면 `run --codex-bin <executable>`로 실행 파일을 지정할 수 있습니다. 하네스는 실제 실행 경로와 버전을 기록합니다. `--windows-sandbox elevated|unelevated`, `--jobs 1|2|4`는 실행별 설정이며 이어서 실행할 때 기존 정책을 유지합니다.
+
 모델 실행은 로컬 Codex 인증, 분리된 Git 작업공간, `codex exec --ephemeral --ignore-user-config --ignore-rules --sandbox workspace-write`, JSONL trace 보존을 사용합니다. 실행 원본은 Git에 넣지 않고 릴리스 artifact로 보관하며 요약만 커밋합니다.
 
-## 호환 패키지
+## 배포 패키지
 
-`python tools/package_skill.py`는 재현 가능한 `genscaff-plugin.zip`과 한 번만 제공하는 `genscaff-legacy.zip`, 각 SHA-256 파일을 생성합니다. legacy ZIP과 `$genscaff strict` 경로는 v2.1에서 제거됩니다.
+`python tools/package_skill.py`는 재현 가능한 `genscaff-plugin.zip`, 버전별 평가 산출물과 SHA-256 파일을 생성합니다. 평가 파일명은 플러그인 manifest 버전을 따릅니다. `--kind plugin`은 플러그인 ZIP만, 기본값인 `--kind all`은 평가 산출물까지 생성합니다. `--kind legacy`는 지원하지 않습니다. 과거 평가 요약은 원래 버전 이름으로 보존합니다.
 
 ## 라이선스
 

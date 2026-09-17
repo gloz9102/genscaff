@@ -6,7 +6,7 @@ Describe the user-visible or validator-visible change.
 
 - [ ] `python tools/check_skill.py`
 - [ ] Relevant regression tests
-- [ ] Full `python skill/genscaff/scripts/test_quality_gate.py` when validator behavior changed
+- [ ] Full `python plugins/genscaff/skills/genscaff-release-audit/scripts/test_quality_gate.py` when validator behavior changed
 - [ ] License and notice files updated when provenance or dependencies changed
 
 ## Risks

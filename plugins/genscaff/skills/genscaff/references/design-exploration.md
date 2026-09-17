@@ -5,7 +5,7 @@ Use for a new surface or major redesign with open visual direction. Information 
 ## User choice and routing
 
 - Default to comparing two candidates. State this early and offer a single-direction option while continuing project inspection and the shared contract; do not create an initial approval gate merely to use the default.
-- Honor an explicit single-direction preference immediately and do not ask again. Build one direction and perform normal verification.
+- Honor an explicit single-direction preference immediately and do not ask again. Build one direction and perform normal verification. A request to choose for the user delegates selection after comparison; it is not a single-direction preference.
 - Skip comparison for Quick, narrow fixes, accessibility-only or localization-only changes, locked reproduction, or an extension whose design system already determines the composition. A token system alone does not settle an otherwise open major redesign.
 - If the user explicitly requests alternatives in an otherwise narrow task, bound the comparison to that scope rather than expanding the whole project.
 

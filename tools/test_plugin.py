@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import unittest
+import ast
 
 import check_skill
 
@@ -14,7 +15,9 @@ class PluginTests(unittest.TestCase):
         audit = (check_skill.AUDIT_ROOT / "SKILL.md").read_text(encoding="utf-8")
         self.assertIn("explicitly invokes `$genscaff`", core)
         self.assertIn("explicitly invokes `$genscaff-release-audit`", audit)
-        self.assertIn("deprecated", core)
+        self.assertIn("unsupported in v2.1", core)
+        self.assertIn("do not automatically start Standard or Strict", core)
+        self.assertNotIn("deprecated v2.0", audit)
         self.assertIn("reference_mode", core)
         self.assertIn("VERIFIED_STANDARD_BASELINE", core)
         self.assertNotIn("primary-start → primary-feedback", core)
@@ -23,8 +26,24 @@ class PluginTests(unittest.TestCase):
         core = (check_skill.CORE_ROOT / "SKILL.md").read_text(encoding="utf-8")
         self.assertIn("default to professional 존댓말", core)
         self.assertIn("never ship 반말 or 음슴체 endings", core)
-        self.assertIn("좌석 수보다 먼저, 좌석의 이유를 설계합니다.", core)
+
         self.assertIn("release requirement", core)
+
+    def test_standard_routes_to_requirement_owners(self) -> None:
+        core = (check_skill.CORE_ROOT / "SKILL.md").read_text(encoding="utf-8")
+        owners = {
+            "visual-target-template.md": ("## Preservation", "## Engineering", "## Inspect before completing the contract"),
+            "design-exploration.md": ("## User choice and routing", "## Controlled comparison"),
+            "reference-intent.md": ("## Locked reproduction", "## Structural reference", "## Aesthetic inspiration"),
+            "verification-baseline.md": ("## Status ceiling", "## Preservation and reference evidence"),
+            "quality-report-schema.md": ("--init", "--report"),
+        }
+        for name, requirements in owners.items():
+            self.assertIn(f"references/{name}", core)
+            owner = (check_skill.CORE_ROOT / "references" / name).read_text(encoding="utf-8")
+            for requirement in requirements:
+                self.assertIn(requirement, owner)
+        self.assertIn("| Visual direction is open | `references/ui-craft-guidelines.md` |", core)
 
     def test_manifest_and_metadata_match_two_skill_roles(self) -> None:
         manifest = check_skill.json.loads((check_skill.PLUGIN_ROOT / ".codex-plugin" / "plugin.json").read_text(encoding="utf-8"))
@@ -44,6 +63,33 @@ class PluginTests(unittest.TestCase):
             self.assertIn("A spinner is not a loading strategy", contract)
             self.assertIn("Do not show a fabricated percentage", contract)
             self.assertIn("Do not use optimistic completion for payment", contract)
+
+    def test_audit_modules_have_no_cycles_or_cli_backimports(self) -> None:
+        root = check_skill.AUDIT_ROOT / "scripts" / "auditlib"
+        graph = {}
+        for path in root.glob("*.py"):
+            dependencies = set()
+            for node in ast.walk(ast.parse(path.read_text(encoding="utf-8"))):
+                if isinstance(node, ast.Import):
+                    self.assertFalse({"hard_gate", "quality_gate"} & {name.name for name in node.names}, path.name)
+                elif isinstance(node, ast.ImportFrom):
+                    self.assertNotIn(node.module, {"hard_gate", "quality_gate"}, path.name)
+                    if node.level == 1:
+                        dependencies.update([node.module] if node.module else [name.name for name in node.names])
+            graph[path.stem] = dependencies
+        active, finished = set(), set()
+        def visit(name):
+            self.assertNotIn(name, active, f"circular audit import: {name}")
+            if name in finished:
+                return
+            self.assertIn(name, graph, f"missing internal audit module: {name}")
+            active.add(name)
+            for dependency in graph[name]:
+                visit(dependency)
+            active.remove(name)
+            finished.add(name)
+        for name in graph:
+            visit(name)
 
     def test_bilingual_docs_cover_current_contract(self) -> None:
         pairs = (

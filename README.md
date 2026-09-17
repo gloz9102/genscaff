@@ -21,17 +21,27 @@ Restart Codex or open a new task. Neither skill is invoked implicitly.
 $genscaff                 # Standard: normal generation and redesign
 $genscaff quick           # Quick: a small local change
 $genscaff-release-audit   # Strict: release-critical exhaustive audit
-$genscaff strict          # v2.0 compatibility route; removed in v2.1
+$genscaff strict          # Retired in v2.1; use $genscaff-release-audit
 ```
 
-## What changed in v2.0.1
+## Version 2.1.0 transition
+
+The legacy source tree, legacy ZIP, and `$genscaff strict` compatibility route are removed. Retired invocations provide migration guidance without starting an audit or a Standard task. Existing report-schema compatibility is preserved. This source version does not imply a published release.
+
+## Retained v2.0.1 loading contract
 
 - Any user-visible asynchronous boundary must follow a wait-removal-first loading contract, preserve usable context, expose honest status and recovery, and document the observed boundary instead of treating a spinner as completion.
 - Standard and Strict reports reject incomplete loading-boundary records; `async` and `generation` Strict work must declare and evidence the loading experience.
 
+## Unreleased: instruction consolidation and audit internals
+
+Core instructions now reuse one product/design contract and route detailed requirements to existing references. The general UI craft file, its enforcement, and its loading condition are unchanged. Strict internals are separated by responsibility while preserving CLI entrypoints, report schemas, and validation rules.
+
+Windows patch writes were recovered using the app-bundled CLI 0.155.0-alpha.2.6 with workspace-write isolation. The revised PR rerun completed all 16 processes after credits were restored, and the affected no-browser pair completed both runs. Eight blind/order-swapped comparisons and the user’s sampled booking/transfer preferences produced 6 treatment preferences and 2 control preferences. These include instruction compliance, not just visual quality. Both dashboard pairs still overflow at 390px; full behavioral acceptance remains withheld. PR median input tokens increased despite a shorter median runtime, so no cost-reduction claim is made. The [v2.1 evaluation record](evals/v2.1-transition.md) separates original failures, reruns, model scores, user preferences, and observed defects. The 120-run release evaluation was not run. [Earlier blocked trials and Strict equivalence evidence](evals/instruction-refactor.md) remain preserved.
+
 ## Unreleased: design exploration and preservation
 
-These changes describe the working tree; they do not announce a new release. The package version remains 2.0.1.
+These workflows are retained in the 2.1.0 source version; publication is a separate step.
 
 - Open-direction new surfaces and major redesigns default to two comparable representative-screen candidates followed by user selection. Users can choose a single direction or explicitly delegate selection. Quick fixes, locked reproduction, and composition-settled extensions skip comparison.
 - Preservation covers required visible information, accessible names, meaningful order, and action outcomes; unchanged HTML alone is insufficient. Reference principles are traced from observed source to implementation and rendered evidence.
@@ -57,7 +67,7 @@ See the [exploration workflow](plugins/genscaff/skills/genscaff/references/desig
 - Named-site inspiration defaults to principle extraction with deliberate differences, not logo, copy, asset, composition, navigation, geometry, or interaction cloning.
 - Product and transaction craft rejects invented selection steps and disabled CTAs as `FABRICATED_FRICTION`.
 - Strict uses a compact workflow rubric instead of loading historical AI-slop and brand-research chains.
-- The deterministic A/B harness prepares eight paired PR tasks (16 runs) or 120 release runs. Its 29 static behavior cases include preservation, design selection, reference tracing, and defect re-verification; these definitions are not executed trials. Optional frozen-skill baselines support previous-versus-current comparisons.
+- The deterministic A/B harness prepares eight paired PR tasks (16 runs) or 120 release runs. Its 30 static behavior cases include preservation, design selection, reference tracing, and defect re-verification; these definitions are not executed trials. Optional frozen-skill baselines support previous-versus-current comparisons.
 - The core skill has no Node, Playwright, or Lighthouse dependency; those remain in release-audit.
 
 Schema v3/v4 Strict reports remain supported by release-audit. Core schema v5 Standard reports remain readable: legacy `VERIFIED_FLOW` maps at most to `VERIFIED_PRIMARY_FLOW`, and `VERIFIED_STANDARD` maps at most to `VERIFIED_KEYBOARD_FLOW` after evidence validation. New reports do not emit legacy names.
@@ -102,6 +112,8 @@ Read-only inspection, project command execution, dependency installation, active
 
 ## Same-brief sample
 
+The following public samples predate v2.1. They remain historical examples, not performance evidence for the current instructions.
+
 Two independent `terra-medium` agents received the same product-page brief. Only the treatment explicitly invoked Genscaff Standard.
 
 | Genscaff Standard | Control |
@@ -112,7 +124,7 @@ Both outputs were usable. This one qualitative pair does not establish superiori
 
 ## Quick anti-slop A/B (directional)
 
-One isolated `gpt-5.6-terra` low-effort pair received the same fictional FlowPilot landing-page brief. The treatment explicitly invoked the current Genscaff Standard Skill; the control could not inspect it. This is directional evidence from two agents, not statistical proof.
+One isolated `gpt-5.6-terra` low-effort pair received the same fictional FlowPilot landing-page brief. The treatment explicitly invoked the then-current Genscaff Standard Skill; the control could not inspect it. This is directional evidence from two agents, not statistical proof.
 
 | Parent-verified result | Genscaff | Control |
 |---|---:|---:|
@@ -146,7 +158,6 @@ Observed differences:
 ```text
 .agents/plugins/marketplace.json
 plugins/genscaff/{.codex-plugin,assets,skills/{genscaff,genscaff-release-audit}}
-skill/genscaff/          # frozen v2.0 legacy source; removed in v2.1
 evals/                   # cases, rubric, evaluation protocol, checked-in summaries
 tools/                   # validators, deterministic packaging, eval harness
 ```
@@ -179,11 +190,13 @@ python tools/eval_harness.py score --run-dir eval-run
 python tools/eval_harness.py validate --run-dir eval-run
 ```
 
+Use `run --codex-bin <executable>` when multiple CLI installations exist; the harness records the resolved executable and version. `--windows-sandbox elevated|unelevated` and `--jobs 1|2|4` are explicit per-run settings. Resume preserves the recorded execution policy.
+
 Model runs use local Codex authentication, isolated Git workspaces, `codex exec --ephemeral --ignore-user-config --ignore-rules --sandbox workspace-write`, and preserved JSONL traces. Raw runs stay out of Git and belong in release artifacts; only summaries are committed.
 
-## Compatibility packages
+## Distribution packages
 
-`python tools/package_skill.py` creates reproducible `genscaff-plugin.zip` and a one-release `genscaff-legacy.zip`, each with a SHA-256 sidecar. The legacy ZIP and `$genscaff strict` route are removed in v2.1.
+`python tools/package_skill.py` creates reproducible `genscaff-plugin.zip` and versioned evaluation artifacts with SHA-256 sidecars. The evaluation filename follows the plugin manifest version. `--kind plugin` creates only the plugin archive; `--kind all` (default) also includes evaluation artifacts. `--kind legacy` is no longer accepted. Historical evaluation summaries retain their original version names.
 
 ## License
 

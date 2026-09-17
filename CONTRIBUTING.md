@@ -31,7 +31,7 @@ The regression suite requires Chrome or Chromium. Set `CHROME_PATH` when automat
 
 ## Design exploration and preservation changes
 
-- Keep both READMEs consistent with the core workflow and mark unreleased behavior separately from versioned release notes. The frozen `skill/genscaff` tree is not the active implementation.
+- Keep both READMEs consistent with the core workflow and mark unreleased behavior separately from versioned release notes. The active implementation is under `plugins/genscaff/skills`; the frozen legacy tree was removed in v2.1.
 - Preserve existing craft rules and required information, accessible names, meaningful order, and action outcomes. DOM equality or a valid report is insufficient evidence.
 - Test default two-candidate exploration, explicit single-direction requests, pending user selection, delegated selection, and comparison skips appropriate to scope. Missing browser access must remain visible as a limitation, with comparable unverified descriptions when exploration applies.
 - Keep source observation, inferred principle, product fit, implementation, and rendered evidence distinguishable. Do not claim access to an unavailable reference.

@@ -19,6 +19,31 @@ class EvalHarnessTests(unittest.TestCase):
     def prepare(self, root: Path, suite: str = "pr") -> None:
         harness.prepare(argparse.Namespace(output=root, suite=suite, model="gpt-5.6-terra", reasoning="medium"))
 
+    def test_explicit_cli_selection_is_parsed_without_changing_path(self) -> None:
+        args = harness.parser().parse_args(["run", "--run-dir", "trial", "--codex-bin", "runtime/codex.exe", "--windows-sandbox", "elevated"])
+        self.assertEqual(Path("runtime/codex.exe"), args.codex_bin)
+        self.assertEqual("elevated", args.windows_sandbox)
+
+    def test_workspace_trust_rejects_manifest_path_escape(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            valid = {"run_id": "case-control", "workspace": "runs/case-control/workspace"}
+            self.assertEqual((root / valid["workspace"]).resolve(), harness.generated_workspace(root, valid))
+            for item in ({"run_id": "../outside", "workspace": "../outside"}, {"run_id": "case-control", "workspace": "../outside"}, {"run_id": "case-control", "workspace": "runs/other/workspace"}):
+                with self.assertRaises(ValueError):
+                    harness.generated_workspace(root, item)
+
+    def test_execution_trust_is_limited_to_generated_workspace(self) -> None:
+        workspace = Path("temporary-evaluation/run/workspace").resolve()
+        argv = harness.execution_argv("codex", {"model": "gpt-5.6-terra", "reasoning": "medium"}, workspace, "build", "unelevated")
+        self.assertEqual("workspace-write", argv[argv.index("--sandbox") + 1])
+        trust = 'projects.' + json.dumps(str(workspace)) + '.trust_level="trusted"'
+        self.assertIn(trust, argv)
+        self.assertIn('windows.sandbox="unelevated"', argv)
+        self.assertIn('approval_policy="never"', argv)
+        self.assertNotIn("--dangerously-bypass-approvals-and-sandbox", argv)
+        self.assertNotIn('windows.sandbox="unelevated"', harness.execution_argv("codex", {"model": "m", "reasoning": "medium"}, workspace, "build"))
+
     def test_prepare_counts_and_explicit_treatment_only(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
@@ -34,13 +59,15 @@ class EvalHarnessTests(unittest.TestCase):
         self.assertEqual([], harness.validate_definitions())
         cases = harness.read_json(harness.CASES)["cases"]
         behavior = [case for case in cases if case.get("behavior_only")]
-        self.assertEqual(29, len(behavior))
+        self.assertEqual(30, len(behavior))
         self.assertTrue(all(harness.EXPECTED_FIELDS <= set(case["expected"]) for case in behavior))
         by_id = {case["id"]: case["expected"] for case in behavior}
         self.assertIn("anti-slop", by_id["behavior-generic-saas-antislop"]["required_references"])
         self.assertIn("schema v6 initialization and validation", by_id["behavior-evidence-free-verified"]["must_include"])
         self.assertIn("single-pattern failure", by_id["behavior-preserve-gradients"]["must_not_include"])
         self.assertIn("anti-slop override of user intent", by_id["behavior-owned-exact-reproduction"]["must_not_include"])
+        self.assertFalse(by_id["behavior-retired-strict-invocation"]["strict_delegation_expected"])
+        self.assertIn("automatic Standard fallback", by_id["behavior-retired-strict-invocation"]["must_not_include"])
         baseline = harness.read_json(harness.ROOT / "evals" / "baselines" / "v2.0.0.json")
         self.assertEqual("2.0.0", baseline["version"])
 

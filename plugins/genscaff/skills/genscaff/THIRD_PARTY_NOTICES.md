@@ -14,7 +14,7 @@ Chrome or Chromium is not bundled and remains subject to its distributor's terms
 
 ## External research and product references
 
-Files under `skill/genscaff/references/` cite external research, standards, design guidance, and product pages. Hyperlinks, names, and project-authored summaries are provided for research provenance. The Apache-2.0 license for this repository does not relicense external websites, papers, trademarks, screenshots, or proprietary assets.
+Files in each skill’s `references/` directory cite external research, standards, design guidance, and product pages. Hyperlinks, names, and project-authored summaries are provided for research provenance. The Apache-2.0 license for this repository does not relicense external websites, papers, trademarks, screenshots, or proprietary assets.
 
 ## OpenAI Codex
 

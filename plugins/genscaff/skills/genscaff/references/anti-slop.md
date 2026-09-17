@@ -12,14 +12,7 @@ Preserve purposeful gradients, glass, cards, rounding, motion, and other treatme
 
 ## Positive direction
 
-Before reviewing the render, state:
-
-- Target user: the concrete audience completing the primary task.
-- Primary success: the observable outcome the surface must help produce.
-- Surface mode: landing, workflow, dashboard, editorial, transaction, or the classified equivalent.
-- Dominant visual idea: the one idea organizing attention and hierarchy.
-- Product-specific visual signature: the domain object, decision, proof, or workflow that makes the surface recognizable without its logo or accent color.
-- Deliberate non-default composition choice: one layout decision derived from the task or content rather than a habitual template.
+Use the existing product/design contract for target user, primary success, surface mode, dominant visual idea, product-specific signature, and deliberate composition choice. Refer to those decisions while reviewing; do not create a second direction record.
 
 A positive direction must improve task clarity and product identity. “Be unique,” “look premium,” or novelty for its own sake is not a direction.
 

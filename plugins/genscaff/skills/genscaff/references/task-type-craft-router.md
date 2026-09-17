@@ -2,7 +2,14 @@
 
 Classify by user task and repository evidence, not brand surface.
 
-Record `project_mode`, `reference_mode`, one primary `experience_archetype`, an optional justified secondary archetype, relevant `surface_types`, `change_scope`, and a short rationale.
+- `project_mode`: `existing` or `new`
+- `reference_mode`: `locked-reproduction`, `structural-reference`, `aesthetic-inspiration`, or `no-reference`
+- one primary `experience_archetype`: `product-editorial`, `marketplace-discovery`, `media-discovery`, `workflow-application`, `content-editorial`, or `transaction`
+- at most one justified secondary archetype
+- only relevant `surface_type` values: `landing`, `search`, `listing`, `detail`, `dashboard`, `form`, `checkout`, `authentication`, `settings`, or `onboarding`
+- `change_scope`: `local`, `component-set`, `route`, or `multi-route`
+
+Record a short rationale. A brand name is a reference signal, not a classifier.
 
 | Archetype | Primary task | Typical surfaces | Craft reference |
 | --- | --- | --- | --- |

@@ -9,7 +9,6 @@ import argparse
 from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
-LEGACY_ROOT = REPO_ROOT / "skill" / "genscaff"
 PLUGIN_ROOT = REPO_ROOT / "plugins" / "genscaff"
 CORE_ROOT = PLUGIN_ROOT / "skills" / "genscaff"
 AUDIT_ROOT = PLUGIN_ROOT / "skills" / "genscaff-release-audit"
@@ -25,10 +24,6 @@ def files_under(root: Path) -> list[Path]:
         directories[:] = sorted(name for name in directories if name not in GENERATED)
         found.extend(Path(current) / name for name in sorted(names) if not name.endswith((".pyc", ".pyo")))
     return found
-
-
-def distributable_files(root: Path = LEGACY_ROOT) -> list[Path]:
-    return files_under(root)
 
 
 def frontmatter(path: Path) -> dict[str, str]:
@@ -89,7 +84,6 @@ def validate(*, allow_generated: bool = False) -> list[str]:
     errors = []
     errors += validate_skill(CORE_ROOT, "genscaff", ("scripts/quality_gate.py", "scripts/inspect_project.py", "references/reference-intent.md", "references/task-type-craft-router.md", "references/responsive-state-matrix.md", "references/verification-baseline.md", "references/anti-slop.md"))
     errors += validate_skill(AUDIT_ROOT, "genscaff-release-audit", ("scripts/hard_gate.py", "scripts/quality_gate.py", "scripts/live_audit.js", "scripts/lighthouse_audit.js", "scripts/runtime_probe.js", "scripts/package.json", "scripts/package-lock.json"))
-    errors += validate_skill(LEGACY_ROOT, "genscaff", ("scripts/hard_gate.py", "scripts/quality_gate.py"), explicit=False)
 
     forbidden_core = tuple(CORE_ROOT.rglob("package*.json")) + tuple(CORE_ROOT.rglob("*.js"))
     if forbidden_core:
@@ -102,7 +96,7 @@ def validate(*, allow_generated: bool = False) -> list[str]:
     except (OSError, json.JSONDecodeError) as error:
         errors.append(f"invalid plugin metadata: {error}")
     else:
-        expected = {"name":"genscaff", "version":"2.0.1", "license":"Apache-2.0", "repository":"https://github.com/gloz9102/genscaff"}
+        expected = {"name":"genscaff", "version":"2.1.0", "license":"Apache-2.0", "repository":"https://github.com/gloz9102/genscaff"}
         for key, value in expected.items():
             if manifest.get(key) != value:
                 errors.append(f"plugin manifest {key} must be {value}")
@@ -129,7 +123,7 @@ def validate(*, allow_generated: bool = False) -> list[str]:
         if lock.get("packages", {}).get("", {}).get("dependencies") != package.get("dependencies"):
             errors.append("audit lockfile dependencies do not match package.json")
 
-    for root in (LEGACY_ROOT, PLUGIN_ROOT):
+    for root in (PLUGIN_ROOT,):
         for current, directories, names in os.walk(root):
             path = Path(current)
             if not allow_generated:
@@ -147,7 +141,7 @@ def validate(*, allow_generated: bool = False) -> list[str]:
 
 
 def main() -> int:
-    parser = argparse.ArgumentParser(description="Validate Genscaff plugin and legacy package structure")
+    parser = argparse.ArgumentParser(description="Validate Genscaff plugin structure")
     parser.add_argument("--reject-generated", action="store_true", help="fail when local cache or dependency directories exist")
     args = parser.parse_args()
     errors = validate(allow_generated=not args.reject_generated)
@@ -155,7 +149,7 @@ def main() -> int:
         for error in errors:
             print(f"ERROR: {error}", file=sys.stderr)
         return 1
-    print("GENSCAFF_PLUGIN_AND_LEGACY_STRUCTURE_VALID")
+    print("GENSCAFF_PLUGIN_STRUCTURE_VALID")
     return 0
 
 

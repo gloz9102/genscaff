@@ -1,7 +1,7 @@
 version: 2
 updates:
   - package-ecosystem: npm
-    directory: /skill/genscaff/scripts
+    directory: /plugins/genscaff/skills/genscaff-release-audit/scripts
     schedule:
       interval: weekly
   - package-ecosystem: github-actions

@@ -1,4 +1,0 @@
-interface:
-  display_name: "Genscaff"
-  short_description: "프로필별 근거 기반 프론트엔드 생성·검증"
-  default_prompt: "Use $genscaff in Standard mode to build or refine this frontend while preserving user and project design intent and verifying the primary flow on desktop and mobile."
