@@ -27,13 +27,15 @@ A positive direction must improve task clarity and product identity. “Be uniqu
 
 Look for combinations, not isolated tokens:
 
-- Generic composition: centered hero, decorative eyebrow or kicker, meaningless small section numbers, and a predictable feature/proof/CTA sequence unrelated to the product task.
-- Generic decoration: gradient text, unsupported glow, purple/teal ornament, glass, or ambient shapes carrying more emphasis than product information.
-- Unsupported proof and copy: invented metrics, testimonials, logo clouds, vague transformation claims, or abstract copy without inspectable product evidence.
-- Mechanical repetition: the same icon tile, feature card, heading stack, radius, and spacing recipe repeated without distinct information roles.
-- Container layering: nested cards and rounded surfaces used where spacing, alignment, dividers, or typography would express the information structure more clearly.
+- Generic composition: centered hero, decorative eyebrow, meaningless section numbers, and a predictable feature/proof/CTA sequence unrelated to the task.
+- Generic decoration: gradient text, unsupported glow, purple/teal ornament, glass, or ambient shapes emphasized above product information.
+- Unsupported proof: invented metrics, testimonials, logo clouds, vague claims, or abstract copy without inspectable evidence.
+- Mechanical repetition: the same icon tile, card, heading stack, radius, and spacing recipe without distinct information roles.
+- Container layering: nested cards where spacing, alignment, dividers, or typography would express the hierarchy more clearly.
 - Unrelated motion: marquee, pulse, scroll reveal, or ambient animation that does not explain state, continuity, hierarchy, or feedback.
 - Irrelevant imagery: stock or abstract imagery that could move to a distant product category without changing meaning.
+
+Once confirmed, prefer information-bearing structure: fold a roleless eyebrow into heading/evidence; replace non-semantic numbers with surface-specific roles (steps, decisions, evidence, states); flatten nested cards using alignment, dividers, state text. Preserve domain objects, flow, accessibility, and responsiveness; deletion alone is not improvement.
 
 ## First-render questions
 
