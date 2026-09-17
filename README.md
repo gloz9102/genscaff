@@ -29,17 +29,35 @@ $genscaff strict          # v2.0 compatibility route; removed in v2.1
 - Any user-visible asynchronous boundary must follow a wait-removal-first loading contract, preserve usable context, expose honest status and recovery, and document the observed boundary instead of treating a spinner as completion.
 - Standard and Strict reports reject incomplete loading-boundary records; `async` and `generation` Strict work must declare and evidence the loading experience.
 
+## Unreleased: design exploration and preservation
+
+These changes describe the working tree; they do not announce a new release. The package version remains 2.0.1.
+
+- Open-direction new surfaces and major redesigns default to two comparable representative-screen candidates followed by user selection. Users can choose a single direction or explicitly delegate selection. Quick fixes, locked reproduction, and composition-settled extensions skip comparison.
+- Preservation covers required visible information, accessible names, meaningful order, and action outcomes; unchanged HTML alone is insufficient. Reference principles are traced from observed source to implementation and rendered evidence.
+- Existing aesthetic rules remain unchanged. Candidate comparison is separate from the selected implementation's two aesthetic review passes; content, functional, accessibility, and runtime fixes still require re-verification.
+
+```text
+$genscaff Build a new booking page.                  # Default: compare two representative candidates
+$genscaff Build a booking page in a single direction. # Opt out of comparison
+$genscaff Compare two directions and choose for me.  # Explicitly delegate selection
+```
+
+Without explicit delegation, selection waits for the user before expanding the chosen direction. Missing browser access retains two comparable, clearly unverified direction descriptions and available source work; it does not silently select one or claim rendered evidence.
+
+See the [exploration workflow](plugins/genscaff/skills/genscaff/references/design-exploration.md), [preservation contract](plugins/genscaff/skills/genscaff/references/visual-target-template.md), and [reference trace requirements](plugins/genscaff/skills/genscaff/references/reference-intent.md). The [evaluation protocol and quick-check findings](evals/design-preservation.md) distinguish observed behavior from untested requirements.
+
 ## Current frontend workflow
 
 - Schema v6 separates verification `result`, `method`, `coverage`, evidence, issues, and limitations.
 - New reports use `IMPLEMENTED_UNVERIFIED`, `VERIFIED_RENDER`, `VERIFIED_PRIMARY_FLOW`, `VERIFIED_KEYBOARD_FLOW`, and `VERIFIED_STANDARD_BASELINE`. Evidence-free booleans or `pass` strings cannot raise status.
 - Standard classifies `project_mode`, four reference modes, one primary experience archetype, relevant surface types, and change scope before broad work.
-- The product/design contract covers product, reference, content, visual-system, and engineering decisions. Recovery is required only when failure, cancellation, reversal, incompletion, network, or transaction behavior makes it real.
+- The product/design contract covers product, reference, content, visual-system, engineering, and preservation decisions, with exploration records when applicable. Recovery is required only when failure, cancellation, reversal, incompletion, network, or transaction behavior makes it real.
 - Six focused craft modules cover product editorial, marketplace discovery, media discovery, workflow applications, content editorial, and transactions.
 - Named-site inspiration defaults to principle extraction with deliberate differences, not logo, copy, asset, composition, navigation, geometry, or interaction cloning.
 - Product and transaction craft rejects invented selection steps and disabled CTAs as `FABRICATED_FRICTION`.
 - Strict uses a compact workflow rubric instead of loading historical AI-slop and brand-research chains.
-- The existing deterministic A/B harness still prepares 8-prompt PR suites or 120-run release suites. Its JSON definitions now also include static behavior cases for reference intent, degradation, keyboard, schema migration, and command safety.
+- The deterministic A/B harness prepares eight paired PR tasks (16 runs) or 120 release runs. Its 29 static behavior cases include preservation, design selection, reference tracing, and defect re-verification; these definitions are not executed trials. Optional frozen-skill baselines support previous-versus-current comparisons.
 - The core skill has no Node, Playwright, or Lighthouse dependency; those remain in release-audit.
 
 Schema v3/v4 Strict reports remain supported by release-audit. Core schema v5 Standard reports remain readable: legacy `VERIFIED_FLOW` maps at most to `VERIFIED_PRIMARY_FLOW`, and `VERIFIED_STANDARD` maps at most to `VERIFIED_KEYBOARD_FLOW` after evidence validation. New reports do not emit legacy names.
@@ -129,7 +147,7 @@ Observed differences:
 .agents/plugins/marketplace.json
 plugins/genscaff/{.codex-plugin,assets,skills/{genscaff,genscaff-release-audit}}
 skill/genscaff/          # frozen v2.0 legacy source; removed in v2.1
-evals/                   # cases, rubric, checked-in summaries only
+evals/                   # cases, rubric, evaluation protocol, checked-in summaries
 tools/                   # validators, deterministic packaging, eval harness
 ```
 
@@ -140,7 +158,7 @@ Core checks use Python. Strict additionally uses the Node version and production
 ```shell
 python tools/check_skill.py
 python -m unittest discover -s tools -p "test_*.py"
-python plugins/genscaff/skills/genscaff/scripts/test_quality_gate.py
+python -m unittest discover -s plugins/genscaff/skills/genscaff/scripts -p "test_*.py"
 npm ci --omit=dev --prefix plugins/genscaff/skills/genscaff-release-audit/scripts
 npm audit --omit=dev --audit-level=moderate --prefix plugins/genscaff/skills/genscaff-release-audit/scripts
 python plugins/genscaff/skills/genscaff-release-audit/scripts/test_quality_gate.py
@@ -150,6 +168,8 @@ python tools/package_skill.py
 The validator never replays repository commands by default. `--execute-approved-commands` is only for an inspected repository the user explicitly trusts. Active browser audits execute page JavaScript and may make external requests.
 
 ## Evaluation harness
+
+Use `prepare --baseline-skill <previous-core-skill>` to compare the current skill against a frozen previous skill. Both arms then explicitly invoke Genscaff with equal prompts; omitting the option preserves the no-skill control. The non-interactive harness delegates design selection in both arms. See [design preservation evaluation](evals/design-preservation.md) for interactive choice cases, raw fixture requirements, quality/cost criteria, and the boundary between static cases and executed trials.
 
 ```shell
 python tools/eval_harness.py prepare --suite pr --model gpt-5.6-terra --reasoning medium --output eval-run

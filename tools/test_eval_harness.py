@@ -4,6 +4,7 @@ import argparse
 import json
 import tempfile
 import unittest
+from unittest.mock import patch
 from pathlib import Path
 
 import eval_harness as harness
@@ -33,7 +34,7 @@ class EvalHarnessTests(unittest.TestCase):
         self.assertEqual([], harness.validate_definitions())
         cases = harness.read_json(harness.CASES)["cases"]
         behavior = [case for case in cases if case.get("behavior_only")]
-        self.assertEqual(21, len(behavior))
+        self.assertEqual(29, len(behavior))
         self.assertTrue(all(harness.EXPECTED_FIELDS <= set(case["expected"]) for case in behavior))
         by_id = {case["id"]: case["expected"] for case in behavior}
         self.assertIn("anti-slop", by_id["behavior-generic-saas-antislop"]["required_references"])
@@ -59,6 +60,73 @@ class EvalHarnessTests(unittest.TestCase):
                 harness.stage_workspace(root, item, workspace)
                 installed = (workspace / ".agents" / "skills" / "genscaff" / "SKILL.md").is_file()
                 self.assertEqual(item["condition"] == "treatment", installed)
+
+    def test_baseline_comparison_stages_distinct_frozen_skills_with_equal_prompts(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            parent = Path(directory)
+            baseline = parent / "baseline"
+            baseline.mkdir()
+            (baseline / "SKILL.md").write_text("old skill", encoding="utf-8")
+            root = parent / "run"
+            harness.prepare(argparse.Namespace(output=root, suite="pr", model="gpt-5.6-terra", reasoning="medium", baseline_skill=baseline))
+            manifest = harness.read_json(root / "manifest.json")
+            self.assertEqual("baseline-skill", manifest["comparison"])
+            self.assertEqual([], harness.snapshot_errors(root, manifest))
+            (baseline / "SKILL.md").write_text("changed original", encoding="utf-8")
+            prompts = []
+            for item in manifest["runs"][:2]:
+                workspace = root / item["workspace"]
+                harness.stage_workspace(root, item, workspace)
+                harness.stage_workspace(root, item, workspace)  # unchanged rerun
+                installed = workspace / ".agents" / "skills" / "genscaff"
+                expected = manifest["baseline_skill_snapshot_sha256"] if item["condition"] == "control" else manifest["skill_snapshot_sha256"]
+                self.assertEqual(expected, harness.tree_digest(installed))
+                prompts.append((root / item["prompt"]).read_text(encoding="utf-8"))
+            self.assertEqual(prompts[0], prompts[1])
+            self.assertIn("$genscaff", prompts[0])
+            self.assertEqual([], harness.snapshot_errors(root, manifest))
+
+    def test_invalid_or_overlapping_baseline_is_rejected_before_output(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            parent = Path(directory)
+            baseline = parent / "baseline"
+            baseline.mkdir()
+            args = argparse.Namespace(output=parent / "run", suite="pr", model="test", reasoning="low", baseline_skill=baseline)
+            with self.assertRaisesRegex(ValueError, "SKILL.md"):
+                harness.prepare(args)
+            self.assertFalse(args.output.exists())
+            (baseline / "SKILL.md").write_text("old", encoding="utf-8")
+            args.output = baseline / "run"
+            with self.assertRaisesRegex(ValueError, "contain"):
+                harness.prepare(args)
+            self.assertFalse(args.output.exists())
+
+    def test_changed_staged_skill_is_not_silently_overwritten(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            self.prepare(root)
+            item = next(item for item in harness.read_json(root / "manifest.json")["runs"] if item["condition"] == "treatment")
+            workspace = root / item["workspace"]
+            harness.stage_workspace(root, item, workspace)
+            installed = workspace / ".agents" / "skills" / "genscaff" / "SKILL.md"
+            installed.write_text("unexpected modification", encoding="utf-8")
+            with self.assertRaisesRegex(ValueError, "fresh workspace"):
+                harness.stage_workspace(root, item, workspace)
+            self.assertEqual("unexpected modification", installed.read_text(encoding="utf-8"))
+
+    def test_tampered_snapshot_blocks_model_execution(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            parent = Path(directory)
+            baseline = parent / "baseline"
+            baseline.mkdir()
+            (baseline / "SKILL.md").write_text("old", encoding="utf-8")
+            root = parent / "run"
+            harness.prepare(argparse.Namespace(output=root, suite="pr", model="test", reasoning="low", baseline_skill=baseline))
+            (root / "inputs" / "baseline-genscaff" / "SKILL.md").write_text("tampered", encoding="utf-8")
+            with patch.object(harness.subprocess, "run") as execute:
+                with self.assertRaisesRegex(ValueError, "baseline skill snapshot"):
+                    harness.run(argparse.Namespace(run_dir=root, rerun=False))
+                execute.assert_not_called()
 
     def test_blind_is_deterministic_and_does_not_leak(self) -> None:
         with tempfile.TemporaryDirectory() as directory:

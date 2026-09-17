@@ -29,17 +29,35 @@ $genscaff strict          # v2.0 호환 경로, v2.1에서 제거
 - 사용자에게 보이는 모든 비동기 경계에는 대기 제거 우선 로딩 계약을 적용합니다. 사용할 수 있는 맥락을 보존하고, 정직한 상태와 복구 수단을 제공하며, 스피너를 완료 근거로 대신하지 않고 관찰한 경계를 기록합니다.
 - Standard·Strict 보고서는 불완전한 로딩 경계 기록을 거부합니다. Strict의 `async`·`generation` 작업은 로딩 경험을 선언하고 근거를 남겨야 합니다.
 
+## 미배포 변경: 디자인 탐색과 보존 검증
+
+아래 내용은 작업 중인 소스의 변경이며 새 릴리스 발표가 아닙니다. 패키지 버전은 2.0.1을 유지합니다.
+
+- 방향이 열려 있는 신규 화면·대규모 개편은 같은 조건의 대표 화면 두 안을 비교하고 사용자가 선택하는 방식이 기본입니다. 사용자는 단일안 진행 또는 선택 위임을 지정할 수 있습니다. Quick, 잠금 재현, 구성이 확정된 기존 시스템 확장은 비교를 생략합니다.
+- 필수 정보, 접근 가능한 이름, 의미 있는 순서와 동작 결과를 보존합니다. HTML이 같다는 사실만으로 보존을 판정하지 않으며, 레퍼런스 관찰을 구현 위치와 실제 화면 증거까지 연결합니다.
+- 기존 미학 규칙은 변경하지 않습니다. 후보 비교와 선택안의 미학 검토 2회를 구분하며, 정보·기능·접근성·런타임 결함 수정 후에는 필요한 재검증을 수행합니다.
+
+```text
+$genscaff 새 예약 페이지를 만들어 주세요.                 # 기본: 대표 화면 두 안 비교
+$genscaff 예약 페이지를 단일안으로 진행해 주세요.           # 비교 생략 선택
+$genscaff 두 방향을 비교한 뒤 적합한 안을 대신 골라 주세요. # 선택 명시적 위임
+```
+
+명시적인 위임이 없으면 사용자의 선택을 받은 뒤 선택안을 확장합니다. 브라우저를 사용할 수 없어도 비교 가능한 두 방향의 설명과 가능한 소스 작업을 유지하고 미검증임을 표시합니다. 임의로 단일안을 선택하거나 화면 검증을 완료했다고 보고하지 않습니다.
+
+상세 기준은 [탐색 절차](plugins/genscaff/skills/genscaff/references/design-exploration.md), [보존 계약](plugins/genscaff/skills/genscaff/references/visual-target-template.md), [레퍼런스 추적](plugins/genscaff/skills/genscaff/references/reference-intent.md)에서 확인할 수 있습니다. [평가 절차와 빠른 검증 결과](evals/design-preservation.md)는 실제 관찰과 미검증 요구사항을 구분합니다.
+
 ## 현재 프런트엔드 워크플로
 
 - schema v6는 검증 `result`, `method`, `coverage`, 근거, 문제, 제한사항을 분리합니다.
 - 새 보고서는 `IMPLEMENTED_UNVERIFIED`, `VERIFIED_RENDER`, `VERIFIED_PRIMARY_FLOW`, `VERIFIED_KEYBOARD_FLOW`, `VERIFIED_STANDARD_BASELINE`을 사용합니다. 근거 없는 boolean이나 `pass` 문자열로 상태를 올릴 수 없습니다.
 - Standard는 broad 작업 전에 `project_mode`, 네 가지 reference mode, primary experience archetype 하나, 관련 surface type, change scope를 분류합니다.
-- Product/Design contract가 제품, reference, content, visual system, engineering 결정을 다룹니다. 실패·취소·되돌리기·미완료·네트워크·transaction이 실제 의미가 있을 때만 recovery를 요구합니다.
+- Product/Design contract가 제품, reference, content, visual system, engineering, 보존 결정을 다루며 해당되는 경우 탐색 기록을 포함합니다. 실패·취소·되돌리기·미완료·네트워크·transaction이 실제 의미가 있을 때만 recovery를 요구합니다.
 - product editorial, marketplace discovery, media discovery, workflow application, content editorial, transaction용 craft 모듈 6개를 제공합니다.
 - 유명 사이트 참고는 원리와 deliberate difference를 추출하며 logo, copy, asset, composition, navigation, geometry, interaction을 복제하지 않습니다.
 - 상품·트랜잭션 craft는 검증용으로 지어낸 선택 단계와 비활성 CTA를 `FABRICATED_FRICTION`으로 거부합니다.
 - Strict는 구형 AI-slop·브랜드 연구 문서를 연쇄 로드하지 않고 공통 workflow rubric을 사용합니다.
-- 기존 결정적 A/B 하네스는 PR 8개 과제 또는 Release 120회 실행 계약을 유지합니다. JSON 정의에는 reference intent, degradation, keyboard, schema migration, command safety를 보는 정적 behavior case도 추가했습니다.
+- 결정적 A/B 하네스는 PR 8개 과제의 쌍별 비교(16회) 또는 Release 120회 실행 계약을 유지합니다. 정적 행동 사례 29개에는 보존, 디자인 선택, 레퍼런스 추적, 결함 재검증이 포함되며 사례 정의 자체는 실행 결과가 아닙니다. 이전 스킬의 고정 사본을 대조군으로 지정해 변경 전후를 비교할 수 있습니다.
 - 코어 스킬에는 Node, Playwright, Lighthouse 의존성이 없으며 해당 도구는 release-audit에만 포함됩니다.
 
 release-audit는 schema v3·v4 Strict 보고서를 계속 지원합니다. 코어는 schema v5 Standard 보고서를 계속 읽습니다. legacy `VERIFIED_FLOW`는 최대 `VERIFIED_PRIMARY_FLOW`, `VERIFIED_STANDARD`는 근거 재검사 후 최대 `VERIFIED_KEYBOARD_FLOW`로 변환하며 새 보고서는 legacy 상태명을 내보내지 않습니다.
@@ -98,7 +116,7 @@ Read-only inspection, project command 실행, dependency 설치, active browser,
 .agents/plugins/marketplace.json
 plugins/genscaff/{.codex-plugin,assets,skills/{genscaff,genscaff-release-audit}}
 skill/genscaff/          # v2.0 동결 legacy, v2.1에서 제거
-evals/                   # 과제, rubric, Git에 넣는 요약만 보관
+evals/                   # 과제, rubric, 평가 절차, Git에 넣는 요약
 tools/                   # 검증기, 재현 패키징, 평가 하네스
 ```
 
@@ -109,7 +127,7 @@ tools/                   # 검증기, 재현 패키징, 평가 하네스
 ```shell
 python tools/check_skill.py
 python -m unittest discover -s tools -p "test_*.py"
-python plugins/genscaff/skills/genscaff/scripts/test_quality_gate.py
+python -m unittest discover -s plugins/genscaff/skills/genscaff/scripts -p "test_*.py"
 npm ci --omit=dev --prefix plugins/genscaff/skills/genscaff-release-audit/scripts
 npm audit --omit=dev --audit-level=moderate --prefix plugins/genscaff/skills/genscaff-release-audit/scripts
 python plugins/genscaff/skills/genscaff-release-audit/scripts/test_quality_gate.py
@@ -119,6 +137,8 @@ python tools/package_skill.py
 검증기는 저장소 명령을 기본적으로 재실행하지 않습니다. 정확한 명령을 검사하고 사용자가 저장소를 명시적으로 신뢰한 경우에만 `--execute-approved-commands`를 사용해 주세요. 활성 브라우저 감사는 페이지 JavaScript를 실행하고 외부 요청을 만들 수 있습니다.
 
 ## 평가 하네스
+
+`prepare --baseline-skill <previous-core-skill>`을 사용하면 이전 스킬의 고정 사본과 현재 스킬을 비교합니다. 양쪽에 같은 프롬프트로 Genscaff를 명시적으로 호출하며, 옵션을 생략하면 기존 스킬 미사용 대조군을 유지합니다. 비대화형 실행은 양쪽에 디자인 선택을 위임합니다. 사용자 선택 경계, 원본 입력, 품질·비용 판정, 정적 사례와 실제 실행의 차이는 [평가 절차](evals/design-preservation.md)에 설명합니다.
 
 ```shell
 python tools/eval_harness.py prepare --suite pr --model gpt-5.6-terra --reasoning medium --output eval-run

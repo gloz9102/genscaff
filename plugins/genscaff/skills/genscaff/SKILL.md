@@ -31,6 +31,7 @@ Use Standard for `$genscaff`. Use Quick only when the user requests it or the ta
 
 - Use for copy, one component, or local styling with a narrow affected path.
 - Inspect affected code and existing conventions, verify changed behavior, and inspect one representative viewport when rendering changed.
+- Preserve affected required information, accessible names, and action outcomes; record any explicitly requested changes. Do not require a broad contract or alternative designs.
 - Do not require JSON, Lighthouse, independent review, or command replay.
 - If a changed path has a user-visible asynchronous boundary, read `references/loading-ux.md` and report the relevant boundary record.
 - State every unverified risk. A small diff alone is not proof that Quick is appropriate.
@@ -39,6 +40,7 @@ Use Standard for `$genscaff`. Use Quick only when the user requests it or the ta
 
 - Use for ordinary generation, redesign, route, or multi-component work.
 - Inspect the project; classify task and reference intent; define the product and design contract; implement the primary flow and relevant states end to end.
+- For new surfaces or major redesigns with open visual direction, default to two representative-screen candidates and user selection. Honor a user's single-direction choice; read `references/design-exploration.md` only when applicable.
 - Observe desktop/mobile rendering, console errors, clipping and overflow, the primary action, complete critical keyboard path, and visible unobscured focus.
 - Capture evidence and issue a human-readable completion report. Create JSON only when requested or needed by the validator.
 
@@ -78,11 +80,12 @@ A supplied image does not automatically lock all text, order, component count, o
 
 1. Inspect project facts without running project code.
 2. Select profile, classification, reference intent, and directly relevant references.
-3. Define the product and design contract.
-4. Preserve architecture and implement the primary flow plus relevant states.
-5. Review the first render for product flow and, when routed, anti-slop clusters. Explicitly inspect visible eyebrow/kicker copy, non-semantic numbering, repeated card geometry, and container layering as possible members of a broader cluster; do not fail any one pattern alone. Record the cluster review before edits, batch corrections, and recheck desktop/mobile once (maximum two rendered review passes total).
-6. Verify to the highest status supported by actual evidence.
-7. Report commands, evidence, issues, limitations, and incomplete checks.
+3. Define the product and design contract, including required information and behavior invariants and permitted changes.
+4. When exploration applies, state the two-candidate default and single-direction option, build comparable representative screens, and obtain the user's selection before expanding a direction unless that choice was explicitly delegated.
+5. Preserve architecture and implement the selected direction, primary flow, and relevant states.
+6. Review the first render of the selected implementation for product flow and, when routed, anti-slop clusters. Explicitly inspect visible eyebrow/kicker copy, non-semantic numbering, repeated card geometry, and container layering as possible members of a broader cluster; do not fail any one pattern alone. Record the cluster review before edits, batch aesthetic corrections, and recheck desktop/mobile once (two aesthetic review passes for the selected implementation). Candidate comparison is a separate bounded stage. This limit never prevents verification after fixing content, functionality, accessibility, or runtime defects.
+7. Verify invariants and the implementation to the highest status supported by actual evidence.
+8. Report commands, evidence, issues, limitations, and incomplete checks.
 
 ## Project inspection
 
@@ -101,10 +104,14 @@ For broad work, complete `references/visual-target-template.md`. It covers:
 - Product: target user, job, success, domain objects, CTA/actions, decision cost, and recovery only when failure/cancel/reversal/incompletion is meaningful
 - Reference: mode, archetype, surfaces, adopted principles, deliberate differences, and locks
 - Content: hierarchy, item count, missing data, long/localized content, and writing direction
+- Preservation: required information, values, accessible names, action outcomes, meaningful reading/focus order, allowed changes, and evidence for each affected invariant
+- Exploration when applicable: comparison or user-selected single direction, representative surface, shared content/state/viewports, candidate differences, and user selection or explicit delegation
 - Visual system: dominant idea, focal point, density, type/space/color/depth roles, media, motion, and reduced motion
 - Engineering: stack, tokens/components, state/data boundaries, browser support, performance, and verification
 
 Never fabricate recovery or disabled states for an informational page. Unsupported steps remain `FABRICATED_FRICTION`.
+
+HTML or DOM identity does not prove preservation. Check rendered required information, CSS-generated or hidden content, accessible names, and observed action outcomes. Permit justified semantic or responsive DOM changes when they preserve the contract; never remove required information merely to improve composition. For a new project, derive invariants from the brief rather than inventing a baseline.
 
 ## Implementation and visual policy
 
@@ -131,6 +138,7 @@ Read only references needed for the task; Quick loads none by default except its
 | --- | --- |
 | External image or named-site reference | `references/reference-intent.md` |
 | New or broad UI | `references/visual-target-template.md` |
+| New surface or major redesign with open visual direction; user may choose a single direction | `references/design-exploration.md` |
 | Task classification or legacy page type | `references/task-type-craft-router.md` |
 | Product or interactive flow | `references/product-specificity-and-action-gate.md` |
 | Visual direction is open | `references/ui-craft-guidelines.md` |
@@ -194,5 +202,7 @@ Inspect the bundled manifest for exact Skill runtime versions and preserve targe
 - Stop the whole task only when continuing is unsafe or the deliverable itself cannot be produced.
 
 ## Completion
+
+For affected invariants, report the observed preservation result and unresolved discrepancies. When exploration applies, report both candidate locations or unverified descriptions and the user's choice or explicit delegation; otherwise record the single-direction preference or inapplicability reason. Summarize adopted-reference traces through actual implementation evidence rather than just listing intended principles.
 
 Report profile, classification, contract decisions, files changed, commands actually run, evidence, exact status, issues, skipped checks, and limitations. `GENSCAFF_STANDARD_REPORT_VALID` validates the declared Standard report structure and local evidence only; it does not prove authorship, originality, legal clearance, universal quality, full accessibility, or representative-user success.

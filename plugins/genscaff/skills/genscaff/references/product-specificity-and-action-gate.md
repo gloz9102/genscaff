@@ -102,7 +102,7 @@ Browser evidence is required before assigning any verified status. Without real 
 
 ## 8. Review The First Render
 
-Judge the rendered surface before declaring it done. First confirm the product flow and signature, then apply the routed anti-slop cluster review. Do not treat a single CSS feature or component pattern as a failure. Batch all applicable corrections after the first render and recheck desktop and mobile once; stop after two rendered review passes total.
+Judge the selected implementation before declaring it done. First confirm the product flow and signature, then apply the routed anti-slop cluster review. Do not treat a single CSS feature or component pattern as a failure. Batch aesthetic corrections after its first render and recheck desktop and mobile once; stop after two aesthetic review passes for that implementation. Representative-candidate comparison is a separate bounded stage. Always re-verify affected content, functionality, accessibility, and runtime behavior after fixing defects; the aesthetic limit does not cap these checks.
 
 Before editing, record the first-pass result for each applicable area. When the anti-slop reference is routed, explicitly inspect any visible decorative eyebrow/kicker, non-semantic section numbering, repeated card geometry, and container layering as possible evidence of a cluster; none fails alone, but none may be silently marked clean. Use the first pass to identify:
 

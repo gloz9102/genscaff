@@ -11,6 +11,8 @@ python <skill-dir>/scripts/quality_gate.py --report <report.json>
 
 Schema v6 records classification, a product/design contract, separated verification dimensions, in-root evidence, runtime checks, relevant-state coverage, interaction cost, loading experience, and distinct execution permissions.
 
+Keep schema v6 and its status meanings unchanged for preservation, exploration, and reference tracing. Store required invariants and permitted changes in existing contract content/reference/engineering strings or the human-readable contract. Put actual observations and artifacts in the relevant verification dimension's coverage/evidence, discrepancies in issues, and unverified scope in limitations. Use notes for comparison mode, candidate locations, comparable inputs, user selection or explicit delegation, and reference-to-implementation traces. Do not add a clean preservation boolean or treat notes as evidence validated by the schema checker. The validator does not inspect semantic equivalence, user-choice authenticity, or aesthetic quality.
+
 Record first-render and anti-slop findings in the existing structure rather than adding a boolean checklist. Put the concrete finding, rendered location, evidence, and `keep`, `replace`, `remove`, or project-evidenced `exception` response in the relevant verification dimension's `issues`; put unresolved scope or uncertainty in `limitations`. `notes` may summarize the review. A visual finding that remains cannot coexist with an unsupported clean claim such as `no_nested_card_soup: true`.
 
 Each verification dimension contains:

@@ -10,6 +10,14 @@ Observe required desktop and mobile routes. Check uncaught console errors, unint
 
 Observe trigger, feedback, and terminal result. Verify recovery only when failure, cancellation, reversal, incomplete state, network, or transaction behavior makes it real.
 
+## Preservation and reference evidence
+
+Compare each affected invariant with its brief or before-state baseline: required visible information and values, accessible names, meaningful reading/focus order, and action outcomes. Use rendered observations, accessibility-tree inspection, and relevant interaction checks; source or DOM equality alone is insufficient. Inspect CSS-generated text and hidden content when they affect required information. Decorative pseudo-elements are not failures by themselves.
+
+Record each invariant's implementing region, actual observation, evidence, and any permitted change or unresolved discrepancy. Re-run affected checks after defect fixes even when the aesthetic review budget is exhausted. A preservation failure fails the relevant render, flow, keyboard, or accessibility check; preference for a candidate cannot offset it.
+
+For adopted reference principles, connect the inspected source observation to the actual target implementation and rendered result. For candidate comparison, distinguish representative-screen evidence from selected-product verification. Preserve existing status ceilings; neither reference traces nor a user's visual selection certify beauty, originality, WCAG conformance, or user success.
+
 ## Keyboard and focus
 
 Exercise the complete critical path using applicable Tab, Shift+Tab, Enter, Space, Escape, composite-widget arrows, and Home/End. Check dialog entry, containment, close, focus return, focus visibility inside horizontal content, and sticky UI occlusion. Do not award keyboard status from one sampled activation.

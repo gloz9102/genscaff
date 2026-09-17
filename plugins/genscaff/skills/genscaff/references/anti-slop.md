@@ -59,4 +59,4 @@ For each finding record its location, rendered evidence, project or brief ration
 - `remove`: delete decoration or unsupported content with no information loss.
 - `exception`: preserve it and cite explicit user or project evidence.
 
-Batch applicable corrections after the first render. Recheck desktop and mobile once, then stop: two rendered review passes total. Do not create an anti-slop-only render loop. If a finding remains, record it as an issue or limitation; never convert an unresolved visual finding into a clean boolean claim.
+Batch applicable aesthetic corrections after the selected implementation's first render. Recheck desktop and mobile once, then stop aesthetic iteration: two aesthetic review passes for that implementation. A bounded representative-candidate comparison is separate; it must not become an anti-slop-only render loop. This limit does not apply to required re-verification after fixing content, functionality, accessibility, or runtime defects. If a finding remains, record it as an issue or limitation; never convert an unresolved visual finding into a clean boolean claim.

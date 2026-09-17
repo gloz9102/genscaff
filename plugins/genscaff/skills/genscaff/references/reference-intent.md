@@ -26,6 +26,18 @@ Do not copy logos, trademarks, proprietary copy, copyrighted imagery, exact comp
 
 Apple-like does not mean black backgrounds and giant type; test whether product narrative is the task. Airbnb-like does not mean rounded cards; test search, comparison, availability, and trust. Netflix-like does not mean dark rails; test content grouping, density, progress, and focus-aware discovery.
 
+## Trace observations to implementation
+
+For every adopted principle, keep one concise trace:
+
+`source and inspected region -> observed feature -> inferred working principle -> target-product fit -> implementing component/region -> rendered evidence and observation -> exclusions`
+
+Separate direct observations from inferences and uninspected behavior. A static image cannot establish responsive behavior or action outcomes. Inspect the relevant source state where possible; otherwise disclose that limitation. Complete implementation and evidence entries after rendering, not as predictions disguised as results.
+
+For example, separated article and navigation regions may support long-form reading and secondary discovery; this does not imply copying their color, dimensions, or artwork, or adding a sidebar to a single-step transaction. Reject principles that do not serve the target's information or task.
+
+Keep the existing deliberate-differences requirement, but tie differences to product needs and actual implementation. A count of differences proves neither originality nor reference fidelity. Reference traces and candidate exploration do not override existing craft rules or locked user requirements. Under `no-reference`, use brief/repository evidence instead of inventing an external source.
+
 ## No reference
 
 Derive the target from user requirements and repository evidence. Do not invent a fashionable reference after the fact.

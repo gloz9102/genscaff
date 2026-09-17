@@ -11,7 +11,7 @@ Record third-party material in `THIRD_PARTY_NOTICES.md` and retain all required 
 ```shell
 python tools/check_skill.py
 python -m unittest discover -s tools -p "test_*.py"
-python plugins/genscaff/skills/genscaff/scripts/test_quality_gate.py
+python -m unittest discover -s plugins/genscaff/skills/genscaff/scripts -p "test_*.py"
 npm ci --omit=dev --prefix plugins/genscaff/skills/genscaff-release-audit/scripts
 npm audit --omit=dev --audit-level=moderate --prefix plugins/genscaff/skills/genscaff-release-audit/scripts
 python plugins/genscaff/skills/genscaff-release-audit/scripts/test_quality_gate.py
@@ -28,3 +28,15 @@ The regression suite requires Chrome or Chromium. Set `CHROME_PATH` when automat
 - Remove generated caches, browser profiles, reports, and `node_modules` from commits.
 - Describe behavioral changes and the commands used to verify them.
 - Update `NOTICE` or `THIRD_PARTY_NOTICES.md` when attribution or dependency facts change.
+
+## Design exploration and preservation changes
+
+- Keep both READMEs consistent with the core workflow and mark unreleased behavior separately from versioned release notes. The frozen `skill/genscaff` tree is not the active implementation.
+- Preserve existing craft rules and required information, accessible names, meaningful order, and action outcomes. DOM equality or a valid report is insufficient evidence.
+- Test default two-candidate exploration, explicit single-direction requests, pending user selection, delegated selection, and comparison skips appropriate to scope. Missing browser access must remain visible as a limitation, with comparable unverified descriptions when exploration applies.
+- Keep source observation, inferred principle, product fit, implementation, and rendered evidence distinguishable. Do not claim access to an unavailable reference.
+- Separate the two aesthetic review passes from defect re-verification. Functional or accessibility defects do not become acceptable when the aesthetic budget is exhausted.
+
+Before changing the skill, retain a clean baseline outside the evaluation output directory. Follow the [evaluation protocol](evals/design-preservation.md) and use `prepare --baseline-skill <previous-core-skill>` for a previous-versus-current comparison. A no-skill control answers a different question. The harness delegates selection for unattended runs; interactive selection requires a separate observed trial.
+
+Record structural/unit-test results separately from generated-output observations. Static behavior cases are not executed tests, and one pair cannot establish superiority. Commit concise findings and limitations; keep raw runs, temporary previews, and generated packages outside the source change. Existing schema v6 fields carry preservation and exploration evidence; this workflow does not introduce a new report schema or status.

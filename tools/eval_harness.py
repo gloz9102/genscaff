@@ -8,6 +8,7 @@ import json
 import shutil
 import subprocess
 import sys
+import time
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -90,11 +91,23 @@ def prepare(args: argparse.Namespace) -> int:
     if definition_errors:
         raise ValueError("; ".join(definition_errors))
     output = args.output.resolve()
+    baseline = getattr(args, "baseline_skill", None)
+    if baseline is not None:
+        baseline = baseline.resolve()
+        if not (baseline / "SKILL.md").is_file():
+            raise ValueError("baseline skill must contain SKILL.md")
+        if output == baseline or baseline in output.parents or output in baseline.parents:
+            raise ValueError("output and baseline skill must not contain one another")
     if output.exists() and any(output.iterdir()):
         raise ValueError(f"output directory is not empty: {output}")
     output.mkdir(parents=True, exist_ok=True)
     snapshot = output / "inputs" / "genscaff"
     shutil.copytree(CORE_SKILL, snapshot, ignore=shutil.ignore_patterns("__pycache__", "node_modules"))
+    baseline_digest = None
+    if baseline is not None:
+        baseline_snapshot = output / "inputs" / "baseline-genscaff"
+        shutil.copytree(baseline, baseline_snapshot, ignore=shutil.ignore_patterns("__pycache__", "node_modules"))
+        baseline_digest = tree_digest(baseline_snapshot)
     cases = [case for case in read_json(CASES)["cases"] if not case.get("behavior_only")]
     selected = [case for case in cases if args.suite == "release" or case.get("pr")]
     repeats = 3 if args.suite == "release" else 1
@@ -106,8 +119,8 @@ def prepare(args: argparse.Namespace) -> int:
                 run_id = f"{pair_id}-{condition}"
                 run_dir = output / "runs" / run_id
                 run_dir.mkdir(parents=True)
-                instruction = case["brief"]
-                if condition == "treatment":
+                instruction = case["brief"] + " For this non-interactive evaluation, choose any needed design direction yourself and record the rationale; do not wait for a user selection. Do not inspect sibling runs or skill snapshots outside this workspace."
+                if condition == "treatment" or baseline is not None:
                     instruction = "Use $genscaff in Standard mode. " + instruction
                 (run_dir / "prompt.txt").write_text(instruction + "\n", encoding="utf-8")
                 runs.append({
@@ -118,7 +131,9 @@ def prepare(args: argparse.Namespace) -> int:
                 })
     write_json(output / "manifest.json", {
         "schema_version": 1, "suite": args.suite, "model": args.model,
-        "reasoning": args.reasoning, "skill_snapshot_sha256": tree_digest(snapshot), "runs": runs
+        "reasoning": args.reasoning, "skill_snapshot_sha256": tree_digest(snapshot),
+        "comparison": "baseline-skill" if baseline is not None else "no-skill",
+        "baseline_skill_snapshot_sha256": baseline_digest, "runs": runs
     })
     print(f"PREPARED_RUNS={len(runs)}")
     return 0
@@ -126,14 +141,41 @@ def prepare(args: argparse.Namespace) -> int:
 
 def stage_workspace(root: Path, item: dict, workspace: Path) -> None:
     workspace.mkdir(parents=True, exist_ok=True)
+    manifest = read_json(root / "manifest.json")
     if item["condition"] == "treatment":
-        target = workspace / ".agents" / "skills" / "genscaff"
-        shutil.copytree(root / "inputs" / "genscaff", target, dirs_exist_ok=True)
+        source = root / "inputs" / "genscaff"
+    elif manifest.get("comparison") == "baseline-skill":
+        source = root / "inputs" / "baseline-genscaff"
+    else:
+        return
+    target = workspace / ".agents" / "skills" / "genscaff"
+    if target.exists():
+        if tree_digest(target) != tree_digest(source):
+            raise ValueError("staged skill differs from the prepared snapshot; use a fresh workspace")
+        return
+    shutil.copytree(source, target)
+
+
+def snapshot_errors(root: Path, manifest: dict) -> list[str]:
+    errors = []
+    snapshots = [("genscaff", "skill_snapshot_sha256", "treatment")]
+    if manifest.get("comparison", "no-skill") not in {"no-skill", "baseline-skill"}:
+        errors.append("invalid comparison mode")
+    if manifest.get("comparison") == "baseline-skill":
+        snapshots.append(("baseline-genscaff", "baseline_skill_snapshot_sha256", "baseline"))
+    for folder, key, label in snapshots:
+        snapshot = root / "inputs" / folder
+        if not (snapshot / "SKILL.md").is_file() or tree_digest(snapshot) != manifest.get(key):
+            errors.append(f"{label} skill snapshot does not match the prepared digest")
+    return errors
 
 
 def run(args: argparse.Namespace) -> int:
     root = args.run_dir.resolve()
     manifest = read_json(root / "manifest.json")
+    errors = snapshot_errors(root, manifest)
+    if errors:
+        raise ValueError("; ".join(errors))
     codex = shutil.which("codex")
     git = shutil.which("git")
     if not codex or not git:
@@ -153,11 +195,13 @@ def run(args: argparse.Namespace) -> int:
             "-c", f"model_reasoning_effort={manifest['reasoning']}", "--json", prompt,
         ]
         trace = run_root / "trace.jsonl"
+        started = time.monotonic()
         with trace.open("w", encoding="utf-8") as stream:
             completed = subprocess.run(command, cwd=workspace, stdout=stream, stderr=subprocess.PIPE, text=True, check=False)
         write_json(run_root / "result.json", {
             "schema_version": 1, "exit_code": completed.returncode,
-            "stderr": completed.stderr[-4000:], "argv": command[1:-1]
+            "stderr": completed.stderr[-4000:], "argv": command[1:-1],
+            "elapsed_seconds": round(time.monotonic() - started, 3)
         })
         failures += completed.returncode != 0
     print(f"RUN_FAILURES={failures}")
@@ -262,7 +306,8 @@ def score(args: argparse.Namespace) -> int:
             "fabricated_friction_count": sum(item["fabricated_friction"] for item in available),
             "mean_scores": {dimension: (sum(item["scores"][dimension] for item in available) / len(available) if available else None) for dimension in DIMENSIONS},
         }
-    write_json(root / "summary.json", {"schema_version": 1, "suite": read_json(root / "manifest.json")["suite"], "pairs_scored": len(rows), "aggregates": aggregates, "results": rows})
+    manifest = read_json(root / "manifest.json")
+    write_json(root / "summary.json", {"schema_version": 1, "suite": manifest["suite"], "comparison": manifest.get("comparison", "no-skill"), "pairs_scored": len(rows), "aggregates": aggregates, "results": rows})
     print(f"SCORED_PAIRS={len(rows)}")
     return 0
 
@@ -276,8 +321,7 @@ def validate(args: argparse.Namespace) -> int:
         errors.append(f"expected {expected} runs")
     if any(item.get("condition") not in {"control", "treatment"} for item in manifest.get("runs", [])):
         errors.append("invalid condition")
-    if tree_digest(root / "inputs" / "genscaff") != manifest.get("skill_snapshot_sha256"):
-        errors.append("treatment skill snapshot does not match the prepared digest")
+    errors.extend(snapshot_errors(root, manifest))
     for item in manifest.get("runs", []):
         result_path = root / "runs" / item["run_id"] / "result.json"
         if not result_path.is_file():
@@ -337,6 +381,7 @@ def parser() -> argparse.ArgumentParser:
     p.add_argument("--model", required=True)
     p.add_argument("--reasoning", choices=("low", "medium", "high", "xhigh"), required=True)
     p.add_argument("--output", type=Path, required=True)
+    p.add_argument("--baseline-skill", type=Path, help="compare an immutable snapshot of an older skill against the current skill instead of a no-skill control")
     p.set_defaults(func=prepare)
     p = commands.add_parser("run")
     p.add_argument("--run-dir", type=Path, required=True)
