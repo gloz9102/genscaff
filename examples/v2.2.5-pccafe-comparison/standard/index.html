@@ -1,0 +1,176 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="LEVEL PC 라운지의 공간과 좌석별 이용 요금을 확인하고 방문 계획을 미리 계산해 보세요." />
+    <title>LEVEL PC 라운지 | 나에게 맞는 좌석을 고르는 시간</title>
+    <link rel="stylesheet" href="styles.css" />
+    <script src="script.js" defer></script>
+  </head>
+  <body>
+    <a class="skip-link" href="#main-content">본문으로 바로가기</a>
+    <header class="site-header" data-header>
+      <div class="shell header-inner">
+        <a class="brand" href="#top" aria-label="LEVEL PC 라운지 홈">
+          <span class="brand-mark" aria-hidden="true">L</span>
+          <span class="brand-text"><strong>LEVEL</strong><span>PC 라운지</span></span>
+        </a>
+        <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="primary-nav">
+          <span class="menu-icon" aria-hidden="true"><i></i><i></i></span>
+          <span class="sr-only">메뉴 열기</span>
+        </button>
+        <nav class="primary-nav" id="primary-nav" aria-label="주요 메뉴">
+          <a href="#space">공간</a>
+          <a href="#rates">요금</a>
+          <a href="#planner">방문 계획</a>
+          <a class="nav-cta" href="#planner">계획 계산하기 <span aria-hidden="true">↗</span></a>
+        </nav>
+      </div>
+    </header>
+
+    <main id="main-content">
+      <section class="hero" id="top" aria-labelledby="hero-title">
+        <div class="shell hero-grid">
+          <div class="hero-copy">
+            <p class="eyebrow"><span class="eyebrow-dot" aria-hidden="true"></span>24시간 운영 · LEVEL PC 라운지</p>
+            <h1 id="hero-title">머무를 자리를<br /><em>미리 고르는 시간</em></h1>
+            <p class="hero-lede">혼자 집중할 때, 더 넓게 펼칠 때, 나란히 앉을 때. 목적에 맞는 좌석과 이용 시간을 골라 방문 계획을 준비해 보세요.</p>
+            <div class="hero-actions">
+              <a class="button button-primary" href="#planner">방문 계획 시작 <span aria-hidden="true">↓</span></a>
+              <a class="text-link" href="#space">공간 먼저 둘러보기 <span aria-hidden="true">→</span></a>
+            </div>
+            <dl class="hero-facts" aria-label="라운지 안내">
+              <div><dt>운영</dt><dd>24시간</dd></div>
+              <div><dt>좌석</dt><dd>3가지 타입</dd></div>
+              <div><dt>시작 요금</dt><dd>1시간 2,000원</dd></div>
+            </dl>
+          </div>
+          <figure class="hero-media">
+            <img src="../assets/cafe-hero.png" alt="따뜻한 조명과 모니터가 있는 LEVEL PC 라운지 콘셉트 이미지" width="1672" height="941" />
+            <figcaption><span>공간의 온도</span><span>01 / 03</span></figcaption>
+          </figure>
+        </div>
+      </section>
+
+      <section class="space-section section" id="space" aria-labelledby="space-title">
+        <div class="shell">
+          <div class="section-intro section-intro-row">
+            <div>
+              <p class="section-label">01 / SPACE</p>
+              <h2 id="space-title">오늘의 플레이에<br />맞는 자리</h2>
+            </div>
+            <p class="section-description">자리의 모양이 플레이의 리듬을 바꿉니다.<br />필요한 만큼의 거리와 집중을 선택하세요.</p>
+          </div>
+          <div class="seat-list">
+            <article class="seat-row seat-row-featured">
+              <div class="seat-index">01</div>
+              <div class="seat-name"><h3>스탠다드석</h3><p>개인 플레이용</p></div>
+              <p class="seat-description">혼자만의 화면과 흐름에 집중할 수 있는 기본 좌석입니다.</p>
+              <p class="seat-price"><strong>2,000원</strong><span>/ 1시간</span></p>
+            </article>
+            <article class="seat-row">
+              <div class="seat-index">02</div>
+              <div class="seat-name"><h3>와이드석</h3><p>넓은 책상</p></div>
+              <p class="seat-description">여유 있는 책상 위에 필요한 것들을 펼쳐두고 이용합니다.</p>
+              <p class="seat-price"><strong>2,500원</strong><span>/ 1시간</span></p>
+            </article>
+            <article class="seat-row">
+              <div class="seat-index">03</div>
+              <div class="seat-name"><h3>듀오석</h3><p>2인 나란히</p></div>
+              <p class="seat-description">두 사람이 나란히 앉아 함께 플레이할 수 있는 자리입니다.</p>
+              <p class="seat-price"><strong>5,000원</strong><span>/ 1시간 · 2인 합계</span></p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="rates-section section" id="rates" aria-labelledby="rates-title">
+        <div class="shell rates-grid">
+          <div class="section-intro">
+            <p class="section-label">02 / RATES</p>
+            <h2 id="rates-title">시간만큼<br />단순한 요금</h2>
+            <p class="section-description">좌석을 고른 뒤 이용 시간을 선택하면 예상 금액을 바로 확인할 수 있습니다.</p>
+          </div>
+          <div class="rate-table-wrap">
+            <table class="rate-table">
+              <caption>좌석별 1시간 이용 요금</caption>
+              <thead><tr><th scope="col">좌석</th><th scope="col">이용 기준</th><th scope="col">1시간</th></tr></thead>
+              <tbody>
+                <tr><th scope="row">스탠다드석</th><td>1인</td><td>2,000원</td></tr>
+                <tr><th scope="row">와이드석</th><td>1인</td><td>2,500원</td></tr>
+                <tr><th scope="row">듀오석</th><td>2인 합계</td><td>5,000원</td></tr>
+              </tbody>
+            </table>
+            <p class="table-note"><span aria-hidden="true">↳</span> 이용 시간은 1, 2, 3시간 중에서 선택합니다.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="planner-section section" id="planner" aria-labelledby="planner-title">
+        <div class="shell">
+          <div class="planner-heading">
+            <div><p class="section-label">03 / YOUR PLAN</p><h2 id="planner-title">방문 전,<br /><span>금액을 확인하세요</span></h2></div>
+            <p class="section-description">좌석과 시간을 선택하면 예상 요금이 즉시 갱신됩니다.</p>
+          </div>
+          <div class="planner-panel">
+            <form id="plan-form" class="plan-form">
+              <fieldset class="choice-group">
+                <legend><span class="choice-number">01</span><span>어떤 자리를 고르시겠어요?</span></legend>
+                <div class="seat-choices">
+                  <label class="seat-choice is-selected">
+                    <input type="radio" name="seat" value="standard" checked />
+                    <span class="choice-copy"><strong>스탠다드석</strong><small>개인 플레이용</small></span>
+                    <span class="choice-rate">2,000원<small>/ 1시간</small></span>
+                    <span class="choice-check" aria-hidden="true">✓</span>
+                  </label>
+                  <label class="seat-choice">
+                    <input type="radio" name="seat" value="wide" />
+                    <span class="choice-copy"><strong>와이드석</strong><small>넓은 책상</small></span>
+                    <span class="choice-rate">2,500원<small>/ 1시간</small></span>
+                    <span class="choice-check" aria-hidden="true">✓</span>
+                  </label>
+                  <label class="seat-choice">
+                    <input type="radio" name="seat" value="duo" />
+                    <span class="choice-copy"><strong>듀오석</strong><small>2인 나란히</small></span>
+                    <span class="choice-rate">5,000원<small>/ 1시간 · 2인</small></span>
+                    <span class="choice-check" aria-hidden="true">✓</span>
+                  </label>
+                </div>
+              </fieldset>
+              <fieldset class="choice-group time-group">
+                <legend><span class="choice-number">02</span><span>얼마나 머무르시겠어요?</span></legend>
+                <div class="time-choices" role="radiogroup" aria-label="이용 시간">
+                  <label class="time-choice is-selected"><input type="radio" name="duration" value="1" checked /><span>1시간</span></label>
+                  <label class="time-choice"><input type="radio" name="duration" value="2" /><span>2시간</span></label>
+                  <label class="time-choice"><input type="radio" name="duration" value="3" /><span>3시간</span></label>
+                </div>
+              </fieldset>
+              <div class="plan-actions">
+                <button class="button button-primary plan-submit" type="submit">방문 계획 확인 <span aria-hidden="true">↗</span></button>
+                <p>실제 예약이나 결제가 아닌 예상 금액 확인입니다.</p>
+              </div>
+            </form>
+            <aside class="plan-total" aria-label="예상 요금">
+              <p class="total-label">예상 요금</p>
+              <output id="total-price" class="total-price" aria-live="polite">2,000원</output>
+              <p class="total-detail" id="total-detail">스탠다드석 · 1시간</p>
+              <div class="total-divider"></div>
+              <p class="total-note">24시간 운영<br />방문 시간은 자유롭게 선택하세요.</p>
+            </aside>
+          </div>
+          <div class="plan-confirmation" id="plan-confirmation" hidden tabindex="-1" aria-labelledby="confirmation-title">
+            <div class="confirmation-icon" aria-hidden="true">✓</div>
+            <div class="confirmation-copy"><p class="confirmation-kicker">방문 계획을 확인했습니다</p><h3 id="confirmation-title">내 계획은 <strong id="confirmed-plan">스탠다드석 · 1시간</strong></h3><p>예상 금액은 <strong id="confirmed-price">2,000원</strong>입니다. 필요하면 선택을 수정할 수 있습니다.</p></div>
+            <button class="button button-secondary" type="button" id="edit-plan">수정하기</button>
+          </div>
+        </div>
+      </section>
+
+      <section class="closing-section" aria-label="방문 안내">
+        <div class="shell closing-inner"><p class="closing-mark" aria-hidden="true">LEVEL</p><p>늦은 밤에도, 이른 아침에도<br /><strong>플레이할 시간은 열려 있습니다.</strong></p><a href="#planner" class="circle-arrow" aria-label="방문 계획으로 이동">↗</a></div>
+      </section>
+    </main>
+    <footer class="site-footer"><div class="shell footer-inner"><p>LEVEL PC 라운지</p><p>24시간 운영 · 예상 금액 계산</p><p class="footer-disclaimer">본 페이지는 방문 계획을 위한 콘셉트 안내이며 실제 예약이나 결제가 아닙니다.</p></div></footer>
+  </body>
+</html>

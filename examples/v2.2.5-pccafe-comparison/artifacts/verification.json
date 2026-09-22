@@ -1,0 +1,416 @@
+[
+  {
+    "arm": "standard",
+    "device": "desktop",
+    "viewport": {
+      "width": 1440,
+      "height": 1000
+    },
+    "touchEmulation": false,
+    "errors": [],
+    "checks": {
+      "images": true,
+      "noOverflow": true,
+      "calculations": [
+        {
+          "seat": "standard",
+          "h": 1,
+          "total": 2000
+        },
+        {
+          "seat": "standard",
+          "h": 2,
+          "total": 4000
+        },
+        {
+          "seat": "standard",
+          "h": 3,
+          "total": 6000
+        },
+        {
+          "seat": "wide",
+          "h": 1,
+          "total": 2500
+        },
+        {
+          "seat": "wide",
+          "h": 2,
+          "total": 5000
+        },
+        {
+          "seat": "wide",
+          "h": 3,
+          "total": 7500
+        },
+        {
+          "seat": "duo",
+          "h": 1,
+          "total": 5000
+        },
+        {
+          "seat": "duo",
+          "h": 2,
+          "total": 10000
+        },
+        {
+          "seat": "duo",
+          "h": 3,
+          "total": 15000
+        }
+      ],
+      "confirmEdit": true,
+      "focusUnobscured": true,
+      "keyboard": true,
+      "hoverFeedback": true,
+      "pointerRestored": true,
+      "reducedMotion": true,
+      "noRuntimeErrors": true
+    },
+    "focus": {
+      "background": "rgb(228, 162, 80)",
+      "color": "rgb(30, 22, 12)",
+      "transform": "none",
+      "outline": "solid",
+      "outlineWidth": "3px",
+      "transition": "0.18s, 0.18s, 0.18s, 0.1s",
+      "width": 196,
+      "height": 46
+    },
+    "pointer": {
+      "normal": {
+        "background": "rgb(228, 162, 80)",
+        "color": "rgb(30, 22, 12)",
+        "transform": "none",
+        "outline": "none",
+        "outlineWidth": "3px",
+        "transition": "0.18s, 0.18s, 0.18s, 0.1s",
+        "width": 137.640625,
+        "height": 46
+      },
+      "hover": {
+        "background": "rgb(241, 193, 124)",
+        "color": "rgb(36, 23, 10)",
+        "transform": "none",
+        "outline": "none",
+        "outlineWidth": "3px",
+        "transition": "0.18s, 0.18s, 0.18s, 0.1s",
+        "width": 137.640625,
+        "height": 46
+      },
+      "out": {
+        "background": "rgb(228, 162, 80)",
+        "color": "rgb(30, 22, 12)",
+        "transform": "none",
+        "outline": "none",
+        "outlineWidth": "3px",
+        "transition": "0.18s, 0.18s, 0.18s, 0.1s",
+        "width": 137.640625,
+        "height": 46
+      }
+    },
+    "reducedMotion": {
+      "background": "rgb(228, 162, 80)",
+      "color": "rgb(30, 22, 12)",
+      "transform": "none",
+      "outline": "none",
+      "outlineWidth": "3px",
+      "transition": "1e-05s",
+      "width": 196,
+      "height": 46
+    }
+  },
+  {
+    "arm": "standard",
+    "device": "mobile",
+    "viewport": {
+      "width": 390,
+      "height": 844
+    },
+    "touchEmulation": true,
+    "errors": [],
+    "checks": {
+      "images": true,
+      "noOverflow": true,
+      "calculations": [
+        {
+          "seat": "standard",
+          "h": 1,
+          "total": 2000
+        },
+        {
+          "seat": "standard",
+          "h": 2,
+          "total": 4000
+        },
+        {
+          "seat": "standard",
+          "h": 3,
+          "total": 6000
+        },
+        {
+          "seat": "wide",
+          "h": 1,
+          "total": 2500
+        },
+        {
+          "seat": "wide",
+          "h": 2,
+          "total": 5000
+        },
+        {
+          "seat": "wide",
+          "h": 3,
+          "total": 7500
+        },
+        {
+          "seat": "duo",
+          "h": 1,
+          "total": 5000
+        },
+        {
+          "seat": "duo",
+          "h": 2,
+          "total": 10000
+        },
+        {
+          "seat": "duo",
+          "h": 3,
+          "total": 15000
+        }
+      ],
+      "confirmEdit": true,
+      "focusUnobscured": true,
+      "keyboard": true,
+      "touchMenuAndAction": true,
+      "reducedMotion": true,
+      "noRuntimeErrors": true
+    },
+    "focus": {
+      "background": "rgb(228, 162, 80)",
+      "color": "rgb(30, 22, 12)",
+      "transform": "none",
+      "outline": "solid",
+      "outlineWidth": "3px",
+      "transition": "0.18s, 0.18s, 0.18s, 0.1s",
+      "width": 320,
+      "height": 46
+    },
+    "reducedMotion": {
+      "background": "rgb(228, 162, 80)",
+      "color": "rgb(30, 22, 12)",
+      "transform": "none",
+      "outline": "none",
+      "outlineWidth": "3px",
+      "transition": "1e-05s",
+      "width": 320,
+      "height": 46
+    }
+  },
+  {
+    "arm": "control",
+    "device": "desktop",
+    "viewport": {
+      "width": 1440,
+      "height": 1000
+    },
+    "touchEmulation": false,
+    "errors": [],
+    "checks": {
+      "images": true,
+      "noOverflow": true,
+      "calculations": [
+        {
+          "seat": "standard",
+          "h": 1,
+          "total": 2000
+        },
+        {
+          "seat": "standard",
+          "h": 2,
+          "total": 4000
+        },
+        {
+          "seat": "standard",
+          "h": 3,
+          "total": 6000
+        },
+        {
+          "seat": "wide",
+          "h": 1,
+          "total": 2500
+        },
+        {
+          "seat": "wide",
+          "h": 2,
+          "total": 5000
+        },
+        {
+          "seat": "wide",
+          "h": 3,
+          "total": 7500
+        },
+        {
+          "seat": "duo",
+          "h": 1,
+          "total": 5000
+        },
+        {
+          "seat": "duo",
+          "h": 2,
+          "total": 10000
+        },
+        {
+          "seat": "duo",
+          "h": 3,
+          "total": 15000
+        }
+      ],
+      "confirmEdit": true,
+      "focusUnobscured": true,
+      "keyboard": true,
+      "hoverFeedback": true,
+      "pointerRestored": true,
+      "reducedMotion": true,
+      "noRuntimeErrors": true
+    },
+    "focus": {
+      "background": "rgb(16, 20, 29)",
+      "color": "rgb(255, 255, 255)",
+      "transform": "matrix(1, 0, 0, 1, 0, 0)",
+      "outline": "solid",
+      "outlineWidth": "3px",
+      "transition": "0.2s, 0.2s, 0.2s",
+      "width": 333,
+      "height": 50
+    },
+    "pointer": {
+      "normal": {
+        "background": "rgb(217, 242, 104)",
+        "color": "rgb(16, 20, 29)",
+        "transform": "none",
+        "outline": "none",
+        "outlineWidth": "3px",
+        "transition": "0.2s, 0.2s, 0.2s",
+        "width": 171.140625,
+        "height": 50
+      },
+      "hover": {
+        "background": "rgb(230, 250, 130)",
+        "color": "rgb(16, 20, 29)",
+        "transform": "matrix(1, 0, 0, 1, 0, -2)",
+        "outline": "none",
+        "outlineWidth": "3px",
+        "transition": "0.2s, 0.2s, 0.2s",
+        "width": 171.140625,
+        "height": 50
+      },
+      "out": {
+        "background": "rgb(217, 242, 104)",
+        "color": "rgb(16, 20, 29)",
+        "transform": "none",
+        "outline": "none",
+        "outlineWidth": "3px",
+        "transition": "0.2s, 0.2s, 0.2s",
+        "width": 171.140625,
+        "height": 50
+      }
+    },
+    "reducedMotion": {
+      "background": "rgb(16, 20, 29)",
+      "color": "rgb(255, 255, 255)",
+      "transform": "none",
+      "outline": "none",
+      "outlineWidth": "3px",
+      "transition": "1e-05s",
+      "width": 333,
+      "height": 50
+    }
+  },
+  {
+    "arm": "control",
+    "device": "mobile",
+    "viewport": {
+      "width": 390,
+      "height": 844
+    },
+    "touchEmulation": true,
+    "errors": [],
+    "checks": {
+      "images": true,
+      "noOverflow": true,
+      "calculations": [
+        {
+          "seat": "standard",
+          "h": 1,
+          "total": 2000
+        },
+        {
+          "seat": "standard",
+          "h": 2,
+          "total": 4000
+        },
+        {
+          "seat": "standard",
+          "h": 3,
+          "total": 6000
+        },
+        {
+          "seat": "wide",
+          "h": 1,
+          "total": 2500
+        },
+        {
+          "seat": "wide",
+          "h": 2,
+          "total": 5000
+        },
+        {
+          "seat": "wide",
+          "h": 3,
+          "total": 7500
+        },
+        {
+          "seat": "duo",
+          "h": 1,
+          "total": 5000
+        },
+        {
+          "seat": "duo",
+          "h": 2,
+          "total": 10000
+        },
+        {
+          "seat": "duo",
+          "h": 3,
+          "total": 15000
+        }
+      ],
+      "confirmEdit": true,
+      "focusUnobscured": true,
+      "keyboard": true,
+      "touchMenuAndAction": true,
+      "reducedMotion": true,
+      "noRuntimeErrors": true
+    },
+    "focus": {
+      "background": "rgb(16, 20, 29)",
+      "color": "rgb(255, 255, 255)",
+      "transform": "matrix(1, 0, 0, 1, 0, 0)",
+      "outline": "solid",
+      "outlineWidth": "3px",
+      "transition": "0.2s, 0.2s, 0.2s",
+      "width": 310,
+      "height": 50
+    },
+    "reducedMotion": {
+      "background": "rgb(16, 20, 29)",
+      "color": "rgb(255, 255, 255)",
+      "transform": "none",
+      "outline": "none",
+      "outlineWidth": "3px",
+      "transition": "1e-05s",
+      "width": 310,
+      "height": 50
+    }
+  }
+]

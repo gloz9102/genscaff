@@ -24,6 +24,21 @@ $genscaff-release-audit   # Strict: release-critical exhaustive audit
 $genscaff strict          # Retired in v2.1; use $genscaff-release-audit
 ```
 
+## Version 2.2.5 mobile and hover guidance
+
+Mobile layouts now explicitly recompose content, media crops, and action groups around task priority. Hover feedback follows control roles while preserving layout, hit areas, and accessible names. Menus require applicable submenu, back/close, and focus-return paths with non-hover alternatives.
+
+Verification distinguishes viewport resizing, touch emulation, and real devices, and compares normal, hover, and pointer-out states. These changes supplement the six product-expression principles. Quick retains its affected-scope checks; one v2.2.5 paired PC cafe demonstration is documented below; the repeated release evaluation has not run. The [mobile and hover observation record](docs/design-reference-mobile-hover.ko.md) documents the sampled references and limitations.
+
+## Version 2.2.0 UI defaults
+
+- Keep screens focused and allow whitespace instead of packing everything into one viewport. Dashboards, back offices, other information-intensive pages, and explicit user requests may use higher density.
+- Separate changes of context or topic into rendered lines or paragraphs.
+- Provide hover and press/click feedback for direct actions, with keyboard/touch equivalents and reduced-motion support. Ask the user when the appropriate reaction is unclear.
+- Choose a primary accent by default and centralize its foreground and interaction variants in shared theme tokens for quick replacement.
+
+These defaults apply to Quick and Standard. Version 2.2.0 behavioral A/B evaluation has not run; earlier evaluation results remain historical evidence. Source versioning does not publish a release.
+
 ## Version 2.1.0 transition
 
 The legacy source tree, legacy ZIP, and `$genscaff strict` compatibility route are removed. Retired invocations provide migration guidance without starting an audit or a Standard task. Existing report-schema compatibility is preserved. This source version does not imply a published release.
@@ -33,15 +48,15 @@ The legacy source tree, legacy ZIP, and `$genscaff strict` compatibility route a
 - Any user-visible asynchronous boundary must follow a wait-removal-first loading contract, preserve usable context, expose honest status and recovery, and document the observed boundary instead of treating a spinner as completion.
 - Standard and Strict reports reject incomplete loading-boundary records; `async` and `generation` Strict work must declare and evidence the loading experience.
 
-## Unreleased: instruction consolidation and audit internals
+## Retained workflow: instruction consolidation and audit internals
 
 Core instructions now reuse one product/design contract and route detailed requirements to existing references. The general UI craft file, its enforcement, and its loading condition are unchanged. Strict internals are separated by responsibility while preserving CLI entrypoints, report schemas, and validation rules.
 
 Windows patch writes were recovered using the app-bundled CLI 0.155.0-alpha.2.6 with workspace-write isolation. The revised PR rerun completed all 16 processes after credits were restored, and the affected no-browser pair completed both runs. Eight blind/order-swapped comparisons and the user’s sampled booking/transfer preferences produced 6 treatment preferences and 2 control preferences. These include instruction compliance, not just visual quality. Both dashboard pairs still overflow at 390px; full behavioral acceptance remains withheld. PR median input tokens increased despite a shorter median runtime, so no cost-reduction claim is made. The [v2.1 evaluation record](evals/v2.1-transition.md) separates original failures, reruns, model scores, user preferences, and observed defects. The 120-run release evaluation was not run. [Earlier blocked trials and Strict equivalence evidence](evals/instruction-refactor.md) remain preserved.
 
-## Unreleased: design exploration and preservation
+## Retained workflow: design exploration and preservation
 
-These workflows are retained in the 2.1.0 source version; publication is a separate step.
+These workflows are included in v2.2.5.
 
 - Open-direction new surfaces and major redesigns default to two comparable representative-screen candidates followed by user selection. Users can choose a single direction or explicitly delegate selection. Quick fixes, locked reproduction, and composition-settled extensions skip comparison.
 - Preservation covers required visible information, accessible names, meaningful order, and action outcomes; unchanged HTML alone is insufficient. Reference principles are traced from observed source to implementation and rendered evidence.
@@ -110,48 +125,35 @@ Missing Chrome caps Standard at source implementation without browser evidence; 
 
 Read-only inspection, project command execution, dependency installation, active browser access, network commands, and destructive operations are separate permissions. A request to modify and test the workspace may authorize inspected non-destructive lint/test/build commands, but not installs, deploys, migrations, credentials, network access, or cleanup. Validation output is scoped evidence, not WCAG conformance or legal/originality certification.
 
-## Same-brief sample
+## Genscaff 2.2.5 Standard comparison: PC cafe
 
-The following public samples predate v2.1. They remain historical examples, not performance evidence for the current instructions.
+Two independent agents built a landing page for fictional **LEVEL PC Lounge** using the same brief, generated hero image, model (`gpt-5.6-luna`), and reasoning effort (`xhigh`). One used Genscaff Standard; the other used no frontend design skill. Design selection was delegated.
 
-Two independent `terra-medium` agents received the same product-page brief. Only the treatment explicitly invoked Genscaff Standard.
-
-| Genscaff Standard | Control |
+| Standard applied | Without Genscaff |
 |---|---|
-| <img src="docs/assets/slowdrop-comparison/genscaff-with.png" alt="Product page built with Genscaff Standard" width="720"> | <img src="docs/assets/slowdrop-comparison/genscaff-without.png" alt="Control product page built without Genscaff" width="720"> |
+| <img src="examples/v2.2.5-pccafe-comparison/artifacts/standard-desktop.png" alt="LEVEL PC landing page with Genscaff Standard" width="560"> | <img src="examples/v2.2.5-pccafe-comparison/artifacts/control-desktop.png" alt="LEVEL PC landing page without Genscaff" width="560"> |
+| [Source](examples/v2.2.5-pccafe-comparison/standard/index.html) | [Source](examples/v2.2.5-pccafe-comparison/control/index.html) |
 
-Both outputs were usable. This one qualitative pair does not establish superiority; see the [full comparison](docs/slowdrop-comparison.md). v2.0 treats its first scored release run as a baseline rather than a marketing claim.
+| Observed difference | Standard applied | Without Genscaff |
+|---|---|---|
+| Visual composition | Amber accent, restrained surfaces | Lime accent, large italic emphasis, colored seat panels |
+| Visit confirmation | Inline below the calculator | Separate modal |
+| Review corrections | Korean word wrapping, mobile-menu keyboard access, secondary-text contrast | Emphasized text contrast on light backgrounds, reduced-motion scrolling |
+| Shared functional checks | Desktop/mobile pricing, confirmation/editing, keyboard, hover, touch menu passed | Same checks passed |
 
-## Quick anti-slop A/B (directional)
+Colors and composition are choices made for this sample, not a style imposed by the skill. Both outputs include review corrections; neither functional superiority nor general quality improvement is established. Standard candidate captures were added after implementation and do not demonstrate completion of rendered selection before implementation.
 
-One isolated `gpt-5.6-terra` low-effort pair received the same fictional FlowPilot landing-page brief. The treatment explicitly invoked the then-current Genscaff Standard Skill; the control could not inspect it. This is directional evidence from two agents, not statistical proof.
+Both pages calculate seat and duration costs and display an editable visit preview. No reservation or payment is submitted. The hero is a concept image generated with the built-in imagegen tool, not a real venue photograph.
 
-| Parent-verified result | Genscaff | Control |
-|---|---:|---:|
-| Desktop render and primary interaction | Pass | Pass |
-| Reliable 390×844 render evidence | Pass | Fail: renderer scaling limitation |
-| Valid Standard schema v6 report | Pass | Not produced |
-| Lighthouse P/A/BP/SEO | 100/98/100/100 | 100/95/100/100 |
-| Remaining generic-default cluster | Yes | Yes, broader |
+```shell
+python -m http.server 8835 --bind 127.0.0.1 --directory examples/v2.2.5-pccafe-comparison
+```
 
-Genscaff helped by grounding the hero in a concrete approval route, retaining desktop/mobile flow evidence, and producing a validator-clean evidence report. It did not fully solve report honesty: the rendered treatment still contained decorative eyebrow copy, unsupported time-saved/setup claims, and nested workflow-row geometry that its own report did not list. The control combined a gradient hero, decorative eyebrow, nested workflow cards, and a uniform feature-card grid, while its mobile screenshot could not substantiate the requested viewport. The directional verdict is **Genscaff helped, but anti-slop finding recall still needs work**.
+Open the [comparison](http://127.0.0.1:8835/) after starting the server. No frontend build is required.
 
-## Same-brief Apple-principle PC café comparison
+[Mobile and full-page screenshots, findings and limitations](docs/v2.2.5-pccafe-comparison.md) | [Shared brief](examples/v2.2.5-pccafe-comparison/brief.md) | [Image prompt](examples/v2.2.5-pccafe-comparison/assets/provenance.md)
 
-Two independent `gpt-5.6-terra` agents received the [same NOON PC brief](examples/pccafe-apple-comparison/shared-brief.md), the same generated store image, the same standalone HTML constraint, and the same Korean production-copy rule. Only the left treatment invoked Genscaff Standard. Apple was used as an aesthetic-principle reference; neither treatment copies Apple trademarks, assets, copy, or exact layout.
-
-| Genscaff Standard | Control |
-|---|---|
-| <img src="docs/assets/pccafe-apple-comparison/with-genscaff.jpg" alt="NOON PC site built with Genscaff Standard" width="720"> | <img src="docs/assets/pccafe-apple-comparison/without-genscaff.jpg" alt="NOON PC control site built without Genscaff" width="720"> |
-
-Observed differences:
-
-- Genscaff produced a separate visual target and Standard report, a more compact three-option configuration surface, and a larger edge-to-edge image treatment.
-- The control put the selected `60평` model and `132석` consequence directly in the hero, then used a longer model-list and result-panel composition.
-- Both completed the model-change, required-field error, consultation summary, edit/close recovery, and desktop/mobile overflow checks. Focus styles were checked statically; a full Tab/Enter walkthrough was not claimed. Both final Lighthouse runs scored 100 in Performance, Accessibility, Best Practices, and SEO.
-- The Genscaff treatment initially omitted the dialog's team-room value and logged a console error after model change. The shared verification pass found and fixed it before publication. This pair is qualitative evidence, not a claim that either workflow is universally better.
-
-[Open the deployed comparison](https://pccafe-apple-comparison.vercel.app/) · [Genscaff Standard](https://pccafe-apple-comparison.vercel.app/with-genscaff/) · [Control](https://pccafe-apple-comparison.vercel.app/without-genscaff/)
+This is one paired demonstration with parent-reviewed corrections, not a statistical or blind effectiveness study. The earlier [v2.2 Quick examples](docs/v2.2-quick-examples.md) remain available as historical samples.
 
 ## Repository layout
 

@@ -94,8 +94,8 @@ class PluginTests(unittest.TestCase):
     def test_bilingual_docs_cover_current_contract(self) -> None:
         pairs = (
             (check_skill.REPO_ROOT / "README.md", check_skill.REPO_ROOT / "README.ko.md"),
-            (check_skill.REPO_ROOT / "docs" / "comparison.md", check_skill.REPO_ROOT / "docs" / "comparison.ko.md"),
-            (check_skill.REPO_ROOT / "docs" / "slowdrop-comparison.md", check_skill.REPO_ROOT / "docs" / "slowdrop-comparison.ko.md"),
+            (check_skill.REPO_ROOT / "docs" / "v2.2-quick-examples.md", check_skill.REPO_ROOT / "docs" / "v2.2-quick-examples.ko.md"),
+            (check_skill.REPO_ROOT / "docs" / "v2.2.5-pccafe-comparison.md", check_skill.REPO_ROOT / "docs" / "v2.2.5-pccafe-comparison.ko.md"),
         )
         for english, korean in pairs:
             self.assertTrue(english.is_file() and korean.is_file())

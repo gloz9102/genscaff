@@ -1,6 +1,6 @@
 # Product Specificity And Action Gate
 
-Use this Standard gate after the first render and before reporting completion. Use it to check product identity and the primary task; do not treat it as a substitute for the Strict evidence contract. For full manifests, fresh-context reruns, four-checkpoint capture, provenance, and independent review, read `aggressive-hard-gate.md` only under Strict.
+Apply the action requirements while implementing interactive controls; use the render review after the first render and before reporting completion. Check product identity and the primary task without treating this gate as a substitute for the Strict evidence contract. For full manifests, fresh-context reruns, four-checkpoint capture, provenance, and independent review, read `aggressive-hard-gate.md` only under Strict.
 
 ## 1. Define The Product Contract
 
@@ -78,9 +78,9 @@ Revise silent clicks, wrong destinations, hidden prerequisites, indefinite loadi
 
 Review visible controls involved in the primary viewport and primary task:
 
-- Make functional controls perform the represented action.
+- Make functional controls perform the represented action, including secondary controls you introduce. Feedback describes an actual result: a success toast alone does not create a promised file, change the displayed page, or advance to the next input step.
 - Make disabled controls semantic and explain a prerequisite when useful.
-- Label prototype-only controls visibly; do not imitate a completed production action.
+- Label prototype-only controls visibly at the point of use; a report-only caveat does not explain a dead control or a false completion message to the user.
 - Point navigation labels to real destinations or remove them.
 - Make filters, tabs, selectors, and comparison controls visibly change state or content.
 

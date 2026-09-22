@@ -24,6 +24,21 @@ $genscaff-release-audit   # Strict: 배포 중요 전체 감사
 $genscaff strict          # v2.1에서 종료, $genscaff-release-audit 사용
 ```
 
+## 2.2.5 모바일과 hover 구현 기준
+
+모바일에서는 작업 우선순위에 따라 콘텐츠, 이미지 크롭, 버튼 그룹을 재구성합니다. hover 반응은 컨트롤 역할에 맞게 선택하며 배치, 조작 영역, 접근 가능한 이름을 안정적으로 유지합니다. 메뉴에는 해당되는 하위 단계, 뒤로 이동, 닫기, 초점 복귀 경로와 hover 대체 조작을 제공합니다.
+
+검증에서는 화면 폭 조절, 터치 에뮬레이션, 실제 기기를 구분하고 기본, hover, 포인터 이탈 상태를 비교합니다. 기존 여섯 가지 표현 원칙을 보완하며 Quick은 변경 범위에 맞는 검사만 수행합니다. 2.2.5 PC방 샘플 한 쌍의 비교를 아래에 기록했습니다. 반복 릴리스 평가는 실행하지 않았습니다. [모바일과 hover 관찰 기록](docs/design-reference-mobile-hover.ko.md)에 참고 사이트의 표본과 한계를 정리했습니다.
+
+## 2.2.0 UI 기본 원칙
+
+- 한 화면에 모든 정보를 압축하지 않고 여백을 허용합니다. 대시보드, 백오피스 등 정보 중심 화면이나 사용자 요청은 높은 정보 밀도를 허용합니다.
+- 맥락이나 주제가 바뀌면 실제 화면에서 줄바꿈 또는 문단으로 분리합니다.
+- 직접 조작하는 요소에는 hover와 누름/클릭 반응을 기본으로 적용합니다. 키보드와 터치 조작, 모션 감소 설정도 지원하며 적절한 반응을 판단하기 어려우면 사용자에게 확인합니다.
+- 포인트 색상은 기본적으로 판단하여 정하고, 전경색과 상호작용 상태를 공통 테마 토큰으로 관리하여 요청 시 빠르게 교체할 수 있게 합니다.
+
+Quick과 Standard에 공통으로 적용합니다. 2.2.0 행동 A/B 평가는 아직 실행하지 않았으며 이전 평가 결과는 과거 근거로 유지합니다. 소스 버전 변경은 릴리스 게시를 의미하지 않습니다.
+
 ## 2.1.0 전환
 
 레거시 소스 트리·ZIP과 `$genscaff strict` 호환 경로를 제거합니다. 종료된 호출에는 이전 방법만 안내하며 감사나 Standard 작업을 자동으로 시작하지 않습니다. 기존 보고서 스키마 호환성은 유지합니다. 소스 버전 변경은 릴리스 게시를 의미하지 않습니다.
@@ -33,15 +48,15 @@ $genscaff strict          # v2.1에서 종료, $genscaff-release-audit 사용
 - 사용자에게 보이는 모든 비동기 경계에는 대기 제거 우선 로딩 계약을 적용합니다. 사용할 수 있는 맥락을 보존하고, 정직한 상태와 복구 수단을 제공하며, 스피너를 완료 근거로 대신하지 않고 관찰한 경계를 기록합니다.
 - Standard·Strict 보고서는 불완전한 로딩 경계 기록을 거부합니다. Strict의 `async`·`generation` 작업은 로딩 경험을 선언하고 근거를 남겨야 합니다.
 
-## 미배포 변경: 지침 중복 제거와 감사 구현 분리
+## 유지되는 흐름: 지침 중복 제거와 감사 구현 분리
 
 Core는 제품·디자인 계약을 한 번 기록하고 상세 요구사항을 기존 reference로 안내하도록 정리했습니다. 일반 UI 디자인 지침 파일의 내용·강제 수준·적용 조건은 유지합니다. Strict 내부 구현은 책임별로 분리하며 CLI 진입점, 보고서 스키마와 검증 규칙은 유지합니다.
 
 Windows 패치 쓰기는 앱에 포함된 CLI 0.155.0-alpha.2.6을 사용하여 workspace-write 격리를 유지한 상태로 복구했습니다. 크레딧 복구 후 수정 후보의 PR 16회와 브라우저 없는 조건 2회를 모두 완료했습니다. 블라인드·순서 교환 비교 8쌍과 사용자의 예약·송금 선호 판정을 반영한 결과는 수정판 6승·이전판 2승입니다. 이는 지침 준수를 포함한 선호이며 시각 품질 개선의 입증은 아닙니다. 두 대시보드 쌍 모두 390px에서 가로 넘침이 남아 전체 행동 채택 판정은 보류합니다. PR 실행 시간 중앙값은 줄었지만 입력 토큰 중앙값은 증가하여 비용 절감을 주장하지 않습니다. [v2.1 평가 기록](evals/v2.1-transition.md)에 최초 실패·재실행·모델 점수·사용자 선호·잔여 결함을 구분했습니다. 120회 릴리스 평가는 실행하지 않았습니다. [이전 중단 기록과 Strict 동등성 근거](evals/instruction-refactor.md)도 보존합니다.
 
-## 미배포 변경: 디자인 탐색과 보존 검증
+## 유지되는 흐름: 디자인 탐색과 보존 검증
 
-아래 흐름은 2.1.0 소스 버전에서도 유지합니다. 릴리스 게시는 별도 단계입니다.
+아래 흐름은 v2.2.5에 포함됩니다.
 
 - 방향이 열려 있는 신규 화면·대규모 개편은 같은 조건의 대표 화면 두 안을 비교하고 사용자가 선택하는 방식이 기본입니다. 사용자는 단일안 진행 또는 선택 위임을 지정할 수 있습니다. Quick, 잠금 재현, 구성이 확정된 기존 시스템 확장은 비교를 생략합니다.
 - 필수 정보, 접근 가능한 이름, 의미 있는 순서와 동작 결과를 보존합니다. HTML이 같다는 사실만으로 보존을 판정하지 않으며, 레퍼런스 관찰을 구현 위치와 실제 화면 증거까지 연결합니다.
@@ -110,17 +125,37 @@ Chrome이 없으면 Standard의 browser evidence만 막히며 안전한 source �
 
 Read-only inspection, project command 실행, dependency 설치, active browser, network command, destructive operation은 별도 권한입니다. Workspace 수정·테스트 요청은 검사한 비파괴 lint/test/build를 허용할 수 있지만 install, deploy, migration, credential, network, cleanup까지 허용하지 않습니다. 검증 출력은 범위가 제한된 근거이며 WCAG 준수나 법적·독창성 인증이 아닙니다.
 
-## 동일 브리프 샘플
+## Genscaff 2.2.5 Standard 비교: PC방
 
-공개 샘플은 v2.1 이전의 결과입니다. 과거 사례로 보존하며 현재 지침의 성능 근거로 사용하지 않습니다.
+가상의 **LEVEL PC 라운지**를 두 독립 에이전트가 같은 제작 브리프, 생성 이미지, 모델(`gpt-5.6-luna`), 추론 수준(`xhigh`)으로 제작했습니다. 한쪽에는 Genscaff Standard를 적용하고 다른 쪽은 프런트엔드 디자인 스킬 없이 제작했습니다. 디자인 방향 선택은 제작자에게 위임했습니다.
 
-서로 독립적인 `terra-medium` 에이전트 2개에 같은 상품 페이지 브리프를 제공했습니다. 적용 조건만 Genscaff Standard를 명시적으로 호출했습니다.
-
-| Genscaff Standard | 대조군 |
+| Standard 적용 | Genscaff 미적용 |
 |---|---|
-| <img src="docs/assets/slowdrop-comparison/genscaff-with.png" alt="Genscaff Standard로 만든 상품 페이지" width="720"> | <img src="docs/assets/slowdrop-comparison/genscaff-without.png" alt="Genscaff 없이 만든 대조군 상품 페이지" width="720"> |
+| <img src="examples/v2.2.5-pccafe-comparison/artifacts/standard-desktop.png" alt="Genscaff Standard를 적용한 LEVEL PC 랜딩페이지" width="560"> | <img src="examples/v2.2.5-pccafe-comparison/artifacts/control-desktop.png" alt="Genscaff를 적용하지 않은 LEVEL PC 랜딩페이지" width="560"> |
+| [소스](examples/v2.2.5-pccafe-comparison/standard/index.html) | [소스](examples/v2.2.5-pccafe-comparison/control/index.html) |
 
-두 결과 모두 사용할 수 있는 수준이었습니다. 이 정성 비교 한 쌍만으로 우월성을 주장하지 않습니다. 자세한 내용은 [전체 비교 문서](docs/slowdrop-comparison.ko.md)에서 확인하실 수 있습니다. v2.0은 첫 점수화 Release 실행을 마케팅 주장이 아닌 기준선으로 사용합니다.
+| 확인한 차이 | Standard 적용 | Genscaff 미적용 |
+|---|---|---|
+| 시각 구성 | 호박색 포인트, 절제된 표면 구분 | 라임 포인트, 큰 기울임 강조, 공간별 색면 |
+| 방문 계획 확인 | 계산기 아래 인라인 표시 | 별도 모달 표시 |
+| 검토 후 보정 | 한국어 단어 경계, 모바일 메뉴의 키보드 접근, 보조 문구 대비 | 밝은 배경의 강조 문구 대비, 모션 감소 시 스크롤 |
+| 공통 기능 검증 | 데스크톱 및 모바일 요금 계산, 확인과 수정, 키보드, 호버, 터치 메뉴 통과 | 동일 검사 통과 |
+
+색상과 구성은 이번 샘플의 선택이며 스킬이 고정하는 스타일이 아닙니다. 두 결과 모두 검토 후 보정되었으며, 기능상 우열이나 일반적인 품질 향상을 입증하지 않습니다. Standard 후보 캡처는 구현 후 보완되어 구현 전 후보 선택 절차를 완료했다는 증거로 사용하지 않습니다.
+
+두 페이지 모두 좌석과 이용 시간에 따른 요금을 계산하고 방문 계획을 확인하거나 수정할 수 있습니다. 실제 예약이나 결제는 전송하지 않습니다.
+
+히어로는 imagegen 내장 도구로 생성한 콘셉트 이미지이며 실제 매장 사진이 아닙니다.
+
+```shell
+python -m http.server 8835 --bind 127.0.0.1 --directory examples/v2.2.5-pccafe-comparison
+```
+
+서버 실행 후 [비교 페이지](http://127.0.0.1:8835/)를 엽니다. 프런트엔드 빌드는 필요하지 않습니다.
+
+[모바일 및 전체 화면, 관찰 결과와 한계](docs/v2.2.5-pccafe-comparison.ko.md) | [공통 브리프](examples/v2.2.5-pccafe-comparison/brief.md) | [이미지 생성 프롬프트](examples/v2.2.5-pccafe-comparison/assets/provenance.md)
+
+부모 검토 후 문제를 보정한 한 쌍의 시연 결과이며 통계적 효과 검증이나 블라인드 평가는 아닙니다. 기존 [v2.2 Quick 예시](docs/v2.2-quick-examples.ko.md)는 과거 샘플로 유지합니다.
 
 ## 저장소 구조
 

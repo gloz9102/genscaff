@@ -66,9 +66,9 @@ jobs:
           mkdir -p "$CODEX_HOME"
           codex plugin marketplace add "$GITHUB_WORKSPACE" --json
           codex plugin add genscaff@genscaff-public --json
-          test -f "$CODEX_HOME/plugins/cache/genscaff-public/genscaff/2.1.0/skills/genscaff/SKILL.md"
-          test -f "$CODEX_HOME/plugins/cache/genscaff-public/genscaff/2.1.0/skills/genscaff-release-audit/SKILL.md"
-          grep -R "allow_implicit_invocation: false" "$CODEX_HOME/plugins/cache/genscaff-public/genscaff/2.1.0/skills" | grep -q genscaff-release-audit
+          test -f "$CODEX_HOME/plugins/cache/genscaff-public/genscaff/2.2.5/skills/genscaff/SKILL.md"
+          test -f "$CODEX_HOME/plugins/cache/genscaff-public/genscaff/2.2.5/skills/genscaff-release-audit/SKILL.md"
+          grep -R "allow_implicit_invocation: false" "$CODEX_HOME/plugins/cache/genscaff-public/genscaff/2.2.5/skills" | grep -q genscaff-release-audit
 
       - name: Run release-audit regression tests
         working-directory: plugins/genscaff/skills/genscaff-release-audit/scripts
@@ -86,6 +86,6 @@ jobs:
           path: |
             dist/genscaff-plugin.zip
             dist/genscaff-plugin.zip.sha256
-            dist/genscaff-eval-v2.1.0.zip
-            dist/genscaff-eval-v2.1.0.zip.sha256
-            dist/genscaff-eval-v2.1.0-summary.json
+            dist/genscaff-eval-v2.2.5.zip
+            dist/genscaff-eval-v2.2.5.zip.sha256
+            dist/genscaff-eval-v2.2.5-summary.json

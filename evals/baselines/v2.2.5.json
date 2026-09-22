@@ -1,0 +1,15 @@
+{
+  "schema_version": 1,
+  "version": "2.2.5",
+  "status": "single_paired_demo_with_review_corrections",
+  "release_120_runs": "not_run",
+  "changes": [
+    "Mobile content recomposition with coherent visual, reading, and focus order",
+    "Action grouping and media crops based on available space and content",
+    "Role-appropriate hover feedback with stable layout, hit areas, and accessible labels",
+    "Complete applicable menu paths and non-hover input alternatives",
+    "Separate viewport, touch-emulation, real-device, and pointer-state evidence"
+  ],
+  "claim": "One PC cafe pair used matched gpt-5.6-luna xhigh agents and a shared brief/image, followed by parent review and corrections. Final screenshots demonstrate two implementations, not untouched first outputs or general skill effectiveness. The 120-run release evaluation was not run.",
+  "sample": "docs/v2.2.5-pccafe-comparison.md"
+}

@@ -1,0 +1,13 @@
+{
+  "schema_version": 1,
+  "version": "2.2.0",
+  "status": "behavioral_evaluation_not_run",
+  "release_120_runs": "not_run",
+  "changes": [
+    "Focused screens and acceptable whitespace with information-intensive and user-requested density exceptions",
+    "Rendered line and paragraph separation for context changes",
+    "Default hover and activation feedback with clarification when the reaction is unclear",
+    "Replaceable shared accent tokens and interaction variants"
+  ],
+  "claim": "Instruction update only; no v2.2.0 behavioral or visual improvement has been established. Earlier baselines remain historical evidence."
+}

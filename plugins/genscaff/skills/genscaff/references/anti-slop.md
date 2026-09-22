@@ -8,7 +8,7 @@ Evidence has priority in this order: explicit user direction, existing project a
 
 Do not fail a surface because it contains one gradient, card, radius, centered section, animation, badge, or other component pattern. Treat a result as a generic-default finding only when unsupported defaults cluster across at least two design domains, such as composition plus decoration, content plus component geometry, or imagery plus motion. Name the cluster and the product evidence it displaces or obscures.
 
-Preserve purposeful gradients, glass, cards, rounding, motion, and other treatments when the user requested them or the existing project uses them coherently. Cards that group actionable dashboard information are not marketing slop merely because they are cards. If evidence supports a questioned choice, record an exception instead of forcing a replacement.
+Preserve purposeful gradients, glass, cards, rounding, motion, and other treatments when the user requested them, the existing project uses them coherently, or the product-grounded direction explains their role. Cards that group actionable dashboard information are not marketing slop merely because they are cards. If evidence supports a questioned choice, record an exception instead of forcing a replacement.
 
 ## Positive direction
 
@@ -25,7 +25,7 @@ Look for combinations, not isolated tokens:
 - Unsupported proof: invented metrics, testimonials, logo clouds, vague claims, or abstract copy without inspectable evidence.
 - Mechanical repetition: the same icon tile, card, heading stack, radius, and spacing recipe without distinct information roles.
 - Container layering: nested cards where spacing, alignment, dividers, or typography would express the hierarchy more clearly.
-- Unrelated motion: marquee, pulse, scroll reveal, or ambient animation that does not explain state, continuity, hierarchy, or feedback.
+- Unrelated motion: marquee, pulse, scroll reveal, or ambient animation that does not explain the product, a usage scene, state, continuity, hierarchy, or feedback.
 - Irrelevant imagery: stock or abstract imagery that could move to a distant product category without changing meaning.
 
 Once confirmed, prefer information-bearing structure: fold a roleless eyebrow into heading/evidence; replace non-semantic numbers with surface-specific roles (steps, decisions, evidence, states); flatten nested cards using alignment, dividers, state text. Preserve domain objects, flow, accessibility, and responsiveness; deletion alone is not improvement.
