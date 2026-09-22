@@ -96,12 +96,19 @@ class PluginTests(unittest.TestCase):
             (check_skill.REPO_ROOT / "README.md", check_skill.REPO_ROOT / "README.ko.md"),
             (check_skill.REPO_ROOT / "docs" / "v2.2-quick-examples.md", check_skill.REPO_ROOT / "docs" / "v2.2-quick-examples.ko.md"),
             (check_skill.REPO_ROOT / "docs" / "v2.2.5-pccafe-comparison.md", check_skill.REPO_ROOT / "docs" / "v2.2.5-pccafe-comparison.ko.md"),
+            (check_skill.REPO_ROOT / "docs" / "workflow-details.md", check_skill.REPO_ROOT / "docs" / "workflow-details.ko.md"),
+            (check_skill.REPO_ROOT / "docs" / "development.md", check_skill.REPO_ROOT / "docs" / "development.ko.md"),
+            (check_skill.REPO_ROOT / "docs" / "version-history.md", check_skill.REPO_ROOT / "docs" / "version-history.ko.md"),
         )
         for english, korean in pairs:
             self.assertTrue(english.is_file() and korean.is_file())
         for path in pairs[0]:
             text = path.read_text(encoding="utf-8")
-            for term in ("aesthetic-inspiration", "product-editorial", "VERIFIED_STANDARD_BASELINE", "$genscaff-release-audit"):
+            self.assertIn("$genscaff-release-audit", text)
+            self.assertIn("docs/workflow-details", text)
+        for path in pairs[3]:
+            text = path.read_text(encoding="utf-8")
+            for term in ("aesthetic-inspiration", "product-editorial", "VERIFIED_STANDARD_BASELINE"):
                 self.assertIn(term, text)
 
 
