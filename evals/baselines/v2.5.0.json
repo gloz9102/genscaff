@@ -1,0 +1,15 @@
+{
+  "schema_version": 1,
+  "version": "2.5.0",
+  "status": "behavioral_evaluation_not_run",
+  "release_120_runs": "not_run",
+  "changes": [
+    "Apply product-grounded anti-slop prevention before layout and copy decisions",
+    "Separate visual sameness, product specificity, and experience completeness",
+    "Replace rigid style quotas with task-based criteria and actionable defect evidence",
+    "Verify represented action outcomes, promised persistence, recovery, and accessible use",
+    "Preserve schema v6 while expanding contract and verification guidance",
+    "Support an explicit API base URL in the isolated evaluation execution policy"
+  ],
+  "claim": "Behavioral expectations and regression coverage were updated. The v2.5.0 generation comparison and 120-run release evaluation were not run. Structural validation and unit tests do not establish improved generated-output quality. Earlier evaluation results remain historical evidence."
+}

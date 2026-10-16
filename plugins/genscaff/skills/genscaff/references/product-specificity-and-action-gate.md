@@ -4,7 +4,7 @@ Apply the action requirements while implementing interactive controls; use the r
 
 ## 1. Define The Product Contract
 
-Write a compact contract before choosing a layout:
+Use the existing product/design contract before choosing a layout; add missing applicable entries there rather than creating a duplicate:
 
 - Target user: name one concrete user group for the primary flow.
 - User need: state the job in the user's language.
@@ -13,9 +13,12 @@ Write a compact contract before choosing a layout:
 - Primary CTA: identify the control that starts or advances that task.
 - Domain objects: name the things users view, compare, create, edit, buy, book, track, or share.
 - Decision: identify the choice the interface helps the user make and the information needed for it.
+- Priority: identify what must be noticed first and which conditions must be understood before acting.
 - Recovery: identify how users correct, reverse, retry, or safely return when relevant.
 
 Mark important claims as `user`, `repository`, `external-research`, or `assumption`. Do not present an assumption as user research.
+
+Make product claims match implemented capability. Keep source, units, period, and comparison basis for material metrics and charts where relevant; distinguish sample data from live data at the point of interpretation. Unsupported testimonials, customer logos, performance claims, and availability are not placeholders to publish as facts. Reading or understanding a specific subject can be the primary job of an informational surface; do not invent a purchase or mutation to satisfy this gate.
 
 ## 2. Trace Need To UI
 
@@ -25,7 +28,7 @@ Do not count a product name, decorative image, planned feature, or report-only p
 
 ## 3. Establish A Product Signature
 
-Show at least three independent product signals for a screen, flow, site, or design board; show at least one for a narrowly scoped component. Use signals such as:
+Show enough independent product signals to make the user, subject, task, and necessary constraints recognizable in the affected surface. Judge their usefulness, not a quota; a narrow component may legitimately inherit surrounding context. Use signals such as:
 
 - Domain objects with realistic attributes, units, or constraints.
 - Terms the target user recognizes.
@@ -48,9 +51,9 @@ Make one product-specific decision visible and useful. State:
 - Consequence: what changes after the choice.
 - Evidence: where the choice and consequence appear in the rendered UI.
 
-Revise when the primary experience only asks users to scroll, read generic claims, or click an action with an unclear consequence.
+Revise when an action-oriented experience only asks users to scroll, read generic claims, or click an action with an unclear consequence. For editorial, discovery, or informational work, verify useful reading, understanding, comparison, or navigation instead of fabricating an interactive decision.
 
-Run a lightweight substitution check. Mentally replace only the name, logo, and accent color with two distant product categories. Revise when the same information architecture, data, controls, and primary action still fit either category with only superficial relabeling. Treat this as a design prompt, not an academic score or a Strict pass/fail formula.
+Run a lightweight substitution check. Mentally replace the name, logo, and accent color with a distant product category. If the content, data, and action remain interchangeable, identify missing domain meaning and revise that gap. Preserve familiar search, login, table, and navigation conventions. This is a design prompt, not a required number of substitutions or broken structural axes.
 
 ## 5. Walk The Primary Action
 
@@ -83,6 +86,8 @@ Review visible controls involved in the primary viewport and primary task:
 - Label prototype-only controls visibly at the point of use; a report-only caveat does not explain a dead control or a false completion message to the user.
 - Point navigation labels to real destinations or remove them.
 - Make filters, tabs, selectors, and comparison controls visibly change state or content.
+- Verify the underlying outcome promised by an affected control: the exported artifact exists, the selected filter changes the result, or a saved value survives the promised revisit/reload boundary. Use controlled test data; label simulated backend behavior and do not silently treat in-memory state as durable storage.
+- Keep validation errors associated with inputs, retain recoverable entries, explain actionable prerequisites, and expose relevant retry/edit/cancel/back behavior. Distinguish initial emptiness, zero matches, missing data, and failure; a generic empty illustration cannot represent all four accurately.
 
 Check the controls needed for the primary flow, including its recovery. Do not require a full-page control inventory or a control manifest in Standard; reserve those checks for Strict. Treat an undisclosed dead-end control in the reviewed flow as a failure.
 
@@ -102,16 +107,16 @@ Browser evidence is required before assigning any verified status. Without real 
 
 ## 8. Review The First Render
 
-Judge the selected implementation before declaring it done. First confirm the product flow and signature, then apply the routed anti-slop cluster review. Do not treat a single CSS feature or component pattern as a failure. Batch aesthetic corrections after its first render and recheck desktop and mobile once; stop after two aesthetic review passes for that implementation. Representative-candidate comparison is a separate bounded stage. Always re-verify affected content, functionality, accessibility, and runtime behavior after fixing defects; the aesthetic limit does not cap these checks.
+Judge the selected implementation before declaring it done. First confirm the product flow and signature, then apply the routed anti-slop review across visual sameness, product specificity, and experience completeness. A single CSS feature is not a failure, but one observable content, interaction, or accessibility defect is actionable without a cluster. Batch aesthetic corrections after its first render and recheck desktop and mobile once; stop after two aesthetic review passes for that implementation. Representative-candidate comparison is a separate bounded stage. Always fix and re-verify affected in-scope content, functionality, accessibility, and runtime defects; the aesthetic limit does not cap these checks.
 
-Before editing, record the first-pass result for each applicable area. When the anti-slop reference is routed, explicitly inspect any visible decorative eyebrow/kicker, non-semantic section numbering, repeated card geometry, and container layering as possible evidence of a cluster; none fails alone, but none may be silently marked clean. Use the first pass to identify:
+Before correction, record the first-pass result for each applicable area. When the anti-slop reference is routed, account for its applicable dimensions in the existing record, including the role of visible eyebrows, numbering, repeated cards, and container layering. Their presence alone does not fail, and a familiar style does not excuse a concrete defect. Use the first pass to identify:
 
 - Composition: guide attention to the primary task without accidental imbalance.
 - Product storytelling: make the product, domain object, or work surface communicate its value.
 - Hierarchy: make title, product information, price or consequence, and CTA readable in their intended order.
 - Brand coherence: align color, type, shape, imagery, and effects with project or user evidence.
 - Interaction polish: make selection, feedback, terminal state, and recovery feel connected.
-- Generic-default clusters: when unsupported choices occur across at least two design domains, record the finding, location, rendered evidence, rationale, and `keep`, `replace`, `remove`, or project-evidenced `exception` response.
+- Product-grounded findings: record the affected dimension, location/state/viewport, observed evidence, task impact, and `keep`, `replace`, `remove`, or project-evidenced `exception` response, followed by the correction's recheck or unresolved limitation. Repeated unsupported choices strengthen a diagnosis but are not a minimum threshold for correction.
 
 Preserve product-specific objects, proof, workflow states, action continuity, accessibility, and responsive behavior while correcting presentation. Keep the review grounded in the actual capture. Do not convert it into a numerical quality score, an originality claim, or a substitute for user testing. If a finding remains, report it as an issue or limitation rather than a clean claim.
 

@@ -25,7 +25,7 @@ Record conflicts, repository facts, and assumptions. A lower rule never silently
 
 ## Profiles
 
-- **Quick:** copy, one component, or local styling with a narrow affected path. Inspect affected code and conventions; preserve required information, accessible names, and action outcomes; verify changed behavior and one representative viewport when rendering changed. Record requested changes and unverified risks. No broad contract, alternative designs, JSON, Lighthouse, independent review, or command replay. A small diff alone does not establish suitability. Read `references/loading-ux.md` for an affected user-visible async boundary and report its boundary record.
+- **Quick:** copy, one component, or local styling with a narrow affected path. Inspect affected code and conventions; preserve required information, accessible names, and action outcomes; apply the anti-slop requirements below to that path and verify changed behavior and one representative viewport when rendering changed. Record requested changes and unverified risks. No broad contract, alternative designs, JSON, Lighthouse, independent review, or command replay. A small diff alone does not establish suitability. Read `references/loading-ux.md` for an affected user-visible async boundary and report its boundary record; read `references/anti-slop.md` for an explicit slop complaint, keeping its review local.
 - **Standard:** default for ordinary generation, redesign, routes, or multi-component work. Follow the workflow below. JSON is needed only when requested or required by a loaded validator/workflow.
 - **Strict:** never escalate automatically. An explicit Strict or release-critical request delegates to `$genscaff-release-audit`. Missing audit skill, runtime, or reviewer makes Strict incomplete; continue safe implementation and separately bounded Standard checks where possible.
 
@@ -33,12 +33,24 @@ Record conflicts, repository facts, and assumptions. A lower rule never silently
 
 1. Inspect project facts without executing project code. Read the contract's inspection guidance before editing broad or new UI.
 2. Record `project_mode`, `reference_mode`, archetype, surfaces, and change scope using `references/task-type-craft-router.md`. Select only the directly applicable references below.
-3. Complete `references/visual-target-template.md` once: product/design decisions, required information and behavior, allowed changes, implementation, and evidence share one contract. Do not invent recovery or disabled states for an informational page (`FABRICATED_FRICTION`).
+3. Complete `references/visual-target-template.md` once: product/design decisions, required information and behavior, allowed changes, implementation, and evidence share one contract. When routed, read `references/anti-slop.md` now and apply its prevention checks before choosing composition or copy. Do not invent recovery or disabled states for an informational page (`FABRICATED_FRICTION`).
 4. For open-direction new surfaces or major redesigns, read `references/design-exploration.md` before implementation. Compare two representative candidates, then select: the user chooses by default; explicit delegation lets you choose after comparison. Only an explicit single-direction request or a routed exception skips the pair. Without a browser, retain two comparable, clearly unverified direction descriptions before selection.
 5. Preserve architecture and implement the selected direction, primary flow, and relevant states. For interactive work, apply `references/product-specificity-and-action-gate.md` while wiring controls, before the first render. Follow the routed craft requirements without weakening them for exploration.
-6. Inspect the first selected-product render for product flow and, when routed, the clusters in `references/anti-slop.md`. Record findings before edits, batch aesthetic corrections, and recheck desktop/mobile once. Candidate comparison is separate. Content, functional, accessibility, and runtime fixes still require affected checks to run again.
+6. Inspect the first selected-product render for product flow and, when routed, all applicable dimensions in `references/anti-slop.md`. Separate visual sameness, product specificity, and experience completeness; record concrete findings before edits. Batch aesthetic corrections and recheck desktop/mobile once. Candidate comparison is separate. A single content, functional, accessibility, or runtime defect requires correction and affected re-verification regardless of the aesthetic-pass limit.
 7. Read `references/verification-baseline.md` before verification claims. Observe desktop/mobile render, console, overflow/clipping, primary flow, critical keyboard path, visible unobscured focus, and relevant states. Update the contract's existing preservation/reference evidence rather than writing it again.
 8. Report the highest evidenced status and unresolved findings. `VERIFIED_STANDARD_BASELINE` is the Standard ceiling, not universal quality or full accessibility certification.
+
+## Anti-slop requirements for every profile
+
+Apply these requirements within the authorized change scope, including Quick. Detailed diagnosis belongs to the routed anti-slop reference; a local task does not become a whole-product redesign.
+
+- Derive structure and emphasis from the user's job, domain objects, necessary decisions, and observable outcome. Preserve useful familiar conventions; a logo, accent, or generic feature grid does not supply missing product meaning.
+- Make visual priority match task priority. Choose tables, lists, steps, work surfaces, cards, or editorial sections from information relationships and reading needs. Preserve required detail, useful density, and comfortable whitespace.
+- Write concrete, truthful copy and place decision-critical conditions where needed. Use real or clearly identified sample data; factual claims, metrics, charts, testimonials, and trust marks require traceable support. Missing evidence must not become invented proof.
+- Implement the represented action through its actual result and relevant recovery. Distinguish immediate feedback from completion; verify the state/data change, not only a toast. Disclose prototype limits at the point of use.
+- Design and check relevant non-happy states, realistic content extremes, responsive reading order, Korean/fallback typography, keyboard/focus, contrast, and announcements. A polished default screenshot cannot establish these behaviors.
+- Keep type, spacing, color, geometry, icons, media, and motion coherent with their roles. A common font, gradient, card, library, or conventional layout is not a defect by itself; replacing it with fashionable novelty does not establish improvement.
+- Correct observable failures without waiting for a cluster or a numeric score. Record location, observation, affected task, correction, and recheck. A visual preference or accepted style exception cannot waive an unresolved functional or accessibility defect. Never infer AI authorship, low effort, or user success from appearance.
 
 ## UI defaults for every profile
 
@@ -65,7 +77,7 @@ For user-facing Korean sentences, default to professional 존댓말 (`-합니다
 
 ## Reference routing
 
-Read only references needed for the task; Quick loads none by default except its conditional loading rule.
+Read only references needed for the task; Quick loads none by default except its conditional loading and explicit slop-review rules.
 
 | Condition | Read directly |
 | --- | --- |
@@ -75,7 +87,7 @@ Read only references needed for the task; Quick loads none by default except its
 | Standard task classification or legacy page type | `references/task-type-craft-router.md` |
 | Product or interactive flow | `references/product-specificity-and-action-gate.md` |
 | Visual direction is open | `references/ui-craft-guidelines.md` |
-| New landing/page/surface, major redesign, open-direction first render, aesthetic inspiration conversion, or user-reported generic/bland/AI-looking/template-like/slop output | `references/anti-slop.md` |
+| New landing/page/surface, major redesign, aesthetic inspiration conversion, or user-reported generic/bland/AI-looking/template-like/slop output: read before layout/copy decisions, then reuse at render and flow review | `references/anti-slop.md` |
 | Product editorial | `references/craft-product-editorial.md` |
 | Marketplace discovery | `references/craft-marketplace-discovery.md` |
 | Media discovery | `references/craft-media-discovery.md` |
@@ -88,7 +100,7 @@ Read only references needed for the task; Quick loads none by default except its
 | Standard JSON report requested | `references/quality-report-schema.md` |
 | Strict requested | delegate to `$genscaff-release-audit` |
 
-Do not load `references/anti-slop.md` by default for a small bug fix, accessibility-only change, RTL/i18n-only change, single-component logic change, or Strict release audit.
+Do not load `references/anti-slop.md` by default for a small bug fix, accessibility-only change, RTL/i18n-only change, single-component logic change, or Strict release audit. The always-loaded requirements still apply to the affected scope; an explicit slop complaint loads the reference without widening that scope.
 
 Treat a JSON quality report required or created by any concurrently loaded workflow as a generated Standard report: load `references/quality-report-schema.md` before creating it. The current Standard schema and validator take precedence over another workflow's historical report shape.
 
@@ -97,6 +109,8 @@ Do not make one reference require a chain of other references.
 ## Reports and verification
 
 Use the status definitions and evidence requirements in `references/verification-baseline.md`. Keep result, method, coverage, evidence, issues, and limitations distinct; browser, keyboard, automation, assistive-technology, and representative-user validation are not interchangeable.
+
+Report visual sameness, product specificity, and experience completeness separately when the anti-slop review is routed. Record supported style exceptions and unresolved defects independently. Neither a valid report nor a technical verification status proves the absence of slop; do not report the requested remediation complete while an in-scope finding remains unresolved.
 
 Before creating any Standard JSON report, including one required by another loaded workflow, read `references/quality-report-schema.md`. Initialize and validate with the current `scripts/quality_gate.py`; do not copy an older report shape. The current schema takes precedence over historical shapes. Keep visual findings in existing issues/limitations, not clean booleans.
 

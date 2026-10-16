@@ -8,6 +8,8 @@ Observe required desktop and mobile routes. Check uncaught console errors, unint
 
 Check that the layout does not compress everything into one viewport without a task need or explicit request. Accept whitespace; information-intensive dashboards and back offices may legitimately be denser. Verify that topic/context changes in copy render as separate lines or paragraphs on desktop and mobile, rather than relying on collapsed source newlines.
 
+Compare visual emphasis with the contract's task priority and required decision facts. Inspect information relationships, copy specificity, data/proof consistency, rendered Korean/fallback type, icon coherence, numeric alignment, and relevant media crops with representative content. For a routed anti-slop review, retain separate observations for visual sameness, product specificity, and experience completeness. State which checks are static, rendered, exercised, or unverified; a familiar style is not a defect and a striking style is not evidence of usability.
+
 Inspect accent consumers for shared theme tokens, including foreground and interaction variants, so a requested replacement does not require per-component edits. When the accent changes, verify affected contrast and states.
 
 Measure document overflow separately from intentional component scrolling. A wide table may scroll locally, but its labels, focused controls, and positioned descendants must not create page-level scrolling or become unreachable. When overflow occurs, locate the element and its containing block, repair the affected layout, and repeat render and keyboard/action checks while preserving content. Missing browser access leaves this check unverified; source inspection or a model preference cannot establish a render pass.
@@ -15,6 +17,10 @@ Measure document overflow separately from intentional component scrolling. A wid
 ## Primary flow
 
 Observe trigger, feedback, and terminal result. Verify recovery only when failure, cancellation, reversal, incomplete state, network, or transaction behavior makes it real.
+
+Check the promised outcome beyond visual feedback: open the generated artifact, observe the changed filtered/selected data, follow the destination, or revisit/reload a saved value when persistence is promised. Use authorized test data and controlled fixtures. Distinguish prototype state, local persistence, and backend persistence; an untested or simulated outcome cannot support a stronger claim. Include secondary controls introduced within the affected primary flow.
+
+Exercise applicable non-happy-state triggers and recovery, including initial versus filtered emptiness, missing data, failures, validation, and input/filter retention. Record representative content extremes and which transitions were observed. A decorative empty screen or forced success screenshot does not establish state completeness.
 
 For affected direct-action controls, observe hover feedback where supported and immediate press/click feedback, including equivalent keyboard/touch activation. Check reduced-motion behavior where effects use motion. A terminal result alone does not establish immediate reaction feedback.
 
@@ -40,6 +46,8 @@ Exercise the complete critical path using applicable Tab, Shift+Tab, Enter, Spac
 
 Record keyboard, focus, automated accessibility, manual accessibility, assistive-technology user validation, and representative-user validation independently. Check names, headings, landmarks, error association, dynamic announcements, drag alternatives, target spacing, reduced motion, zoom, and reflow where relevant.
 
+Measure affected text contrast against actual backgrounds and relevant states: WCAG AA normally requires 4.5:1 for text and 3:1 for qualifying large text, with applicable exceptions. Check meaningful non-text controls and indicators under their applicable contrast requirements; do not apply a blanket decorative-icon rule. Verify visible unobscured focus, readable secondary copy, non-color state cues, and programmatically exposed status messages where applicable. Record tool/inspection evidence; keyboard operation alone does not prove that a screen reader announced an update.
+
 Automation does not establish WCAG conformance. Keyboard testing is not screen-reader testing. Neither is representative-user validation.
 
 ## Status ceiling
@@ -51,3 +59,5 @@ Automation does not establish WCAG conformance. Keyboard testing is not screen-r
 - `VERIFIED_STANDARD_BASELINE`: Keyboard Flow plus all relevant state evidence and no unresolved critical automated finding in tested states.
 
 Every verified status requires matching, in-root, readable artifacts and concrete observations. Boolean claims, strings, nonexistent files, path traversal, outside-root artifacts, and unverified reviewer claims cannot raise status.
+
+An unresolved task, content, functional, or accessibility defect prevents the affected verification dimension from passing. Record style preferences and exceptions separately from those failures. If an aesthetic concern remains after the bounded review, retain it as an issue or limitation and report technical coverage separately from unfinished design remediation. Do not claim anti-slop completion, originality, measured task improvement, or representative-user success from a technical status or a valid report.

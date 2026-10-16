@@ -8,6 +8,7 @@ Complete this compact contract once before broad or new UI. Keep entries testabl
 - Domain objects and vocabulary:
 - Primary CTA / secondary actions:
 - Required decisions / actions to success / safe defaults:
+- Use context / task priority / facts needed before the next action or reading decision:
 - Failure or recovery when applicable:
 
 ## Reference
@@ -19,6 +20,8 @@ Complete this compact contract once before broad or new UI. Keep entries testabl
 
 ## Content
 - Hierarchy / expected item count:
+- User question answered by each section / comparison, sequence, grouping, or narrative relationship:
+- Claim and data sources / units and periods / disclosed samples / unknown facts:
 - Long-content and missing-data behavior:
 - Localization and writing-direction needs:
 
@@ -39,8 +42,9 @@ Complete this compact contract once before broad or new UI. Keep entries testabl
 ## Visual system
 - Surface mode / dominant idea / focal point / information density:
 - Product-specific visual signature:
-- Deliberate non-default composition choice and product rationale:
+- Composition choice and product rationale / familiar conventions retained:
 - Typography / spacing / color roles:
+- Korean and fallback font behavior / icon consistency / numeric alignment:
 - Radius / elevation strategy:
 - Image or media strategy:
 - Motion intent / reduced-motion behavior:
@@ -49,10 +53,18 @@ Complete this compact contract once before broad or new UI. Keep entries testabl
 - Framework / router / rendering model / styling system:
 - Token source / reusable components:
 - State ownership / data boundary:
+- Observable action result / persistence scope / relevant non-happy-state triggers:
 - Browser support / performance risks / verification plan:
+
+## Anti-slop review (only when routed; update after observation)
+- Visual sameness / product specificity / experience completeness: separate observations and coverage:
+- Applicable dimensions reviewed / scoped inapplicability or missing evidence:
+- Finding -> location/state/viewport -> evidence -> task impact -> response/change -> recheck or unresolved limitation:
 ```
 
 Recovery is required only when an action can fail, be cancelled, be reversed, leave the user incomplete, or cross a meaningful network/transaction boundary. Do not add fake recovery to informational pages.
+
+Use representative content before choosing layout. Record only decision-relevant facts and constraints for this stage; do not turn the fields into extra product sections. Unknown facts stay unknown until supported. Common layouts are acceptable when their relationships fit the task; a non-default composition is not a completion requirement. Keep observations separate from assumed benefits, preferences, and untested behavior.
 
 ## Inspect before completing the contract
 

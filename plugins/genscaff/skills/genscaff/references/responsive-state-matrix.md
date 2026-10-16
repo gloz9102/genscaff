@@ -4,6 +4,8 @@ Identify possible states from real data and interaction boundaries. Implement an
 
 Consider: `initial`, `loading`, `partial-loading`, `empty`, `error`, `retrying`, `disabled`, `hover`, `focus-visible`, `active`, `selected`, `unavailable`, `success`, `long-content`, `missing-image`, `slow-image`, `broken-image`, and `offline-or-degraded-network` when relevant.
 
+Derive these states from actual data and action boundaries before styling the default screen. Distinguish no records yet, no filter matches, missing/unknown fields, unavailable permissions, and failed retrieval when applicable; each needs accurate text and only useful actions. Unknown is not zero. Verify real transitions into and out of a state rather than only a manually forced screenshot. Simulated errors or mocked responses are valid test inputs when identified as such.
+
 For each affected surface record:
 
 - state trigger and observable result
@@ -12,6 +14,8 @@ For each affected surface record:
 - desktop, mobile, and container-size behavior
 - keyboard and focus behavior
 - evidence or explicit verification ceiling
+
+For data-bearing surfaces, use representative zero, one, and many-item fixtures plus relevant long localized labels, large/negative values, missing media, and unavailable fields. Keep displayed units, totals, status counts, and chart periods consistent. Exercise input/filter retention, cancellation, retry, and promised save persistence for affected actions; prevent duplicate submissions where relevant. Do not require impossible states or add backend features outside the requested scope merely to complete this matrix.
 
 Review long Korean and English text, RTL/writing direction when localization applies, 200% zoom and text reflow, fixed-height clipping, desktop/mobile horizontal overflow, and focus visibility inside sticky or horizontally scrollable regions. Consider container queries when component width matters more than viewport width.
 

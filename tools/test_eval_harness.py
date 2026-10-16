@@ -33,6 +33,17 @@ class EvalHarnessTests(unittest.TestCase):
                 with self.assertRaises(ValueError):
                     harness.generated_workspace(root, item)
 
+    def test_explicit_route_preserves_isolation_and_default(self) -> None:
+        manifest = {"model": "gpt-5.6-terra", "reasoning": "medium"}
+        workspace = Path("trial/workspace")
+        default = harness.execution_argv("codex", manifest, workspace, "build")
+        routed = harness.execution_argv("codex", manifest, workspace, "build", openai_base_url="http://127.0.0.1:10100/v1")
+        self.assertFalse(any(arg.startswith("openai_base_url=") for arg in default))
+        self.assertIn('openai_base_url="http://127.0.0.1:10100/v1"', routed)
+        self.assertIn("--ignore-user-config", routed)
+        self.assertEqual("workspace-write", routed[routed.index("--sandbox") + 1])
+        self.assertEqual(["--json", "build"], routed[-2:])
+
     def test_execution_trust_is_limited_to_generated_workspace(self) -> None:
         workspace = Path("temporary-evaluation/run/workspace").resolve()
         argv = harness.execution_argv("codex", {"model": "gpt-5.6-terra", "reasoning": "medium"}, workspace, "build", "unelevated")

@@ -184,7 +184,7 @@ def generated_workspace(root: Path, item: dict) -> Path:
 
 
 def execution_argv(codex: str, manifest: dict, workspace: Path, prompt: str,
-                   windows_sandbox: str | None = None) -> list[str]:
+                   windows_sandbox: str | None = None, openai_base_url: str | None = None) -> list[str]:
     # Trust only the disposable workspace created by this harness, never a parent.
     trust = "projects." + json.dumps(str(workspace.resolve())) + '.trust_level="trusted"'
     command = [codex, "exec", "--ephemeral", "--ignore-user-config", "--ignore-rules",
@@ -193,6 +193,8 @@ def execution_argv(codex: str, manifest: dict, workspace: Path, prompt: str,
                "-c", 'approval_policy="never"', "-c", trust]
     if windows_sandbox is not None:
         command += ["-c", f'windows.sandbox="{windows_sandbox}"']
+    if openai_base_url is not None:
+        command += ["-c", "openai_base_url=" + json.dumps(openai_base_url)]
     return command + ["--json", prompt]
 
 
@@ -211,6 +213,8 @@ def run(args: argparse.Namespace) -> int:
               "windows_sandbox": getattr(args, "windows_sandbox", None),
               "jobs": getattr(args, "jobs", 1), "sandbox": "workspace-write",
               "approval_policy": "never", "trust": "generated-workspace-only"}
+    if getattr(args, "openai_base_url", None) is not None:
+        policy["openai_base_url"] = args.openai_base_url
     policy_path = root / "execution-policy.json"
     if policy_path.exists() and read_json(policy_path) != policy:
         raise ValueError("execution policy changed; prepare a fresh run directory")
@@ -224,7 +228,7 @@ def run(args: argparse.Namespace) -> int:
         stage_workspace(root, item, workspace)
         subprocess.run([git, "init", "--quiet"], cwd=workspace, check=True)
         prompt = (root / item["prompt"]).read_text(encoding="utf-8")
-        command = execution_argv(codex, manifest, workspace, prompt, policy["windows_sandbox"])
+        command = execution_argv(codex, manifest, workspace, prompt, policy["windows_sandbox"], policy.get("openai_base_url"))
         started = time.monotonic()
         with (run_root / "trace.jsonl").open("w", encoding="utf-8") as stream:
             completed = subprocess.run(command, cwd=workspace, stdin=subprocess.DEVNULL,
@@ -423,6 +427,7 @@ def parser() -> argparse.ArgumentParser:
     p.add_argument("--run-dir", type=Path, required=True)
     p.add_argument("--rerun", action="store_true")
     p.add_argument("--codex-bin", type=Path, help="explicit Codex executable; recorded with its version for reproducible runtime selection")
+    p.add_argument("--openai-base-url", help="explicit API route shared by both arms and locked on resume; user config remains ignored")
     p.add_argument("--windows-sandbox", choices=("elevated", "unelevated"), help="explicit native Windows sandbox mode; no global config is changed")
     p.add_argument("--jobs", type=int, choices=(1, 2, 4), default=1, help="concurrent isolated runs")
     p.set_defaults(func=run)

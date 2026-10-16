@@ -4,6 +4,14 @@
 
 Version changes and evaluation context moved from the README. Historical claims retain their original scope. Published versions are listed in [GitHub Releases](https://github.com/gloz9102/genscaff/releases).
 
+## Version 2.5.0 product-grounded anti-slop prevention
+
+Anti-slop guidance now applies before layout and copy decisions and separates visual sameness, product specificity, and experience completeness. Concrete task, content, functional, and accessibility defects require correction without waiting for a cluster of visual patterns. Familiar conventions and evidenced style choices remain valid; rigid style and product-signal quotas are replaced with task-based criteria.
+
+Design contracts, responsive state coverage, and verification guidance now require evidence for represented action outcomes, promised persistence, relevant recovery, and accessible use. Findings stay in existing schema v6 fields. The evaluation harness adds an explicit `--openai-base-url` option, records it in the execution policy, and preserves runtime isolation and resume consistency.
+
+Behavioral expectations and regression coverage are updated. A repeated v2.5.0 generation evaluation has not run; structural validation and unit tests do not establish improved generated-output quality. Source versioning does not publish a release.
+
 ## Version 2.2.5 mobile and hover guidance
 
 Mobile layouts now explicitly recompose content, media crops, and action groups around task priority. Hover feedback follows control roles while preserving layout, hit areas, and accessible names. Menus require applicable submenu, back/close, and focus-return paths with non-hover alternatives.

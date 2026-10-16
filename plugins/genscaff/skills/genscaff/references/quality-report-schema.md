@@ -15,6 +15,8 @@ Keep schema v6 and its status meanings unchanged for preservation, exploration, 
 
 Record first-render and anti-slop findings in the existing structure rather than adding a boolean checklist. Put the concrete finding, rendered location, evidence, and `keep`, `replace`, `remove`, or project-evidenced `exception` response in the relevant verification dimension's `issues`; put unresolved scope or uncertainty in `limitations`. `notes` may summarize the review. A visual finding that remains cannot coexist with an unsupported clean claim such as `no_nested_card_soup: true`.
 
+For a routed anti-slop review, distinguish visual sameness, product specificity, and experience completeness in existing coverage/notes; do not add schema fields or an aggregate score. Each finding names its state/viewport, affected task, correction, and observed recheck or remaining limitation. Map concrete task/content failures to the affected render/flow/state/accessibility result rather than hiding them as style preferences. A style exception cannot waive an independent defect. Passing structural validation does not establish that these semantic judgments are correct or that design remediation is complete.
+
 Each verification dimension contains:
 
 ```json
