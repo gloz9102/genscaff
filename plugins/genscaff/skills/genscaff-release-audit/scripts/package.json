@@ -9,7 +9,7 @@
   },
   "dependencies": {
     "chrome-launcher": "1.2.1",
-    "lighthouse": "13.4.1",
+    "lighthouse": "13.6.0",
     "playwright": "1.61.1"
   }
 }
